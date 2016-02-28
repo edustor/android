@@ -9,15 +9,12 @@ import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import com.flipboard.bottomsheet.BottomSheetLayout
 import com.google.zxing.integration.android.IntentIntegrator
 
 class MainActivity : AppCompatActivity() {
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        IntentIntegrator.parseActivityResult(requestCode, resultCode, data)?.let {
-            Snackbar.make(findViewById(R.id.container), "Found ${it.contents}", Snackbar.LENGTH_LONG).show()
-        }
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,14 +23,23 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        //        fab.setOnClickListener { view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show() }
         fab.setOnClickListener {
             IntentIntegrator(this).initiateScan(IntentIntegrator.QR_CODE_TYPES)
         }
 
-        val bottomSheetLayout = findViewById(R.id.bottomsheet) as BottomSheetLayout
-        val view = LayoutInflater.from(applicationContext).inflate(R.layout.sheet_document, bottomSheetLayout, false)
-        bottomSheetLayout.showWithSheetView(view)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        IntentIntegrator.parseActivityResult(requestCode, resultCode, data)?.contents?.let {
+            Snackbar.make(findViewById(R.id.container), "Found ${it}", Snackbar.LENGTH_LONG).show()
+
+            val bottomSheetLayout = findViewById(R.id.bottomsheet) as BottomSheetLayout
+            val documentSheetView = LayoutInflater.from(applicationContext).inflate(R.layout.sheet_document, bottomSheetLayout, false)
+            val uuidView = documentSheetView.findViewById(R.id.uuid) as TextView
+            uuidView.text = it
+            bottomSheetLayout.showWithSheetView(documentSheetView)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
