@@ -1,4 +1,18 @@
+buildscript {
+    ext.kotlin_version = '1.0.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: "kotlin-android"
+
 
 android {
     compileSdkVersion 23
@@ -11,6 +25,12 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    //noinspection GroovyAssignabilityCheck
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
