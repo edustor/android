@@ -15,6 +15,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 
 class MainActivity : AppCompatActivity() {
 
+    val docService = DocumentsService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +27,6 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             IntentIntegrator(this).initiateScan(IntentIntegrator.QR_CODE_TYPES)
         }
-
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -39,6 +38,8 @@ class MainActivity : AppCompatActivity() {
             val uuidView = documentSheetView.findViewById(R.id.uuid) as TextView
             uuidView.text = it
             bottomSheetLayout.showWithSheetView(documentSheetView)
+
+            docService.activateUUID(it)
         }
     }
 
