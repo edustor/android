@@ -7,11 +7,11 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.wutiarn.edustor.android.data.repository.DocumentsRepository
-import rx.lang.kotlin.onError
+import ru.wutiarn.edustor.android.data.repository.DocumentsApi
+import rx.Observable
 import rx.schedulers.Schedulers
 
-class DocumentsService {
+class DocumentsRepository {
     val retrofit: Retrofit
 
     init {
@@ -37,12 +37,12 @@ class DocumentsService {
         return chain.proceed(request)
     }
 
-    fun activateUUID(uuid: String) {
-        val docRepo = retrofit.create(DocumentsRepository::class.java)
-        docRepo.activateUUID(uuid, offset = 3)
+    fun documentUUIDInfo(uuid: String) {
+        val docRepo = retrofit.create(DocumentsApi::class.java)
+        docRepo.UUIDInfo(uuid)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
-                .onError { Log.e("UUID RESULT", "Network error", it) }
+                .onErrorResumeNext { println("NORMAL HANDLER"); Observable.empty() }
                 .subscribe { Log.i("UUID RESULT", "Response: ${it.string()}") }
     }
 }

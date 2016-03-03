@@ -15,7 +15,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 
 class MainActivity : AppCompatActivity() {
 
-    val docService = DocumentsService()
+    val docService = DocumentsRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             uuidView.text = it
             bottomSheetLayout.showWithSheetView(documentSheetView)
 
-            docService.activateUUID(it)
+            docService.documentUUIDInfo(it)
         }
     }
 
