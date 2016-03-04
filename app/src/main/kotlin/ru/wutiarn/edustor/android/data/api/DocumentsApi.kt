@@ -1,4 +1,4 @@
-package ru.wutiarn.edustor.android.data.repository
+package ru.wutiarn.edustor.android.data.api
 
 import okhttp3.ResponseBody
 import retrofit2.http.*

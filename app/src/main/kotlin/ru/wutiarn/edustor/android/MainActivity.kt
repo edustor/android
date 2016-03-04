@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import com.flipboard.bottomsheet.BottomSheetLayout
 import com.google.zxing.integration.android.IntentIntegrator
+import ru.wutiarn.edustor.android.dagger.component.DaggerAppComponent
 
 class MainActivity : AppCompatActivity() {
 
