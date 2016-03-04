@@ -12,6 +12,7 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
+apply plugin: 'kotlin-android-extensions'
 
 //noinspection GroovyMissingReturnStatement
 android {
@@ -26,6 +27,10 @@ android {
         versionName "1.0"
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     //noinspection GroovyAssignabilityCheck
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -37,6 +42,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+}
+
+kapt {
+    generateStubs = true
 }
 
 dependencies {
@@ -45,6 +55,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2'
     compile 'com.android.support:design:23.2.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.google.dagger:dagger:2.0.1'
+    kapt "com.google.dagger:dagger-compiler:2.0.1"
+    compile 'javax.annotation:jsr250-api:1.0'
 
     compile 'com.google.zxing:android-integration:3.2.1'
     compile 'com.flipboard:bottomsheet-core:1.5.0'

@@ -15,7 +15,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 
 class MainActivity : AppCompatActivity() {
 
-    val docService = DocumentsRepository()
+    val docService = DaggerAppComponent.create().documentsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
