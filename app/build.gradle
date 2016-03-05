@@ -86,4 +86,7 @@ dependencies {
     compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.3'
     compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.wang.avi:library:1.0.2'
+    compile 'com.nineoldandroids:library:2.4.0'
+
 }

@@ -31,9 +31,11 @@ class DocumentInfoFragment : MvpLceFragment<LinearLayout, Document, DocumentInfo
 
     override fun setData(p0: Document) {
         uuidTextView.text = p0.id
+        showContent()
     }
 
     override fun loadData(p0: Boolean) {
+        showLoading(false)
         presenter.loadData()
     }
 
