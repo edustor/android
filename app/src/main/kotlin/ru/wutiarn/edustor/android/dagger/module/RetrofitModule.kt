@@ -17,18 +17,18 @@ import javax.inject.Named
  * Created by wutiarn on 03.03.16.
  */
 @Module
-class RetrofitModule {
+open class RetrofitModule {
     @Provides
     @AppScope
     @Named("API_URL")
-    fun url(): String {
+    open fun url(): String {
         return "http://192.168.10.3:8080/api/"
     }
 
     @Provides
     @AppScope
-    fun retrofitClient(objectMapper: ObjectMapper, @Named("API_URL") url: String): Retrofit {
-        val client = OkHttpClient.Builder()
+    open fun httpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
                 .addInterceptor {
                     val original = it.request()
 
@@ -39,7 +39,11 @@ class RetrofitModule {
                     return@addInterceptor it.proceed(request)
                 }
                 .build()
+    }
 
+    @Provides
+    @AppScope
+    fun retrofitClient(objectMapper: ObjectMapper, client: OkHttpClient, @Named("API_URL") url: String): Retrofit {
         return Retrofit.Builder()
                 .client(client)
                 .baseUrl(url)
