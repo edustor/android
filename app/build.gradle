@@ -7,6 +7,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
     }
 }
 
@@ -29,6 +30,7 @@ android {
 
     lintOptions {
         abortOnError false
+        disable 'InvalidPackage'
     }
 
     packagingOptions {
@@ -76,7 +78,6 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.1'
     compile 'javax.annotation:jsr250-api:1.0'
     compile 'com.google.zxing:android-integration:3.2.1'
-    compile 'com.flipboard:bottomsheet-core:1.5.0'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxkotlin:0.40.1'
@@ -88,5 +89,6 @@ dependencies {
     compile 'com.android.support:support-v4:23.2.0'
     compile 'com.wang.avi:library:1.0.2'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.sothree.slidinguppanel:library:3.2.1'
 
 }

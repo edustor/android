@@ -15,6 +15,7 @@ import ru.wutiarn.edustor.android.view.DocumentInfoView
 
 
 class DocumentInfoFragment : MvpLceFragment<LinearLayout, Document, DocumentInfoView, DocumentInfoPresenter>(), DocumentInfoView {
+
     lateinit var uuidTextView: TextView
 
     override fun createPresenter(): DocumentInfoPresenter? {
