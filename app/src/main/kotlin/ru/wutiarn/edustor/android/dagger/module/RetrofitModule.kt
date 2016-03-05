@@ -11,6 +11,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.data.api.DocumentsApi
+import javax.inject.Named
 
 /**
  * Created by wutiarn on 03.03.16.
@@ -19,7 +20,14 @@ import ru.wutiarn.edustor.android.data.api.DocumentsApi
 class RetrofitModule {
     @Provides
     @AppScope
-    fun retrofitClient(objectMapper: ObjectMapper): Retrofit {
+    @Named("API_URL")
+    fun url(): String {
+        return "http://192.168.10.3:8080/api/"
+    }
+
+    @Provides
+    @AppScope
+    fun retrofitClient(objectMapper: ObjectMapper, @Named("API_URL") url: String): Retrofit {
         val client = OkHttpClient.Builder()
                 .addInterceptor {
                     val original = it.request()
@@ -34,7 +42,7 @@ class RetrofitModule {
 
         return Retrofit.Builder()
                 .client(client)
-                .baseUrl("http://192.168.10.3:8080/api/")
+                .baseUrl(url)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .build()

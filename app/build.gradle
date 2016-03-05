@@ -41,6 +41,7 @@ android {
     //noinspection GroovyAssignabilityCheck
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
     }
 
     buildTypes {
@@ -59,6 +60,8 @@ kapt {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.0'
+
     compile 'com.android.support:appcompat-v7:23.2'
     compile 'com.android.support:design:23.2.0'
     compile 'org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version'
