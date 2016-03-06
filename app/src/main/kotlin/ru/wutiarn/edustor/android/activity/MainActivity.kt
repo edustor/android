@@ -9,18 +9,39 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import com.google.zxing.integration.android.IntentIntegrator
-import com.hannesdorfmann.mosby.mvp.MvpActivity
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceActivity
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.content_main.*
+import org.threeten.bp.format.DateTimeFormatter
+import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
-class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), MainActivityView {
+class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, MainActivityPresenter>(), MainActivityView {
+    override fun loadData(p0: Boolean) {
+        showLoading(false)
+        presenter.loadData()
+    }
+
+    override fun setData(lesson: Lesson?) {
+        subject.text = lesson?.subject?.name
+        date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        start_time.text = lesson?.start?.format(DateTimeFormatter.ISO_LOCAL_TIME)
+        end_time.text = lesson?.end?.format(DateTimeFormatter.ISO_LOCAL_TIME)
+        showContent()
+    }
+
+    override fun getErrorMessage(p0: Throwable?, p1: Boolean): String? {
+        return p0?.message
+    }
 
     override fun createPresenter(): MainActivityPresenter {
-        return MainActivityPresenter()
+        val application = applicationContext as Application
+        return MainActivityPresenter(application.appComponent)
     }
 
     var currentSlidingPanelFragment: Fragment? = null
@@ -37,6 +58,8 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         }
 
         configureSlidingPanel()
+
+        loadData(false)
 
         presenter.showLessonInfo("18e69f5b-5a97-4ce7-9692-23ea18155be3")
     }
