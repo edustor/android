@@ -31,6 +31,8 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
     override fun setData(p0: Lesson) {
         subject.text = p0.subject?.name
         lesson_date.text = p0.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        start_time.text = p0.start?.format(DateTimeFormatter.ISO_LOCAL_TIME)
+        end_time.text = p0.end?.format(DateTimeFormatter.ISO_LOCAL_TIME)
         showContent()
     }
 
