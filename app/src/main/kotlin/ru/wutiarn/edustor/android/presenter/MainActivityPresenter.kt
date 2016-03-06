@@ -19,7 +19,7 @@ class MainActivityPresenter : MvpPresenter<MainActivityView> {
         view = null
     }
 
-    fun showDocumentInfo(uuid: String) {
+    fun showLessonInfo(uuid: String) {
         val documentInfoFragment = LessonFragment()
         val fragmentBundle = Bundle()
         fragmentBundle.putString("uuid", uuid)

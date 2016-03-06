@@ -23,7 +23,6 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         return MainActivityPresenter()
     }
 
-
     var currentSlidingPanelFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,13 +38,13 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
 
         configureSlidingPanel()
 
-        presenter.showDocumentInfo("18e69f5b-5a97-4ce7-9692-23ea18155be3")
+        presenter.showLessonInfo("18e69f5b-5a97-4ce7-9692-23ea18155be3")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         IntentIntegrator.parseActivityResult(requestCode, resultCode, data)?.contents?.let {
             Snackbar.make(findViewById(R.id.container), "Found $it", Snackbar.LENGTH_LONG).show()
-            presenter.showDocumentInfo(it)
+            presenter.showLessonInfo(it)
         }
     }
 
