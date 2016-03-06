@@ -45,9 +45,11 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
     }
 
     fun activateUUID(uuid: String) {
-        appComponent.documentsApi.activateUUID(uuid).configureAsync().subscribe {
+        appComponent.documentsApi.activateUUID(uuid).configureAsync().subscribe({
             view?.makeSnackbar("Done! ID: ${it.id}")
-        }
+        }, {
+            view?.makeSnackbar("Error: ${it.message}")
+        })
     }
 
     fun requestQrScan(activity: Activity, type: ScanRequestType) {

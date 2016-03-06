@@ -41,12 +41,12 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
 
             lesson.documents.toObservable()
                     .first { it.uuid == presenter.uuid }
-                    .subscribe {
+                    .subscribe ({
                         uuid.text = it.uuid
                         is_uploaded.text = it.isUploaded.toString()
                         timestamp.text = OffsetDateTime.ofInstant(it.timestamp, ZoneId.systemDefault())
                                 .toLocalTime().format(DateTimeFormatter.ISO_TIME)
-                    }
+                    })
         }
 
 
