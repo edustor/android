@@ -2,7 +2,6 @@ package ru.wutiarn.edustor.android.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
@@ -13,6 +12,7 @@ import android.widget.LinearLayout
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceActivity
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.Application
@@ -52,8 +52,7 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener {
+        scan_exists.setOnClickListener {
             IntentIntegrator(this).initiateScan(IntentIntegrator.QR_CODE_TYPES)
         }
 

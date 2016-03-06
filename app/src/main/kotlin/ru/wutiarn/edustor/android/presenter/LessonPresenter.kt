@@ -5,7 +5,6 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonView
 import rx.subscriptions.CompositeSubscription
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by wutiarn on 05.03.16.
@@ -28,7 +27,6 @@ class LessonPresenter(val appComponent: AppComponent, val uuid: String? = null, 
         when {
             uuid != null -> {
                 val subscription = appComponent.lessonsApi.byUUID(uuid)
-                        .delay(1, TimeUnit.SECONDS)
                         .linkToLCEView(view)
 
                 subscriptions.add(subscription)
