@@ -37,7 +37,7 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
             IntentIntegrator(this).initiateScan(IntentIntegrator.QR_CODE_TYPES)
         }
 
-        configureSldingPanel()
+        configureSlidingPanel()
 
         presenter.showDocumentInfo("18e69f5b-5a97-4ce7-9692-23ea18155be3")
     }
@@ -74,20 +74,18 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         supportFragmentManager.beginTransaction()
                 .add(R.id.sliding_panel_container, fragment)
                 .commitAllowingStateLoss()
-        sliding_panel.isEnabled = true
         sliding_panel.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
         currentSlidingPanelFragment = fragment
     }
 
     override fun detachSlidingPanelFragment() {
-        sliding_panel.isEnabled = false
+        sliding_panel.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
         currentSlidingPanelFragment?.let {
             supportFragmentManager.beginTransaction().detach(it).commitAllowingStateLoss()
         }
     }
 
-    fun configureSldingPanel() {
-        sliding_panel.isEnabled = false
+    fun configureSlidingPanel() {
         sliding_panel.anchorPoint = 0.25f
         sliding_panel.setPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelExpanded(p0: View?) {
@@ -107,5 +105,9 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
             }
 
         })
+
+        main_container.setOnClickListener {
+            detachSlidingPanelFragment()
+        }
     }
 }

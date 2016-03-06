@@ -4,6 +4,7 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.DocumentInfoView
+import rx.subscriptions.CompositeSubscription
 import java.util.concurrent.TimeUnit
 
 /**
@@ -12,8 +13,10 @@ import java.util.concurrent.TimeUnit
 class DocumentInfoPresenter(val appComponent: AppComponent, val uuid: String) : MvpPresenter<DocumentInfoView> {
 
     var view: DocumentInfoView? = null
+    var subscriptions: CompositeSubscription = CompositeSubscription()
 
     override fun detachView(p0: Boolean) {
+        subscriptions.clear()
         view = null
     }
 
@@ -22,8 +25,10 @@ class DocumentInfoPresenter(val appComponent: AppComponent, val uuid: String) : 
     }
 
     fun loadData() {
-        appComponent.documentsRepository.documentsApi.UUIDInfo(uuid)
+        val subscription = appComponent.documentsRepository.documentsApi.UUIDInfo(uuid)
                 .delay(1, TimeUnit.SECONDS)
                 .linkToLCEView(view)
+
+        subscriptions.add(subscription)
     }
 }
