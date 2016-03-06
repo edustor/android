@@ -6,6 +6,8 @@ import org.threeten.bp.Instant
  * Created by wutiarn on 04.03.16.
  */
 data class Document(
+        var owner: User? = null,
+        var lesson: Lesson? = null,
         var uuid: String? = null,
         var isUploaded: Boolean = false,
         var timestamp: Instant = Instant.now(),
