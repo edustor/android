@@ -10,4 +10,5 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 interface MainActivityView : MvpLceView<Lesson> {
     fun showSlidingPanelFragment(fragment: Fragment)
     fun detachSlidingPanelFragment()
+    fun makeSnackbar(string: String)
 }

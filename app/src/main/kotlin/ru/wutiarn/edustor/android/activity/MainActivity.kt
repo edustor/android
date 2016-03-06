@@ -22,6 +22,10 @@ import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
 class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, MainActivityPresenter>(), MainActivityView {
+    override fun makeSnackbar(string: String) {
+        Snackbar.make(container, string, Snackbar.LENGTH_LONG).show()
+    }
+
     override fun loadData(p0: Boolean) {
         showLoading(false)
         presenter.loadData()
@@ -53,20 +57,21 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         setSupportActionBar(toolbar)
 
         scan_exists.setOnClickListener {
-            IntentIntegrator(this).initiateScan(IntentIntegrator.QR_CODE_TYPES)
+            presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.EXIST)
+        }
+
+        scan_new.setOnClickListener {
+            presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.NEW)
         }
 
         configureSlidingPanel()
 
         loadData(false)
-
-        presenter.showLessonInfo("18e69f5b-5a97-4ce7-9692-23ea18155be3")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         IntentIntegrator.parseActivityResult(requestCode, resultCode, data)?.contents?.let {
-            Snackbar.make(findViewById(R.id.container), "Found $it", Snackbar.LENGTH_LONG).show()
-            presenter.showLessonInfo(it)
+            presenter.processQrScanResult(it)
         }
     }
 
