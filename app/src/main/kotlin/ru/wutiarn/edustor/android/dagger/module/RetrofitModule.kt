@@ -11,6 +11,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.data.api.DocumentsApi
+import ru.wutiarn.edustor.android.data.api.LessonsApi
 import javax.inject.Named
 
 /**
@@ -64,5 +65,11 @@ open class RetrofitModule {
     @AppScope
     fun documentsApi(retrofit: Retrofit): DocumentsApi {
         return retrofit.create(DocumentsApi::class.java)
+    }
+
+    @Provides
+    @AppScope
+    fun lessonsApi(retrofit: Retrofit): LessonsApi {
+        return retrofit.create(LessonsApi::class.java)
     }
 }

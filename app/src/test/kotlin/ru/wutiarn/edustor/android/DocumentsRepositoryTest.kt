@@ -19,7 +19,7 @@ class DocumentsRepositoryTest {
 
         Mockito.`when`(spyModule.httpClient()).thenReturn(getFakeHttpClient("""{"owner":{"login":"user","id":"56d3279ba826458c66c707b3"},"lesson":{"subject":{"name":"Алгебра","year":10,"id":"56d340d1a826427ae8dc5f81"},"start":[0,0],"end":[23,59],"date":[2016,3,2],"id":"56d6d919a8269ff3e0840c43"},"uuid":"18e69f5b-5a97-4ce7-9692-23ea18155be3","timestamp":1456920857.173000000,"id":"56d6d919a8269ff3e0840c44","uploaded":true}"""));
 
-        val repository = DaggerAppComponent.create().documentsRepository
+        val repository = DaggerAppComponent.create().documentsApi
         val subscriber = TestSubscriber<String>()
 
         repository.documentUUIDInfo("18e69f5b-5a97-4ce7-9692-23ea18155be3")

@@ -11,5 +11,6 @@ data class Lesson(
         var start: LocalTime? = null,
         var end: LocalTime? = null,
         var date: LocalDate? = null,
+        var documents: MutableList<Document> = mutableListOf(),
         var id: String? = null
 )
