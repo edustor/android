@@ -6,6 +6,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.fragment.LessonFragment
+import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.MainActivityView
 import rx.subscriptions.CompositeSubscription
@@ -43,6 +44,12 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
         view?.showSlidingPanelFragment(documentInfoFragment)
     }
 
+    fun activateUUID(uuid: String) {
+        appComponent.documentsApi.activateUUID(uuid).configureAsync().subscribe {
+            view?.makeSnackbar("Done! ID: ${it.id}")
+        }
+    }
+
     fun requestQrScan(activity: Activity, type: ScanRequestType) {
         currentScanRequestType = type
         IntentIntegrator(activity).initiateScan(IntentIntegrator.QR_CODE_TYPES)
@@ -54,7 +61,8 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
                 showLessonInfo(result)
             }
             ScanRequestType.NEW -> {
-                view?.makeSnackbar("Creating $result")
+                view?.makeSnackbar("Activating $result")
+                activateUUID(result)
             }
         }
     }
