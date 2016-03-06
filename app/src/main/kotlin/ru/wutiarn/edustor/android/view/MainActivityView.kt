@@ -8,5 +8,5 @@ import com.hannesdorfmann.mosby.mvp.MvpView
  */
 interface MainActivityView : MvpView {
     fun showSlidingPanelFragment(fragment: Fragment)
-    fun detachSlidingPanelFrament()
+    fun detachSlidingPanelFragment()
 }

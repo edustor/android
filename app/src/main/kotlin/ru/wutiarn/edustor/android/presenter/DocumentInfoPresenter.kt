@@ -2,9 +2,8 @@ package ru.wutiarn.edustor.android.presenter
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.DocumentInfoView
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 /**
@@ -24,9 +23,7 @@ class DocumentInfoPresenter(val appComponent: AppComponent, val uuid: String) : 
 
     fun loadData() {
         appComponent.documentsRepository.documentsApi.UUIDInfo(uuid)
-                .subscribeOn(Schedulers.io())
-                .delay(5, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { view?.setData(it) }
+                .delay(1, TimeUnit.SECONDS)
+                .linkToLCEView(view)
     }
 }

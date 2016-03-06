@@ -5,19 +5,23 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.google.zxing.integration.android.IntentIntegrator
+import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.content_main.*
 import ru.wutiarn.edustor.android.R
-import ru.wutiarn.edustor.android.fragment.DocumentInfoFragment
+import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
-class MainActivity : AppCompatActivity(), MainActivityView {
+class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), MainActivityView {
+
+    override fun createPresenter(): MainActivityPresenter {
+        return MainActivityPresenter()
+    }
 
 
     var currentSlidingPanelFragment: Fragment? = null
@@ -35,17 +39,13 @@ class MainActivity : AppCompatActivity(), MainActivityView {
 
         configureSldingPanel()
 
-        val documentInfoFragment = DocumentInfoFragment()
-        val fragmentBundle = Bundle()
-        fragmentBundle.putString("uuid", "18e69f5b-5a97-4ce7-9692-23ea18155be3")
-        documentInfoFragment.arguments = fragmentBundle
-
-        showSlidingPanelFragment(documentInfoFragment)
+        presenter.showDocumentInfo("18e69f5b-5a97-4ce7-9692-23ea18155be3")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         IntentIntegrator.parseActivityResult(requestCode, resultCode, data)?.contents?.let {
             Snackbar.make(findViewById(R.id.container), "Found $it", Snackbar.LENGTH_LONG).show()
+            presenter.showDocumentInfo(it)
         }
     }
 
@@ -70,19 +70,19 @@ class MainActivity : AppCompatActivity(), MainActivityView {
     }
 
     override fun showSlidingPanelFragment(fragment: Fragment) {
-        detachSlidingPanelFrament()
+        detachSlidingPanelFragment()
         supportFragmentManager.beginTransaction()
                 .add(R.id.sliding_panel_container, fragment)
-                .commit()
+                .commitAllowingStateLoss()
         sliding_panel.isEnabled = true
         sliding_panel.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
         currentSlidingPanelFragment = fragment
     }
 
-    override fun detachSlidingPanelFrament() {
+    override fun detachSlidingPanelFragment() {
         sliding_panel.isEnabled = false
         currentSlidingPanelFragment?.let {
-            supportFragmentManager.beginTransaction().detach(it).commit()
+            supportFragmentManager.beginTransaction().detach(it).commitAllowingStateLoss()
         }
     }
 
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), MainActivityView {
             }
 
             override fun onPanelCollapsed(p0: View?) {
-                detachSlidingPanelFrament()
+                detachSlidingPanelFragment()
             }
 
             override fun onPanelHidden(p0: View?) {

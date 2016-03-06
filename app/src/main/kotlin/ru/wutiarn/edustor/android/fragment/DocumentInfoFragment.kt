@@ -40,8 +40,8 @@ class DocumentInfoFragment : MvpLceFragment<LinearLayout, Document, DocumentInfo
         presenter.loadData()
     }
 
-    override fun getErrorMessage(p0: Throwable?, p1: Boolean): String? {
-        throw UnsupportedOperationException()
+    override fun getErrorMessage(p0: Throwable, p1: Boolean): String? {
+        return p0.message
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
