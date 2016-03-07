@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,14 +17,30 @@ import kotlinx.android.synthetic.main.content_main.*
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
 class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, MainActivityPresenter>(), MainActivityView {
-    override fun makeSnackbar(string: String) {
-        Snackbar.make(container, string, Snackbar.LENGTH_LONG).show()
+
+    var currentSlidingPanelFragment: Fragment? = null
+    lateinit override var documentsAdapter: DocumentsAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
+
+
+        configureFabs()
+        configureSlidingPanel()
+        configureRecyclerView()
+
+
+        loadData(false)
     }
+
 
     override fun loadData(p0: Boolean) {
         showLoading(false)
@@ -36,6 +52,9 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         start_time.text = lesson?.start?.format(DateTimeFormatter.ISO_LOCAL_TIME)
         end_time.text = lesson?.end?.format(DateTimeFormatter.ISO_LOCAL_TIME)
+
+        documentsAdapter.documents = lesson?.documents ?: mutableListOf()
+
         showContent()
     }
 
@@ -48,26 +67,6 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         return MainActivityPresenter(application.appComponent)
     }
 
-    var currentSlidingPanelFragment: Fragment? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
-
-        scan_exists.setOnClickListener {
-            presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.EXIST)
-        }
-
-        scan_new.setOnClickListener {
-            presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.NEW)
-        }
-
-        configureSlidingPanel()
-
-        loadData(false)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         IntentIntegrator.parseActivityResult(requestCode, resultCode, data)?.contents?.let {
@@ -95,6 +94,7 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         return super.onOptionsItemSelected(item)
     }
 
+
     override fun showSlidingPanelFragment(fragment: Fragment) {
         detachSlidingPanelFragment()
         supportFragmentManager.beginTransaction()
@@ -108,6 +108,20 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         sliding_panel.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
         currentSlidingPanelFragment?.let {
             supportFragmentManager.beginTransaction().detach(it).commitAllowingStateLoss()
+        }
+    }
+
+    override fun makeSnackbar(string: String) {
+        Snackbar.make(container, string, Snackbar.LENGTH_LONG).show()
+    }
+
+
+    fun configureFabs() {
+        scan_exists.setOnClickListener {
+            presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.EXIST)
+        }
+        scan_new.setOnClickListener {
+            presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.NEW)
         }
     }
 
@@ -135,5 +149,11 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         main_container.setOnClickListener {
             detachSlidingPanelFragment()
         }
+    }
+
+    fun configureRecyclerView() {
+        documents_recycler_view.layoutManager = LinearLayoutManager(this.applicationContext)
+        documentsAdapter = DocumentsAdapter()
+        documents_recycler_view.adapter = documentsAdapter
     }
 }
