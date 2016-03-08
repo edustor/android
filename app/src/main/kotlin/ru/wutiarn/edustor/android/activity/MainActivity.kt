@@ -81,6 +81,7 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
                 .commitAllowingStateLoss()
         sliding_panel.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
         currentSlidingPanelFragment = fragment
+        setFabsShown(false)
     }
 
     override fun detachSlidingPanelFragment() {
@@ -88,6 +89,7 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         currentSlidingPanelFragment?.let {
             supportFragmentManager.beginTransaction().detach(it).commitAllowingStateLoss()
         }
+        setFabsShown(true)
     }
 
     override fun makeSnackbar(string: String) {
@@ -128,5 +130,9 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         main_container.setOnClickListener {
             detachSlidingPanelFragment()
         }
+    }
+
+    fun setFabsShown(shown: Boolean) {
+        fabs_container.visibility = if (shown) View.VISIBLE else View.GONE
     }
 }
