@@ -35,7 +35,7 @@ class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf(), v
     val TAG: String = "DocumentsAdapter"
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
         val document = documents[position]
-        holder.uuid.text = document.uuid?.split("-")?.last()
+        holder.uuid.text = document.shortUUID
         holder.timestamp.text = LocalDateTime.ofInstant(document.timestamp, ZoneId.systemDefault())
                 .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         holder.isUploaded.setBackgroundColor(if (document.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded)
@@ -72,7 +72,7 @@ class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf(), v
     }
 
     override fun onGetSwipeReactionType(holder: DocumentViewHolder?, position: Int, x: Int, y: Int): Int {
-        return SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT
+        return SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H
     }
 
     override fun onSetSwipeBackground(holder: DocumentViewHolder?, position: Int, type: Int) {
@@ -80,12 +80,14 @@ class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf(), v
     }
 
     override fun onSwipeItem(holder: DocumentViewHolder?, position: Int, result: Int): SwipeResultAction? {
-
         when (result) {
-            SwipeableItemConstants.RESULT_SWIPED_LEFT -> {
+            in arrayOf(SwipeableItemConstants.RESULT_SWIPED_LEFT, SwipeableItemConstants.RESULT_SWIPED_RIGHT) -> {
                 return object : SwipeResultActionRemoveItem() {
-                    override fun onSlideAnimationEnd() {
-                        bus.post(DocumentRemovedEvent(documents[position]))
+                    override fun onPerformAction() {
+                        val document = documents[position]
+                        documents.removeAt(position)
+                        notifyItemRemoved(position)
+                        bus.post(DocumentRemovedEvent(document))
                     }
                 }
             }

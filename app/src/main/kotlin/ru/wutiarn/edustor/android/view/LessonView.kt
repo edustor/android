@@ -6,4 +6,6 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 /**
  * Created by wutiarn on 05.03.16.
  */
-interface LessonView : MvpLceView<Lesson>
+interface LessonView : MvpLceView<Lesson> {
+    fun makeSnackbar(msg: String)
+}

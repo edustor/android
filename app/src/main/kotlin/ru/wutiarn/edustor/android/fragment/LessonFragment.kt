@@ -1,6 +1,7 @@
 package ru.wutiarn.edustor.android.fragment
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -27,6 +28,11 @@ import ru.wutiarn.edustor.android.view.LessonView
 
 
 class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPresenter>(), LessonView {
+    override fun makeSnackbar(msg: String) {
+        view?.let {
+            Snackbar.make(view!!, msg, Snackbar.LENGTH_LONG).show()
+        }
+    }
 
     val bus = Bus()
 

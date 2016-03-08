@@ -11,4 +11,7 @@ data class Document(
         var isUploaded: Boolean = false,
         var timestamp: Instant = Instant.now(),
         var id: String? = null
-)
+) {
+    val shortUUID: String?
+        get() = uuid?.split("-")?.last()
+}

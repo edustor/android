@@ -1,5 +1,6 @@
 package ru.wutiarn.edustor.android.data.api
 
+import okhttp3.ResponseBody
 import retrofit2.http.*
 import ru.wutiarn.edustor.android.data.models.Document
 import rx.Observable
@@ -15,4 +16,7 @@ interface DocumentsApi {
 
     @GET("documents/uuid/{uuid}")
     fun UUIDInfo(@Path("uuid") uuid: String): Observable<Document>
+
+    @DELETE("documents/{document}")
+    fun delete(@Path("document") documentId: String): Observable<ResponseBody>
 }
