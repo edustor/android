@@ -2,10 +2,9 @@ package ru.wutiarn.edustor.android.presenter
 
 import android.os.Bundle
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
-import com.squareup.otto.Bus
-import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
+import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
+import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonView
@@ -14,7 +13,7 @@ import rx.subscriptions.CompositeSubscription
 /**
  * Created by wutiarn on 05.03.16.
  */
-class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle, var bus: Bus) : MvpPresenter<LessonView> {
+class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonView>, DocumentsAdapter.EventListener {
 
     var view: LessonView? = null
     var subscriptions: CompositeSubscription = CompositeSubscription()
@@ -23,8 +22,6 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle, var
     var lessonId: String? = null
 
     init {
-        bus.register(this)
-
         uuid = arguments.getString("uuid")
         lessonId = arguments.getString("id")
     }
@@ -36,15 +33,6 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle, var
 
     override fun attachView(p0: LessonView?) {
         view = p0
-    }
-
-    @Subscribe fun onDocumentRemoved(event: DocumentRemovedEvent) {
-        val document = event.document
-        appComponent.documentsApi.delete(document.id!!)
-                .configureAsync().subscribe(
-                { view?.makeSnackbar("Successfully removed: ${document.shortUUID}") },
-                { view?.makeSnackbar("Error removing ${document.shortUUID}: ${it.message}") }
-        )
     }
 
     fun loadData() {
@@ -67,5 +55,13 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle, var
                 )
             }
         }
+    }
+
+    override fun onDocumentRemoved(document: Document) {
+        appComponent.documentsApi.delete(document.id!!)
+                .configureAsync().subscribe(
+                { view?.makeSnackbar("Successfully removed: ${document.shortUUID}") },
+                { view?.makeSnackbar("Error removing ${document.shortUUID}: ${it.message}") }
+        )
     }
 }

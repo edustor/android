@@ -15,12 +15,12 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
-import com.squareup.otto.Bus
 import kotlinx.android.synthetic.main.fragment_lesson.*
 import kotlinx.android.synthetic.main.lesson_info.*
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
@@ -28,20 +28,22 @@ import ru.wutiarn.edustor.android.view.LessonView
 
 
 class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPresenter>(), LessonView {
+
+    lateinit var appComponent: AppComponent
+
     override fun makeSnackbar(msg: String) {
         view?.let {
             Snackbar.make(view!!, msg, Snackbar.LENGTH_LONG).show()
         }
     }
 
-    val bus = Bus()
-
     lateinit var documentsAdapter: DocumentsAdapter
     lateinit var wrappedDocumentsAdapter: RecyclerView.Adapter<*>
 
     override fun createPresenter(): LessonPresenter? {
         val application = context.applicationContext as Application
-        return LessonPresenter(application.appComponent, arguments, bus)
+        appComponent = application.appComponent
+        return LessonPresenter(appComponent, arguments)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,7 +78,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
     }
 
     fun configureRecyclerView() {
-        documentsAdapter = DocumentsAdapter(bus = bus)
+        documentsAdapter = DocumentsAdapter(presenter, appComponent)
 
         val recyclerViewTouchActionGuardManager = RecyclerViewTouchActionGuardManager()
         recyclerViewTouchActionGuardManager.setInterceptVerticalScrollingWhileAnimationRunning(true)

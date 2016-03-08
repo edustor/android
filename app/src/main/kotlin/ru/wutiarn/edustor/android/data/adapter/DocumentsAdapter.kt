@@ -13,20 +13,20 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstant
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableSwipeableItemViewHolder
-import com.squareup.otto.Bus
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 
 /**
  * Created by wutiarn on 07.03.16.
  */
-class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf(), val bus: Bus) : RecyclerView.Adapter<DocumentViewHolder>(),
-        DraggableItemAdapter<DocumentViewHolder>,
-        SwipeableItemAdapter<DocumentViewHolder> {
+class DocumentsAdapter(val listener: EventListener, val appComponent: AppComponent, var documents: MutableList<Document> = mutableListOf()) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
+        DraggableItemAdapter<DocumentsAdapter.DocumentViewHolder>,
+        SwipeableItemAdapter<DocumentsAdapter.DocumentViewHolder> {
 
     init {
         setHasStableIds(true)
@@ -87,7 +87,8 @@ class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf(), v
                         val document = documents[position]
                         documents.removeAt(position)
                         notifyItemRemoved(position)
-                        bus.post(DocumentRemovedEvent(document))
+                        listener.onDocumentRemoved(document)
+                        appComponent.eventBus.post(DocumentRemovedEvent(document))
                     }
                 }
             }
@@ -96,21 +97,26 @@ class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf(), v
             }
         }
     }
-}
 
-class DocumentViewHolder(val view: View) : AbstractDraggableSwipeableItemViewHolder(view) {
+    class DocumentViewHolder(val view: View) : AbstractDraggableSwipeableItemViewHolder(view) {
 
-    lateinit var uuid: TextView
-    lateinit var timestamp: TextView
-    lateinit var isUploaded: View
+        lateinit var uuid: TextView
+        lateinit var timestamp: TextView
+        lateinit var isUploaded: View
 
-    init {
-        uuid = view.findViewById(R.id.uuid) as TextView
-        timestamp = view.findViewById(R.id.uploaded_timestamp) as TextView
-        isUploaded = view.findViewById(R.id.is_uploaded)
+        init {
+            uuid = view.findViewById(R.id.uuid) as TextView
+            timestamp = view.findViewById(R.id.uploaded_timestamp) as TextView
+            isUploaded = view.findViewById(R.id.is_uploaded)
+        }
+
+        override fun getSwipeableContainerView(): View {
+            return view
+        }
     }
 
-    override fun getSwipeableContainerView(): View {
-        return view
+    interface EventListener {
+        fun onDocumentRemoved(document: Document)
     }
+
 }
