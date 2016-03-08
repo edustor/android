@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataBinding version="1.0" xmlns="http://schemas.android.com/heaven7/android-databinding/1">
+    <data>
+        <variable name="user" classname="com.heaven7.databinding.demo.xxx$User" type="bean" />
+        <import alias="View" classname="android.view.View" />
+    </data>
+</DataBinding>
+

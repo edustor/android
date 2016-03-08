@@ -1,12 +1,18 @@
 package ru.wutiarn.edustor.android.fragment
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator
+import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
+import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_lesson.*
 import kotlinx.android.synthetic.main.lesson_info.*
@@ -22,7 +28,7 @@ import ru.wutiarn.edustor.android.view.LessonView
 class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPresenter>(), LessonView {
 
     lateinit var documentsAdapter: DocumentsAdapter
-
+    lateinit var wrappedDocumentsAdapter: RecyclerView.Adapter<*>
 
     override fun createPresenter(): LessonPresenter? {
         val application = context.applicationContext as Application
@@ -61,11 +67,38 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
     }
 
     fun configureRecyclerView() {
-        documents_recycler_view.layoutManager = LinearLayoutManager(this.context)
         documentsAdapter = DocumentsAdapter()
-        documents_recycler_view.adapter = documentsAdapter
 
-        val header = RecyclerViewHeader.fromXml(context, R.layout.lesson_info)
-        header.attachTo(documents_recycler_view)
+        val recyclerViewTouchActionGuardManager = RecyclerViewTouchActionGuardManager()
+        recyclerViewTouchActionGuardManager.setInterceptVerticalScrollingWhileAnimationRunning(true)
+        recyclerViewTouchActionGuardManager.isEnabled = true
+
+        val recyclerViewDragDropManager = RecyclerViewDragDropManager()
+        recyclerViewDragDropManager.setInitiateOnMove(false)
+        recyclerViewDragDropManager.setInitiateOnLongPress(true)
+        recyclerViewDragDropManager.setLongPressTimeout(1000)
+
+        val recyclerViewSwipeManager = RecyclerViewSwipeManager()
+
+
+        val animator = SwipeDismissItemAnimator()
+        animator.supportsChangeAnimations = false
+
+        wrappedDocumentsAdapter = recyclerViewDragDropManager.createWrappedAdapter(documentsAdapter)
+        wrappedDocumentsAdapter = recyclerViewSwipeManager.createWrappedAdapter(wrappedDocumentsAdapter)
+
+
+        documents_recycler_view.layoutManager = LinearLayoutManager(this.context)
+        documents_recycler_view.adapter = wrappedDocumentsAdapter
+        documents_recycler_view.itemAnimator = animator
+
+        recyclerViewTouchActionGuardManager.attachRecyclerView(documents_recycler_view)
+        recyclerViewSwipeManager.attachRecyclerView(documents_recycler_view)
+        recyclerViewDragDropManager.attachRecyclerView(documents_recycler_view)
+
+        documents_recycler_view.addItemDecoration(SimpleListDividerDecorator(ContextCompat.getDrawable(context, R.drawable.list_divider_h), true))
+
+        //        val header = RecyclerViewHeader.fromXml(context, R.layout.lesson_info)
+        //        header.attachTo(documents_recycler_view)
     }
 }

@@ -91,5 +91,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.sothree.slidinguppanel:library:3.2.1'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.1'
-
+    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.6@aar') {
+        transitive = true
+    }
 }
