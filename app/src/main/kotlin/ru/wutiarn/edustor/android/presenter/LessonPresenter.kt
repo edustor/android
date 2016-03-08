@@ -1,5 +1,6 @@
 package ru.wutiarn.edustor.android.presenter
 
+import android.os.Bundle
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
@@ -9,10 +10,18 @@ import rx.subscriptions.CompositeSubscription
 /**
  * Created by wutiarn on 05.03.16.
  */
-class LessonPresenter(val appComponent: AppComponent, val uuid: String? = null, val id: String? = null) : MvpPresenter<LessonView> {
+class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonView> {
 
     var view: LessonView? = null
     var subscriptions: CompositeSubscription = CompositeSubscription()
+
+    var uuid: String? = null
+    var lessonId: String? = null
+
+    init {
+        uuid = arguments.getString("uuid")
+        lessonId = arguments.getString("id")
+    }
 
     override fun detachView(p0: Boolean) {
         subscriptions.clear()
@@ -26,10 +35,21 @@ class LessonPresenter(val appComponent: AppComponent, val uuid: String? = null, 
     fun loadData() {
         when {
             uuid != null -> {
-                val subscription = appComponent.lessonsApi.byUUID(uuid)
-                        .linkToLCEView(view)
-
-                subscriptions.add(subscription)
+                subscriptions.add(
+                        appComponent.lessonsApi.byUUID(uuid!!)
+                                .linkToLCEView(view))
+            }
+            lessonId == "current" -> {
+                subscriptions.add(
+                        appComponent.lessonsApi.current()
+                                .linkToLCEView(view)
+                )
+            }
+            lessonId != null -> {
+                subscriptions.add(
+                        appComponent.lessonsApi.byId(lessonId!!)
+                                .linkToLCEView(view)
+                )
             }
         }
     }

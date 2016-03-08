@@ -7,7 +7,6 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.fragment.LessonFragment
 import ru.wutiarn.edustor.android.util.extension.configureAsync
-import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.MainActivityView
 import rx.subscriptions.CompositeSubscription
 
@@ -26,13 +25,6 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
     override fun detachView(p0: Boolean) {
         view = null
         subscriptions.clear()
-    }
-
-    fun loadData() {
-        val subscription = appComponent.lessonsApi.current()
-                .linkToLCEView(view)
-
-        subscriptions.add(subscription)
     }
 
     fun showLessonInfo(uuid: String) {

@@ -4,28 +4,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import com.google.zxing.integration.android.IntentIntegrator
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceActivity
+import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
-import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
-import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.fragment.LessonFragment
 import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
-class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, MainActivityPresenter>(), MainActivityView {
-
+class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), MainActivityView {
     var currentSlidingPanelFragment: Fragment? = null
-    lateinit override var documentsAdapter: DocumentsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,31 +29,16 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
 
         configureFabs()
         configureSlidingPanel()
-        configureRecyclerView()
 
+        val fragmentArguments = Bundle()
+        fragmentArguments.putString("id", "current")
 
-        loadData(false)
-    }
+        val lessonFragment = LessonFragment()
+        lessonFragment.arguments = fragmentArguments
 
-
-    override fun loadData(p0: Boolean) {
-        showLoading(false)
-        presenter.loadData()
-    }
-
-    override fun setData(lesson: Lesson?) {
-        subject.text = lesson?.subject?.name
-        date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
-        start_time.text = lesson?.start?.format(DateTimeFormatter.ISO_LOCAL_TIME)
-        end_time.text = lesson?.end?.format(DateTimeFormatter.ISO_LOCAL_TIME)
-
-        documentsAdapter.documents = lesson?.documents ?: mutableListOf()
-
-        showContent()
-    }
-
-    override fun getErrorMessage(p0: Throwable?, p1: Boolean): String? {
-        return p0?.message
+        supportFragmentManager.beginTransaction()
+                .add(R.id.main_container, lessonFragment)
+                .commit()
     }
 
     override fun createPresenter(): MainActivityPresenter {
@@ -149,11 +128,5 @@ class MainActivity : MvpLceActivity<LinearLayout, Lesson, MainActivityView, Main
         main_container.setOnClickListener {
             detachSlidingPanelFragment()
         }
-    }
-
-    fun configureRecyclerView() {
-        documents_recycler_view.layoutManager = LinearLayoutManager(this.applicationContext)
-        documentsAdapter = DocumentsAdapter()
-        documents_recycler_view.adapter = documentsAdapter
     }
 }
