@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_lesson.*
+import kotlinx.android.synthetic.main.lesson_info.*
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
@@ -23,7 +25,6 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
 
 
     override fun createPresenter(): LessonPresenter? {
-        val uuid = arguments.getString("uuid")
         val application = context.applicationContext as Application
         return LessonPresenter(application.appComponent, arguments)
     }
@@ -63,5 +64,8 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
         documents_recycler_view.layoutManager = LinearLayoutManager(this.context)
         documentsAdapter = DocumentsAdapter()
         documents_recycler_view.adapter = documentsAdapter
+
+        val header = RecyclerViewHeader.fromXml(context, R.layout.lesson_info)
+        header.attachTo(documents_recycler_view)
     }
 }
