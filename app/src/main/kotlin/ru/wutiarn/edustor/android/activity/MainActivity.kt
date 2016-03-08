@@ -88,6 +88,7 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         sliding_panel.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
         currentSlidingPanelFragment?.let {
             supportFragmentManager.beginTransaction().detach(it).commitAllowingStateLoss()
+            currentSlidingPanelFragment = null
         }
         setFabsShown(true)
     }
@@ -96,6 +97,9 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         Snackbar.make(container, string, Snackbar.LENGTH_LONG).show()
     }
 
+    override fun isBottomPanelOpened(): Boolean {
+        return currentSlidingPanelFragment != null
+    }
 
     fun configureFabs() {
         scan_exists.setOnClickListener {

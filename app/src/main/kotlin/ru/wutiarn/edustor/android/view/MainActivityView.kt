@@ -10,4 +10,5 @@ interface MainActivityView : MvpView {
     fun showSlidingPanelFragment(fragment: Fragment)
     fun detachSlidingPanelFragment()
     fun makeSnackbar(string: String)
+    fun isBottomPanelOpened(): Boolean
 }

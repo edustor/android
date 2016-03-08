@@ -12,7 +12,7 @@ import java.util.*
 interface DocumentsApi {
     @POST("documents/uuid/activate")
     @FormUrlEncoded
-    fun activateUUID(@Field("uuid") uuid: String, @Field("offset") offset: Int = TimeZone.getDefault().rawOffset / 3600000): Observable<Document>;
+    fun activateUUID(@Field("uuid") uuid: String, @Field("lesson") lesson: String = "current", @Field("offset") offset: Int = TimeZone.getDefault().rawOffset / 3600000): Observable<Document>;
 
     @GET("documents/uuid/{uuid}")
     fun UUIDInfo(@Path("uuid") uuid: String): Observable<Document>

@@ -2,9 +2,12 @@ package ru.wutiarn.edustor.android.presenter
 
 import android.os.Bundle
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Document
+import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.events.NewDocumentQrCodeScanned
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonView
@@ -18,20 +21,28 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
     var view: LessonView? = null
     var subscriptions: CompositeSubscription = CompositeSubscription()
 
+    var isSecondary: Boolean = false // true if located in bottom panel
     var uuid: String? = null
     var lessonId: String? = null
 
+    var lesson: Lesson? = null
+
     init {
+        isSecondary = arguments.getBoolean("isSecondary")
         uuid = arguments.getString("uuid")
         lessonId = arguments.getString("id")
     }
 
     override fun detachView(p0: Boolean) {
+        if (isSecondary)
+            appComponent.eventBus.unregister(this)
         subscriptions.clear()
         view = null
     }
 
     override fun attachView(p0: LessonView?) {
+        if (isSecondary)
+            appComponent.eventBus.register(this)
         view = p0
     }
 
@@ -40,21 +51,38 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
             uuid != null -> {
                 subscriptions.add(
                         appComponent.lessonsApi.byUUID(uuid!!)
-                                .linkToLCEView(view))
+                                .linkToLCEView(view, { lesson = it })
+                )
             }
             lessonId == "current" -> {
                 subscriptions.add(
                         appComponent.lessonsApi.current()
-                                .linkToLCEView(view)
+                                .linkToLCEView(view, { lesson = it })
                 )
             }
             lessonId != null -> {
                 subscriptions.add(
                         appComponent.lessonsApi.byId(lessonId!!)
-                                .linkToLCEView(view)
+                                .linkToLCEView(view, { lesson = it })
                 )
             }
         }
+    }
+
+    @Subscribe fun onQrCodeScanned(event: NewDocumentQrCodeScanned) {
+        val uuid = event.string
+
+        val lid = lesson?.id ?: lessonId
+
+        if (lid == null) {
+            view?.makeSnackbar("Error: lesson id is not found"); return
+        }
+
+        appComponent.documentsApi.activateUUID(uuid, lid).configureAsync().subscribe({
+            view?.makeSnackbar("Done! ID: ${it.id}")
+        }, {
+            view?.makeSnackbar("Error: ${it.message}")
+        })
     }
 
     override fun onDocumentRemoved(document: Document) {
