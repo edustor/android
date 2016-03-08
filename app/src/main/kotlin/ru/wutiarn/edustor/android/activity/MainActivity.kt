@@ -133,6 +133,10 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
     }
 
     fun setFabsShown(shown: Boolean) {
-        fabs_container.visibility = if (shown) View.VISIBLE else View.GONE
+        if (shown) {
+            scan_exists.show()
+        } else {
+            scan_exists.hide()
+        }
     }
 }
