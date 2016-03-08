@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
+import eu.davidea.flexibleadapter.FlexibleAdapter
 import kotlinx.android.synthetic.main.fragment_lesson.*
 import kotlinx.android.synthetic.main.lesson_info.*
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
-import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
+import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
 import ru.wutiarn.edustor.android.view.LessonView
@@ -21,7 +22,7 @@ import ru.wutiarn.edustor.android.view.LessonView
 
 class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPresenter>(), LessonView {
 
-    lateinit var documentsAdapter: DocumentsAdapter
+    lateinit var documentsAdapter: FlexibleAdapter<Document>
 
 
     override fun createPresenter(): LessonPresenter? {
@@ -42,7 +43,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
         start_time.text = lesson?.start?.format(DateTimeFormatter.ISO_LOCAL_TIME)
         end_time.text = lesson?.end?.format(DateTimeFormatter.ISO_LOCAL_TIME)
 
-        documentsAdapter.documents = lesson?.documents ?: mutableListOf()
+        documentsAdapter.updateDataSet(lesson?.documents ?: emptyList())
 
         showContent()
     }
@@ -62,7 +63,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
 
     fun configureRecyclerView() {
         documents_recycler_view.layoutManager = LinearLayoutManager(this.context)
-        documentsAdapter = DocumentsAdapter()
+        documentsAdapter = FlexibleAdapter<Document>(emptyList())
         documents_recycler_view.adapter = documentsAdapter
 
         val header = RecyclerViewHeader.fromXml(context, R.layout.lesson_info)
