@@ -14,6 +14,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
+import com.squareup.otto.Bus
 import kotlinx.android.synthetic.main.fragment_lesson.*
 import kotlinx.android.synthetic.main.lesson_info.*
 import org.threeten.bp.format.DateTimeFormatter
@@ -27,12 +28,14 @@ import ru.wutiarn.edustor.android.view.LessonView
 
 class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPresenter>(), LessonView {
 
+    val bus = Bus()
+
     lateinit var documentsAdapter: DocumentsAdapter
     lateinit var wrappedDocumentsAdapter: RecyclerView.Adapter<*>
 
     override fun createPresenter(): LessonPresenter? {
         val application = context.applicationContext as Application
-        return LessonPresenter(application.appComponent, arguments)
+        return LessonPresenter(application.appComponent, arguments, bus)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,7 +70,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
     }
 
     fun configureRecyclerView() {
-        documentsAdapter = DocumentsAdapter()
+        documentsAdapter = DocumentsAdapter(bus = bus)
 
         val recyclerViewTouchActionGuardManager = RecyclerViewTouchActionGuardManager()
         recyclerViewTouchActionGuardManager.setInterceptVerticalScrollingWhileAnimationRunning(true)

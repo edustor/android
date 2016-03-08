@@ -11,17 +11,20 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableSwipeableItemViewHolder
+import com.squareup.otto.Bus
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.data.models.Document
+import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 
 /**
  * Created by wutiarn on 07.03.16.
  */
-class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf()) : RecyclerView.Adapter<DocumentViewHolder>(),
+class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf(), val bus: Bus) : RecyclerView.Adapter<DocumentViewHolder>(),
         DraggableItemAdapter<DocumentViewHolder>,
         SwipeableItemAdapter<DocumentViewHolder> {
 
@@ -77,8 +80,19 @@ class DocumentsAdapter(var documents: MutableList<Document> = mutableListOf()) :
     }
 
     override fun onSwipeItem(holder: DocumentViewHolder?, position: Int, result: Int): SwipeResultAction? {
-        Log.d(TAG, "onSwipeItem(position = $position, result = $result)")
-        return null
+
+        when (result) {
+            SwipeableItemConstants.RESULT_SWIPED_LEFT -> {
+                return object : SwipeResultActionRemoveItem() {
+                    override fun onSlideAnimationEnd() {
+                        bus.post(DocumentRemovedEvent(documents[position]))
+                    }
+                }
+            }
+            else -> {
+                return null
+            }
+        }
     }
 }
 
