@@ -21,13 +21,6 @@ import javax.inject.Named
 open class RetrofitModule {
     @Provides
     @AppScope
-    @Named("API_URL")
-    open fun url(): String {
-        return "http://192.168.10.3:8080/api/"
-    }
-
-    @Provides
-    @AppScope
     open fun httpClient(): OkHttpClient {
         return OkHttpClient.Builder()
                 .addInterceptor {
