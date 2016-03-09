@@ -14,6 +14,6 @@ open class BuildTypeConfigModule {
     @AppScope
     @Named("API_URL")
     open fun url(): String {
-        return "http://wutiarn.ru/api/"
+        return "http://wutiarn.ru:8080/api/"
     }
 }
