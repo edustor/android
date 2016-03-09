@@ -19,14 +19,26 @@ import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Document
+import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.events.DocumentMovedEvent
 import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
+import ru.wutiarn.edustor.android.util.extension.configureAsync
 
 /**
  * Created by wutiarn on 07.03.16.
  */
-class DocumentsAdapter(val listener: EventListener, val appComponent: AppComponent, var documents: MutableList<Document> = mutableListOf()) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
+class DocumentsAdapter(val listener: EventListener, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
         DraggableItemAdapter<DocumentsAdapter.DocumentViewHolder>,
         SwipeableItemAdapter<DocumentsAdapter.DocumentViewHolder> {
+
+    var lesson: Lesson? = null
+        set(value) {
+            field = value; documents = lesson?.documents ?: mutableListOf()
+        }
+
+    private var documents: MutableList<Document> = mutableListOf()
+
 
     init {
         setHasStableIds(true)
@@ -56,7 +68,21 @@ class DocumentsAdapter(val listener: EventListener, val appComponent: AppCompone
 
     override fun onMoveItem(fromPosition: Int, toPosition: Int) {
         Log.d(TAG, "onMoveItem(fromPosition = $fromPosition, toPosition = $toPosition)")
-        notifyItemMoved(fromPosition, toPosition)
+        val document = documents[fromPosition]
+        val after: Document?
+
+        if (fromPosition > toPosition)
+            after = if (toPosition > 0) documents[toPosition - 1] else null
+        else
+            after = documents[toPosition]
+
+        appComponent.eventBus.post(DocumentMovedEvent(lesson!!, document, after, fromPosition, toPosition))
+
+        appComponent.lessonsApi.reorderDocuments(lesson?.id!!, document.id!!, after?.id)
+                .configureAsync().subscribe(
+                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
+                { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
+        )
     }
 
     override fun onGetItemDraggableRange(p0: DocumentViewHolder?, p1: Int): ItemDraggableRange? {

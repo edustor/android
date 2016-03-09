@@ -1,7 +1,6 @@
 package ru.wutiarn.edustor.android.fragment
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -23,6 +22,8 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.events.DocumentChangedEvent
+import ru.wutiarn.edustor.android.events.DocumentMovedEvent
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
 import ru.wutiarn.edustor.android.view.LessonView
 
@@ -30,12 +31,6 @@ import ru.wutiarn.edustor.android.view.LessonView
 class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPresenter>(), LessonView {
 
     lateinit var appComponent: AppComponent
-
-    override fun makeSnackbar(msg: String) {
-        view?.let {
-            Snackbar.make(view!!, msg, Snackbar.LENGTH_LONG).show()
-        }
-    }
 
     lateinit var documentsAdapter: DocumentsAdapter
     lateinit var wrappedDocumentsAdapter: RecyclerView.Adapter<*>
@@ -59,7 +54,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
         start_time.text = lesson?.start?.format(DateTimeFormatter.ISO_LOCAL_TIME)
         end_time.text = lesson?.end?.format(DateTimeFormatter.ISO_LOCAL_TIME)
 
-        documentsAdapter.documents = lesson?.documents ?: mutableListOf()
+        documentsAdapter.lesson = lesson
 
         showContent()
     }
@@ -111,5 +106,17 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
 
         //        val header = RecyclerViewHeader.fromXml(context, R.layout.lesson_info)
         //        header.attachTo(documents_recycler_view)
+    }
+
+    override fun notifyDocumentsUpdated(event: DocumentChangedEvent) {
+        val adapter = this.documentsAdapter
+        when (event) {
+            is DocumentMovedEvent -> {
+                adapter.notifyItemMoved(event.fromPos, event.toPos)
+            }
+            else -> {
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 }

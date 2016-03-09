@@ -6,6 +6,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.NewDocumentQrCodeScanned
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonFragment
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.view.MainActivityView
@@ -40,9 +41,9 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
 
     fun activateUUID(uuid: String) {
         appComponent.documentsApi.activateUUID(uuid).configureAsync().subscribe({
-            view?.makeSnackbar("Done! ID: ${it.id}")
+            appComponent.eventBus.post(RequestSnackbarEvent("Done! ID: ${it.id}"))
         }, {
-            view?.makeSnackbar("Error: ${it.message}")
+            appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
         })
     }
 
@@ -57,7 +58,7 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
                 showLessonInfo(result)
             }
             ScanRequestType.NEW -> {
-                view?.makeSnackbar("Activating $result")
+                appComponent.eventBus.post(RequestSnackbarEvent("Activating $result"))
 
                 if (view?.isBottomPanelOpened() ?: false) {
                     appComponent.eventBus.post(NewDocumentQrCodeScanned(result))

@@ -10,22 +10,28 @@ import android.view.View
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonFragment
 import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
 class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), MainActivityView {
+    lateinit var appComponent: AppComponent
     var currentSlidingPanelFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val application = applicationContext as Application
+        appComponent = application.appComponent
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
 
         configureFabs()
         configureSlidingPanel()
@@ -42,8 +48,7 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
     }
 
     override fun createPresenter(): MainActivityPresenter {
-        val application = applicationContext as Application
-        return MainActivityPresenter(application.appComponent)
+        return MainActivityPresenter(appComponent)
     }
 
 
@@ -93,8 +98,8 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         setFabsShown(true)
     }
 
-    override fun makeSnackbar(string: String) {
-        Snackbar.make(container, string, Snackbar.LENGTH_LONG).show()
+    @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
+        Snackbar.make(container, event.message, event.length).show()
     }
 
     override fun isBottomPanelOpened(): Boolean {
@@ -142,5 +147,16 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         } else {
             scan_exists.hide()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        appComponent.eventBus.register(this)
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appComponent.eventBus.unregister(this)
     }
 }

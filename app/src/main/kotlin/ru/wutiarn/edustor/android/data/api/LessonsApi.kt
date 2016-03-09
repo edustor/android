@@ -1,8 +1,7 @@
 package ru.wutiarn.edustor.android.data.api
 
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import okhttp3.ResponseBody
+import retrofit2.http.*
 import ru.wutiarn.edustor.android.data.models.Lesson
 import rx.Observable
 import java.util.*
@@ -20,4 +19,8 @@ interface LessonsApi {
 
     @GET("lessons/{id}")
     fun byId(@Query("id") id: String): Observable<Lesson>
+
+    @FormUrlEncoded
+    @POST("lessons/{lesson}/documents/reorder")
+    fun reorderDocuments(@Path("lesson") lesson: String, @Field("document") document: String, @Field("after") after: String?): Observable<ResponseBody>
 }
