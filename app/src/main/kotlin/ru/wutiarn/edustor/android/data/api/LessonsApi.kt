@@ -23,4 +23,8 @@ interface LessonsApi {
     @FormUrlEncoded
     @POST("lessons/{lesson}/documents/reorder")
     fun reorderDocuments(@Path("lesson") lesson: String, @Field("document") document: String, @Field("after") after: String?): Observable<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("lessons/{lesson}/topic")
+    fun setTopic(@Path("lesson") lesson: String, @Field("topic") topic: String): Observable<ResponseBody>
 }

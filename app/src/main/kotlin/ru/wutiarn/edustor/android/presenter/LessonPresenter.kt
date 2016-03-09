@@ -66,6 +66,18 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
         }
     }
 
+    fun setTopic(topic: String) {
+        lesson?.let {
+            lesson?.topic = topic
+            appComponent.lessonsApi.setTopic(lesson?.id!!, topic)
+                    .configureAsync()
+                    .subscribe(
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed")) },
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }
+                    )
+        }
+    }
+
     @Subscribe fun onQrCodeScanned(event: NewDocumentQrCodeScanned) {
         if (isSecondary == event.shouldBeHandledBySecondaryFragment) {
             val uuid = event.string

@@ -46,6 +46,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureRecyclerView()
+        topic_save_button.setOnClickListener { presenter.setTopic(topic.text.toString()) }
         loadData(false)
     }
 
@@ -53,6 +54,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
 
         subject.text = lesson?.subject?.name
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        topic.setText(lesson?.topic)
 
         documentsAdapter.lesson = lesson
 
