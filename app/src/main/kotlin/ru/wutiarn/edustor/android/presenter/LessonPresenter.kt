@@ -5,10 +5,7 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.events.DocumentMovedEvent
-import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
-import ru.wutiarn.edustor.android.events.NewDocumentQrCodeScanned
-import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
+import ru.wutiarn.edustor.android.events.*
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonView
@@ -70,17 +67,16 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
     }
 
     @Subscribe fun onQrCodeScanned(event: NewDocumentQrCodeScanned) {
-        if (isSecondary) {
+        if (isSecondary == event.shouldBeHandledBySecondaryFragment) {
             val uuid = event.string
 
-            val lid = lesson?.id ?: lessonId
-
-            if (lid == null) {
+            if (lesson == null) {
                 appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return
             }
 
-            appComponent.documentsApi.activateUUID(uuid, lid).configureAsync().subscribe({
-                appComponent.eventBus.post(RequestSnackbarEvent("Done! ID: ${it.id}"))
+            appComponent.documentsApi.activateUUID(uuid, lesson?.id!!).configureAsync().subscribe({
+                appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
+                appComponent.eventBus.post(DocumentAddedEvent(lesson!!, document = it))
             }, {
                 appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
             })
@@ -94,7 +90,7 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
                 documents.remove(event.document)
                 val targetIndex = if (event.after != null) documents.indexOf(event.after) + 1 else 0
                 documents.add(targetIndex, event.document)
-                view?.notifyDocumentsUpdated(event)
+                view?.notifyDocumentsChanged(event)
             }
         }
     }
@@ -103,8 +99,13 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
         lesson?.let {
             val removed = lesson?.documents?.remove(event.document)
             if (removed == true) {
-                view?.notifyDocumentsUpdated(event)
+                view?.notifyDocumentsChanged(event)
             }
         }
+    }
+
+    @Subscribe fun onDocumentAdded(event: DocumentAddedEvent) {
+        lesson?.documents?.add(event.document.copy())
+        view?.notifyDocumentsChanged(event.copy(insertedPosition = lesson?.documents?.lastIndex!!))
     }
 }

@@ -22,6 +22,7 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.events.DocumentAddedEvent
 import ru.wutiarn.edustor.android.events.DocumentChangedEvent
 import ru.wutiarn.edustor.android.events.DocumentMovedEvent
 import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
@@ -52,8 +53,6 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
 
         subject.text = lesson?.subject?.name
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
-        start_time.text = lesson?.start?.format(DateTimeFormatter.ISO_LOCAL_TIME)
-        end_time.text = lesson?.end?.format(DateTimeFormatter.ISO_LOCAL_TIME)
 
         documentsAdapter.lesson = lesson
 
@@ -109,7 +108,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
         //        header.attachTo(documents_recycler_view)
     }
 
-    override fun notifyDocumentsUpdated(event: DocumentChangedEvent) {
+    override fun notifyDocumentsChanged(event: DocumentChangedEvent) {
         val adapter = this.documentsAdapter
         when (event) {
             is DocumentMovedEvent -> {
@@ -117,6 +116,9 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
             }
             is DocumentRemovedEvent -> {
                 adapter.notifyItemRemoved(event.position)
+            }
+            is DocumentAddedEvent -> {
+                adapter.notifyItemInserted(event.insertedPosition)
             }
             else -> {
                 adapter.notifyDataSetChanged()

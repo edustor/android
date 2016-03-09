@@ -60,12 +60,8 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
             ScanRequestType.NEW -> {
                 appComponent.eventBus.post(RequestSnackbarEvent("Activating $result"))
 
-                if (view?.isBottomPanelOpened() ?: false) {
-                    appComponent.eventBus.post(NewDocumentQrCodeScanned(result))
-                    return
-                }
-
-                activateUUID(result)
+                val shouldBeHandledBySecondaryFragment = view?.isBottomPanelOpened() ?: false
+                appComponent.eventBus.post(NewDocumentQrCodeScanned(result, shouldBeHandledBySecondaryFragment))
             }
         }
     }

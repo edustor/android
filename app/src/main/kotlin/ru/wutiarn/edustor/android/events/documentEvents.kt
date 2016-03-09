@@ -6,6 +6,12 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 /**
  * Created by wutiarn on 08.03.16.
  */
+
+/**
+ * Broadcasted when there is open bottom panel with lesson fragment
+ */
+data class NewDocumentQrCodeScanned(val string: String, val shouldBeHandledBySecondaryFragment: Boolean)
+
 interface DocumentChangedEvent
 
 data class DocumentRemovedEvent(val document: Document, val position: Int) : DocumentChangedEvent
@@ -17,7 +23,4 @@ data class DocumentMovedEvent(val lesson: Lesson,
                               val toPos: Int
 ) : DocumentChangedEvent
 
-/**
- * Broadcasted when there is open bottom panel with lesson fragment
- */
-data class NewDocumentQrCodeScanned(val string: String)
+data class DocumentAddedEvent(val lesson: Lesson, val document: Document, val insertedPosition: Int = -1) : DocumentChangedEvent
