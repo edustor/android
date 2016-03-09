@@ -8,7 +8,7 @@ import ru.wutiarn.edustor.android.data.models.Lesson
  */
 interface DocumentChangedEvent
 
-data class DocumentRemovedEvent(val document: Document) : DocumentChangedEvent
+data class DocumentRemovedEvent(val document: Document, val position: Int) : DocumentChangedEvent
 
 data class DocumentMovedEvent(val lesson: Lesson,
                               val document: Document,

@@ -4,10 +4,9 @@ import android.os.Bundle
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
-import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.DocumentMovedEvent
+import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.events.NewDocumentQrCodeScanned
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.configureAsync
@@ -18,7 +17,7 @@ import rx.subscriptions.CompositeSubscription
 /**
  * Created by wutiarn on 05.03.16.
  */
-class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonView>, DocumentsAdapter.EventListener {
+class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonView> {
 
     var view: LessonView? = null
     var subscriptions: CompositeSubscription = CompositeSubscription()
@@ -100,11 +99,12 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
         }
     }
 
-    override fun onDocumentRemoved(document: Document) {
-        appComponent.documentsApi.delete(document.id!!)
-                .configureAsync().subscribe(
-                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: ${document.shortUUID}")) },
-                { appComponent.eventBus.post(RequestSnackbarEvent("Error removing ${document.shortUUID}: ${it.message}")) }
-        )
+    @Subscribe fun onDocumentRemoved(event: DocumentRemovedEvent) {
+        lesson?.let {
+            val removed = lesson?.documents?.remove(event.document)
+            if (removed == true) {
+                view?.notifyDocumentsUpdated(event)
+            }
+        }
     }
 }

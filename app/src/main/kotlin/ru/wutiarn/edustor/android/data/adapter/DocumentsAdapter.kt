@@ -28,7 +28,7 @@ import ru.wutiarn.edustor.android.util.extension.configureAsync
 /**
  * Created by wutiarn on 07.03.16.
  */
-class DocumentsAdapter(val listener: EventListener, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
+class DocumentsAdapter(val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
         DraggableItemAdapter<DocumentsAdapter.DocumentViewHolder>,
         SwipeableItemAdapter<DocumentsAdapter.DocumentViewHolder> {
 
@@ -112,9 +112,12 @@ class DocumentsAdapter(val listener: EventListener, val appComponent: AppCompone
                     override fun onPerformAction() {
                         val document = documents[position]
                         documents.removeAt(position)
-                        notifyItemRemoved(position)
-                        listener.onDocumentRemoved(document)
-                        appComponent.eventBus.post(DocumentRemovedEvent(document))
+                        appComponent.documentsApi.delete(document.id!!)
+                                .configureAsync().subscribe(
+                                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: ${document.shortUUID}")) },
+                                { appComponent.eventBus.post(RequestSnackbarEvent("Error removing ${document.shortUUID}: ${it.message}")) }
+                        )
+                        appComponent.eventBus.post(DocumentRemovedEvent(document, position))
                     }
                 }
             }
@@ -139,10 +142,6 @@ class DocumentsAdapter(val listener: EventListener, val appComponent: AppCompone
         override fun getSwipeableContainerView(): View {
             return view
         }
-    }
-
-    interface EventListener {
-        fun onDocumentRemoved(document: Document)
     }
 
 }

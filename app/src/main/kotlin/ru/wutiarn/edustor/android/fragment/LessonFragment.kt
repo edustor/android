@@ -24,6 +24,7 @@ import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.DocumentChangedEvent
 import ru.wutiarn.edustor.android.events.DocumentMovedEvent
+import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
 import ru.wutiarn.edustor.android.view.LessonView
 
@@ -73,7 +74,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
     }
 
     fun configureRecyclerView() {
-        documentsAdapter = DocumentsAdapter(presenter, appComponent)
+        documentsAdapter = DocumentsAdapter(appComponent)
 
         val recyclerViewTouchActionGuardManager = RecyclerViewTouchActionGuardManager()
         recyclerViewTouchActionGuardManager.setInterceptVerticalScrollingWhileAnimationRunning(true)
@@ -113,6 +114,9 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
         when (event) {
             is DocumentMovedEvent -> {
                 adapter.notifyItemMoved(event.fromPos, event.toPos)
+            }
+            is DocumentRemovedEvent -> {
+                adapter.notifyItemRemoved(event.position)
             }
             else -> {
                 adapter.notifyDataSetChanged()
