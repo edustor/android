@@ -17,7 +17,7 @@ import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
+import ru.wutiarn.edustor.android.fragment.LessonsListFragment
 import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
@@ -36,14 +36,16 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         configureFabs()
         configureSlidingPanel()
 
-        val fragmentArguments = Bundle()
-        fragmentArguments.putString("id", "current")
+        //        val fragmentArguments = Bundle()
+        //        fragmentArguments.putString("id", "current")
+        //
+        //        val lessonFragment = LessonDetailsFragment()
+        //        lessonFragment.arguments = fragmentArguments
 
-        val lessonFragment = LessonDetailsFragment()
-        lessonFragment.arguments = fragmentArguments
+        val lessonsListFragment = LessonsListFragment()
 
         supportFragmentManager.beginTransaction()
-                .add(R.id.main_container, lessonFragment)
+                .add(R.id.main_container, lessonsListFragment)
                 .commit()
     }
 

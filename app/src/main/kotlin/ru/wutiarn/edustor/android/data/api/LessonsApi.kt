@@ -17,6 +17,9 @@ interface LessonsApi {
     @GET("lessons/current")
     fun current(@Query("offset") offset: Int = TimeZone.getDefault().rawOffset / 3600000): Observable<Lesson>
 
+    @GET("lessons/today")
+    fun today(@Query("offset") offset: Int = TimeZone.getDefault().rawOffset / 3600000): Observable<List<Lesson>>
+
     @GET("lessons/{id}")
     fun byId(@Query("id") id: String): Observable<Lesson>
 

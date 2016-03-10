@@ -104,9 +104,6 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         recyclerViewDragDropManager.attachRecyclerView(documents_recycler_view)
 
         documents_recycler_view.addItemDecoration(SimpleListDividerDecorator(ContextCompat.getDrawable(context, R.drawable.list_divider_h), true))
-
-        //        val header = RecyclerViewHeader.fromXml(context, R.layout.lesson_info)
-        //        header.attachTo(documents_recycler_view)
     }
 
     override fun notifyDocumentsChanged(event: DocumentChangedEvent) {

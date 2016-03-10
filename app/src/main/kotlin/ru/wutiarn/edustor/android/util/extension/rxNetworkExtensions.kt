@@ -9,7 +9,7 @@ import rx.schedulers.Schedulers
 /**
  * Created by wutiarn on 06.03.16.
  */
-fun <T> Observable<T>.linkToLCEView(view: MvpLceView<T>?, resultCallback: ((T) -> Unit)?): Subscription {
+fun <T> Observable<T>.linkToLCEView(view: MvpLceView<T>?, resultCallback: ((T) -> Unit)? = null): Subscription {
     return this.configureAsync()
             .subscribe(
                     { view?.setData(it); resultCallback?.invoke(it) },
