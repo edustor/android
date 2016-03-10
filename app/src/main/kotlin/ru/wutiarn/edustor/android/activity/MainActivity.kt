@@ -3,16 +3,12 @@ package ru.wutiarn.edustor.android.activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpActivity
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
@@ -23,7 +19,6 @@ import ru.wutiarn.edustor.android.view.MainActivityView
 
 class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), MainActivityView {
     lateinit var appComponent: AppComponent
-    var currentSlidingPanelFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val application = applicationContext as Application
@@ -34,13 +29,6 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         setSupportActionBar(toolbar)
 
         configureFabs()
-        configureSlidingPanel()
-
-        //        val fragmentArguments = Bundle()
-        //        fragmentArguments.putString("id", "current")
-        //
-        //        val lessonFragment = LessonDetailsFragment()
-        //        lessonFragment.arguments = fragmentArguments
 
         val lessonsListFragment = LessonsListFragment()
 
@@ -80,32 +68,8 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         return super.onOptionsItemSelected(item)
     }
 
-
-    override fun showSlidingPanelFragment(fragment: Fragment) {
-        detachSlidingPanelFragment()
-        supportFragmentManager.beginTransaction()
-                .add(R.id.sliding_panel_container, fragment)
-                .commitAllowingStateLoss()
-        sliding_panel.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
-        currentSlidingPanelFragment = fragment
-        setFabsShown(false)
-    }
-
-    override fun detachSlidingPanelFragment() {
-        sliding_panel.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
-        currentSlidingPanelFragment?.let {
-            supportFragmentManager.beginTransaction().detach(it).commitAllowingStateLoss()
-            currentSlidingPanelFragment = null
-        }
-        setFabsShown(true)
-    }
-
     @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
         Snackbar.make(container, event.message, event.length).show()
-    }
-
-    override fun isBottomPanelOpened(): Boolean {
-        return currentSlidingPanelFragment != null
     }
 
     fun configureFabs() {
@@ -114,40 +78,6 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         }
         scan_new.setOnClickListener {
             presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.NEW)
-        }
-    }
-
-    fun configureSlidingPanel() {
-        sliding_panel.anchorPoint = 0.25f
-        sliding_panel.setPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
-            override fun onPanelExpanded(p0: View?) {
-            }
-
-            override fun onPanelSlide(p0: View?, p1: Float) {
-            }
-
-            override fun onPanelCollapsed(p0: View?) {
-                detachSlidingPanelFragment()
-            }
-
-            override fun onPanelHidden(p0: View?) {
-            }
-
-            override fun onPanelAnchored(p0: View?) {
-            }
-
-        })
-
-        main_container.setOnClickListener {
-            detachSlidingPanelFragment()
-        }
-    }
-
-    fun setFabsShown(shown: Boolean) {
-        if (shown) {
-            scan_exists.show()
-        } else {
-            scan_exists.hide()
         }
     }
 

@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.events.NewDocumentQrCodeScanned
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
 import ru.wutiarn.edustor.android.util.extension.configureAsync
@@ -33,10 +32,9 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
         val documentInfoFragment = LessonDetailsFragment()
         val fragmentBundle = Bundle()
         fragmentBundle.putString("uuid", uuid)
-        fragmentBundle.putBoolean("isSecondary", true)
-        documentInfoFragment.arguments = fragmentBundle
 
-        view?.showSlidingPanelFragment(documentInfoFragment)
+        //        TODO: New activity call
+
     }
 
     fun activateUUID(uuid: String) {
@@ -60,12 +58,7 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
             ScanRequestType.NEW -> {
                 appComponent.eventBus.post(RequestSnackbarEvent("Activating $result"))
 
-                val shouldBeHandledBySecondaryFragment = view?.isBottomPanelOpened() ?: false
-                if (shouldBeHandledBySecondaryFragment) {
-                    appComponent.eventBus.post(NewDocumentQrCodeScanned(result, shouldBeHandledBySecondaryFragment))
-                } else {
-                    activateUUID(result)
-                }
+                activateUUID(result)
 
             }
         }
