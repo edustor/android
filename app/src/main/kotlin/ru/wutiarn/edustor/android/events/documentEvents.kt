@@ -10,7 +10,7 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 /**
  * Broadcasted when there is open bottom panel with lesson fragment
  */
-data class NewDocumentQrCodeScanned(val string: String, val shouldBeHandledBySecondaryFragment: Boolean)
+data class NewDocumentQrCodeScanned(val string: String)
 
 interface DocumentChangedEvent
 

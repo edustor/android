@@ -19,14 +19,12 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
     var view: LessonDetailsView? = null
     var subscriptions: CompositeSubscription = CompositeSubscription()
 
-    var isSecondary: Boolean = false // true if located in bottom panel
     var uuid: String? = null
     var lessonId: String? = null
 
     var lesson: Lesson? = null
 
     init {
-        isSecondary = arguments.getBoolean("isSecondary")
         uuid = arguments.getString("uuid")
         lessonId = arguments.getString("id")
     }
@@ -79,20 +77,18 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
     }
 
     @Subscribe fun onQrCodeScanned(event: NewDocumentQrCodeScanned) {
-        if (isSecondary == event.shouldBeHandledBySecondaryFragment) {
-            val uuid = event.string
+        val uuid = event.string
 
-            if (lesson == null) {
-                appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return
-            }
-
-            appComponent.documentsApi.activateUUID(uuid, lesson?.id!!).configureAsync().subscribe({
-                appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
-                appComponent.eventBus.post(DocumentAddedEvent(lesson!!, document = it))
-            }, {
-                appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
-            })
+        if (lesson == null) {
+            appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return
         }
+
+        appComponent.documentsApi.activateUUID(uuid, lesson?.id!!).configureAsync().subscribe({
+            appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
+            appComponent.eventBus.post(DocumentAddedEvent(lesson!!, document = it))
+        }, {
+            appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
+        })
     }
 
     @Subscribe fun onLessonDocumentMoved(event: DocumentMovedEvent) {

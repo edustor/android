@@ -8,7 +8,7 @@ import android.view.MenuItem
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.squareup.otto.Subscribe
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_base.*
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
@@ -25,7 +25,7 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         appComponent = application.appComponent
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
         configureFabs()
@@ -38,9 +38,14 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
     }
 
     override fun createPresenter(): MainActivityPresenter {
-        return MainActivityPresenter(appComponent)
+        return MainActivityPresenter(applicationContext, appComponent)
     }
 
+    override fun showLessonInfo(uuid: String) {
+        val intent = Intent(this, LessonDetailsActivity::class.java)
+        intent.putExtra("uuid", uuid)
+        startActivity(intent)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         IntentIntegrator.parseActivityResult(requestCode, resultCode, data)?.contents?.let {
