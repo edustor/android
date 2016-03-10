@@ -8,15 +8,15 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.*
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
-import ru.wutiarn.edustor.android.view.LessonView
+import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.subscriptions.CompositeSubscription
 
 /**
  * Created by wutiarn on 05.03.16.
  */
-class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonView> {
+class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
-    var view: LessonView? = null
+    var view: LessonDetailsView? = null
     var subscriptions: CompositeSubscription = CompositeSubscription()
 
     var isSecondary: Boolean = false // true if located in bottom panel
@@ -38,7 +38,7 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
         view = null
     }
 
-    override fun attachView(p0: LessonView?) {
+    override fun attachView(p0: LessonDetailsView?) {
         appComponent.eventBus.register(this)
         view = p0
     }

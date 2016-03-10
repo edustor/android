@@ -7,7 +7,7 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.NewDocumentQrCodeScanned
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.fragment.LessonFragment
+import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.view.MainActivityView
 import rx.subscriptions.CompositeSubscription
@@ -30,7 +30,7 @@ class MainActivityPresenter(val appComponent: AppComponent) : MvpPresenter<MainA
     }
 
     fun showLessonInfo(uuid: String) {
-        val documentInfoFragment = LessonFragment()
+        val documentInfoFragment = LessonDetailsFragment()
         val fragmentBundle = Bundle()
         fragmentBundle.putString("uuid", uuid)
         fragmentBundle.putBoolean("isSecondary", true)

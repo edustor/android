@@ -14,8 +14,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
-import kotlinx.android.synthetic.main.fragment_lesson.*
-import kotlinx.android.synthetic.main.lesson_info.*
+import kotlinx.android.synthetic.main.fragment_lesson_details.*
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
@@ -27,10 +26,10 @@ import ru.wutiarn.edustor.android.events.DocumentChangedEvent
 import ru.wutiarn.edustor.android.events.DocumentMovedEvent
 import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
-import ru.wutiarn.edustor.android.view.LessonView
+import ru.wutiarn.edustor.android.view.LessonDetailsView
 
 
-class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPresenter>(), LessonView {
+class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetailsView, LessonPresenter>(), LessonDetailsView {
 
     lateinit var appComponent: AppComponent
 
@@ -71,7 +70,7 @@ class LessonFragment : MvpLceFragment<LinearLayout, Lesson, LessonView, LessonPr
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_lesson, container, false)
+        return inflater?.inflate(R.layout.fragment_lesson_details, container, false)
     }
 
     fun configureRecyclerView() {

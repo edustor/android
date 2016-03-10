@@ -17,7 +17,7 @@ import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.fragment.LessonFragment
+import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
 import ru.wutiarn.edustor.android.presenter.MainActivityPresenter
 import ru.wutiarn.edustor.android.view.MainActivityView
 
@@ -39,7 +39,7 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         val fragmentArguments = Bundle()
         fragmentArguments.putString("id", "current")
 
-        val lessonFragment = LessonFragment()
+        val lessonFragment = LessonDetailsFragment()
         lessonFragment.arguments = fragmentArguments
 
         supportFragmentManager.beginTransaction()

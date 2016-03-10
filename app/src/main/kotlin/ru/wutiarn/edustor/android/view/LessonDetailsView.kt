@@ -7,6 +7,6 @@ import ru.wutiarn.edustor.android.events.DocumentChangedEvent
 /**
  * Created by wutiarn on 05.03.16.
  */
-interface LessonView : MvpLceView<Lesson> {
+interface LessonDetailsView : MvpLceView<Lesson> {
     fun notifyDocumentsChanged(event: DocumentChangedEvent)
 }
