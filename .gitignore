@@ -106,3 +106,4 @@ proguard/
 # Android Studio Navigation editor temp files
 .navigation/
 
+!gradle/wrapper/gradle-wrapper.jar
