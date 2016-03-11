@@ -1,5 +1,6 @@
 package ru.wutiarn.edustor.android.data.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,7 +29,7 @@ import ru.wutiarn.edustor.android.util.extension.configureAsync
 /**
  * Created by wutiarn on 07.03.16.
  */
-class DocumentsAdapter(val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
+class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
         DraggableItemAdapter<DocumentsAdapter.DocumentViewHolder>,
         SwipeableItemAdapter<DocumentsAdapter.DocumentViewHolder> {
 
@@ -50,8 +51,9 @@ class DocumentsAdapter(val appComponent: AppComponent) : RecyclerView.Adapter<Do
         holder.uuid.text = document.shortUUID
         holder.timestamp.text = LocalDateTime.ofInstant(document.timestamp, ZoneId.systemDefault())
                 .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        holder.isUploaded.setBackgroundColor(if (document.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded)
-
+        val colorResource = if (document.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded
+        val color = context.resources.getColor(colorResource, null)
+        holder.isUploaded.setBackgroundColor(color)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentViewHolder? {

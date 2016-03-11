@@ -74,7 +74,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     }
 
     fun configureRecyclerView() {
-        documentsAdapter = DocumentsAdapter(appComponent)
+        documentsAdapter = DocumentsAdapter(context, appComponent)
 
         val recyclerViewTouchActionGuardManager = RecyclerViewTouchActionGuardManager()
         recyclerViewTouchActionGuardManager.setInterceptVerticalScrollingWhileAnimationRunning(true)
