@@ -14,7 +14,7 @@ import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 /**
  * Created by wutiarn on 07.03.16.
  */
-class LessonsAdapter(val appComponent: AppComponent) : RecyclerView.Adapter<LessonsAdapter.LessonViewHolder>() {
+class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapterEventsListener) : RecyclerView.Adapter<LessonsAdapter.LessonViewHolder>() {
     var lessons: MutableList<Lesson> = mutableListOf()
 
 
@@ -45,6 +45,7 @@ class LessonsAdapter(val appComponent: AppComponent) : RecyclerView.Adapter<Less
 
         holder.view.setOnClickListener {
             appComponent.eventBus.post(RequestSnackbarEvent("Opening lesson ${lesson.subject?.name}"))
+            listener.onLessonClick(lesson)
         }
     }
 
@@ -61,6 +62,10 @@ class LessonsAdapter(val appComponent: AppComponent) : RecyclerView.Adapter<Less
         override fun getSwipeableContainerView(): View {
             return view
         }
+    }
+
+    interface LessonsAdapterEventsListener {
+        fun onLessonClick(lesson: Lesson)
     }
 
 }

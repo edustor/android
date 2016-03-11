@@ -20,8 +20,8 @@ interface LessonsApi {
     @GET("lessons/today")
     fun today(@Query("offset") offset: Int = TimeZone.getDefault().rawOffset / 3600000): Observable<List<Lesson>>
 
-    @GET("lessons/{id}")
-    fun byId(@Query("id") id: String): Observable<Lesson>
+    @GET("lessons/{lesson}")
+    fun byId(@Path("lesson") id: String): Observable<Lesson>
 
     @FormUrlEncoded
     @POST("lessons/{lesson}/documents/reorder")

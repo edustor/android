@@ -26,6 +26,9 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
 
         val uuid = intent.getStringExtra("uuid")
         lessonBundle.putString("uuid", uuid)
+
+        val id = intent.getStringExtra("id")
+        lessonBundle.putString("id", id)
         lessonDetailsFragment.arguments = lessonBundle
 
 

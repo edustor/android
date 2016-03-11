@@ -1,5 +1,6 @@
 package ru.wutiarn.edustor.android.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_lessons_list.*
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.activity.LessonDetailsActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.LessonsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
@@ -19,7 +21,7 @@ import ru.wutiarn.edustor.android.view.LessonsListView
 /**
  * Created by wutiarn on 10.03.16.
  */
-class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, LessonsListView, LessonListPresenter>(), LessonsListView {
+class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, LessonsListView, LessonListPresenter>(), LessonsListView, LessonsAdapter.LessonsAdapterEventsListener {
     lateinit var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter
 
@@ -54,8 +56,14 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
         showContent()
     }
 
+    override fun onLessonClick(lesson: Lesson) {
+        val intent = Intent(context, LessonDetailsActivity::class.java)
+        intent.putExtra("id", lesson.id)
+        startActivity(intent)
+    }
+
     fun configureRecyclerView() {
-        lessonsAdapter = LessonsAdapter(appComponent)
+        lessonsAdapter = LessonsAdapter(appComponent, this)
         lessons_recycler_view.layoutManager = LinearLayoutManager(context)
         lessons_recycler_view.adapter = lessonsAdapter
     }
