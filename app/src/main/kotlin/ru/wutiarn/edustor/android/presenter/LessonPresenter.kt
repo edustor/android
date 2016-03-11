@@ -5,7 +5,10 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.events.*
+import ru.wutiarn.edustor.android.events.DocumentAddedEvent
+import ru.wutiarn.edustor.android.events.DocumentMovedEvent
+import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonDetailsView
@@ -76,8 +79,7 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
         }
     }
 
-    @Subscribe fun onQrCodeScanned(event: NewDocumentQrCodeScanned) {
-        val uuid = event.string
+    fun onQrCodeScanned(uuid: String) {
 
         if (lesson == null) {
             appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return

@@ -24,6 +24,6 @@ class LessonDetailsActivityPresenter() : MvpPresenter<LessonDetailsActivityView>
     }
 
     fun processQrScanResult(result: String) {
-
+        view?.fragmentPresenter?.onQrCodeScanned(result)
     }
 }
