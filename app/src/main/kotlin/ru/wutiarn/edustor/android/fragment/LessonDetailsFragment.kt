@@ -1,5 +1,7 @@
 package ru.wutiarn.edustor.android.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -54,6 +56,12 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         subject.text = lesson?.subject?.name
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         topic.setText(lesson?.topic)
+
+        getPdf.setOnClickListener {
+            val uri = Uri.parse("http://wutiarn.ru/pdf/${lesson?.id}.pdf")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+        }
 
         documentsAdapter.lesson = lesson
 
