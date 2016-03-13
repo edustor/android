@@ -36,6 +36,12 @@
             android:label="Subjects"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.LessonsListActivity"
+            android:label="Lessons"
+            android:parentActivityName=".activity.SubjectsListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

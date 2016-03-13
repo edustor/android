@@ -28,7 +28,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
     override fun createPresenter(): LessonListPresenter? {
         val application = context.applicationContext as Application
         appComponent = application.appComponent
-        return LessonListPresenter(appComponent)
+        return LessonListPresenter(appComponent, arguments)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

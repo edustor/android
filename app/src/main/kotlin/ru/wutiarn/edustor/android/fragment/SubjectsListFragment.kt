@@ -1,5 +1,6 @@
 package ru.wutiarn.edustor.android.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.activity.LessonsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.SubjectsAdapter
 import ru.wutiarn.edustor.android.data.models.Subject
@@ -61,6 +63,8 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
     }
 
     override fun onSubjectClick(subject: Subject) {
-
+        val intent = Intent(context, LessonsListActivity::class.java)
+        intent.putExtra("subject_id", subject.id)
+        startActivity(intent)
     }
 }
