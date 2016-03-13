@@ -51,6 +51,12 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         holder.uuid.text = document.shortUUID
         holder.timestamp.text = LocalDateTime.ofInstant(document.timestamp, ZoneId.systemDefault())
                 .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        document.uploadedTimestamp?.let {
+            holder.uploadedTimestamp.text = LocalDateTime.ofInstant(document.uploadedTimestamp, ZoneId.systemDefault())
+                    .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        }
+
         val colorResource = if (document.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded
         val color = context.resources.getColor(colorResource, null)
         holder.isUploaded.setBackgroundColor(color)
@@ -133,11 +139,13 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
 
         lateinit var uuid: TextView
         lateinit var timestamp: TextView
+        lateinit var uploadedTimestamp: TextView
         lateinit var isUploaded: View
 
         init {
             uuid = view.findViewById(R.id.uuid) as TextView
-            timestamp = view.findViewById(R.id.uploaded_timestamp) as TextView
+            timestamp = view.findViewById(R.id.scanned_timestamp) as TextView
+            uploadedTimestamp = view.findViewById(R.id.uploaded_timestamp) as TextView
             isUploaded = view.findViewById(R.id.is_uploaded)
         }
 
