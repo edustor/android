@@ -38,10 +38,10 @@ open class RetrofitModule {
 
     @Provides
     @AppScope
-    fun retrofitClient(objectMapper: ObjectMapper, client: OkHttpClient, @Named("API_URL") url: String): Retrofit {
+    fun retrofitClient(objectMapper: ObjectMapper, client: OkHttpClient, @Named("EDUSTOR_URL") url: String): Retrofit {
         return Retrofit.Builder()
                 .client(client)
-                .baseUrl(url)
+                .baseUrl(url + "api/")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .build()

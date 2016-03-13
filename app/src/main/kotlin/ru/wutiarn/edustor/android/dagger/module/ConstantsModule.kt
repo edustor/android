@@ -6,14 +6,17 @@ import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import javax.inject.Named
 
 /**
- * Created by wutiarn on 09.03.16.
+ * Created by wutiarn on 13.03.16.
  */
 @Module
-open class BuildTypeConfigModule {
+class ConstantsModule {
     @Provides
     @AppScope
-    @Named("EDUSTOR_URL")
-    open fun url(): String {
-        return "http://192.168.10.3:8080/"
+    fun edustorConstants(@Named("EDUSTOR_URL") url: String): EdustorConstants {
+        return EdustorConstants(url)
     }
 }
+
+class EdustorConstants(
+        var URL: String
+)

@@ -12,8 +12,8 @@ import javax.inject.Named
 open class BuildTypeConfigModule {
     @Provides
     @AppScope
-    @Named("API_URL")
+    @Named("EDUSTOR_URL")
     open fun url(): String {
-        return "http://wutiarn.ru:8080/api/"
+        return "http://wutiarn.ru:8080/"
     }
 }
