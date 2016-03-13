@@ -1,6 +1,5 @@
 package ru.wutiarn.edustor.android.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -11,24 +10,23 @@ import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
-import ru.wutiarn.edustor.android.activity.LessonDetailsActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.adapter.LessonsAdapter
-import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.presenter.LessonListPresenter
-import ru.wutiarn.edustor.android.view.LessonsListView
+import ru.wutiarn.edustor.android.data.adapter.SubjectsAdapter
+import ru.wutiarn.edustor.android.data.models.Subject
+import ru.wutiarn.edustor.android.presenter.SubjectListPresenter
+import ru.wutiarn.edustor.android.view.SubjectsListView
 
 /**
- * Created by wutiarn on 10.03.16.
+ * Created by wutiarn on 13.03.16.
  */
-class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, LessonsListView, LessonListPresenter>(), LessonsListView, LessonsAdapter.LessonsAdapterEventsListener {
+class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, SubjectsListView, SubjectListPresenter>(), SubjectsListView, SubjectsAdapter.SubjectsAdapterEventsListener {
     lateinit var appComponent: AppComponent
-    lateinit var lessonsAdapter: LessonsAdapter
+    lateinit var adapter: SubjectsAdapter
 
-    override fun createPresenter(): LessonListPresenter? {
+    override fun createPresenter(): SubjectListPresenter? {
         val application = context.applicationContext as Application
         appComponent = application.appComponent
-        return LessonListPresenter(appComponent)
+        return SubjectListPresenter(appComponent)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,20 +49,18 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
         presenter.loadData()
     }
 
-    override fun setData(lessons: MutableList<Lesson>?) {
-        lessonsAdapter.lessons = lessons ?: mutableListOf()
+    override fun setData(lessons: List<Subject>?) {
+        adapter.subjects = lessons ?: emptyList()
         showContent()
     }
 
-    override fun onLessonClick(lesson: Lesson) {
-        val intent = Intent(context, LessonDetailsActivity::class.java)
-        intent.putExtra("id", lesson.id)
-        startActivity(intent)
+    fun configureRecyclerView() {
+        adapter = SubjectsAdapter(appComponent, this)
+        base_recycler_view.layoutManager = LinearLayoutManager(context)
+        base_recycler_view.adapter = adapter
     }
 
-    fun configureRecyclerView() {
-        lessonsAdapter = LessonsAdapter(appComponent, this)
-        base_recycler_view.layoutManager = LinearLayoutManager(context)
-        base_recycler_view.adapter = lessonsAdapter
+    override fun onSubjectClick(subject: Subject) {
+
     }
 }

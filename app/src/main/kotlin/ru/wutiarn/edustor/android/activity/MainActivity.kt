@@ -89,6 +89,10 @@ class MainActivity : MvpActivity<MainActivityView, MainActivityPresenter>(), Mai
         fab_scan_new.setOnClickListener {
             presenter.requestQrScan(this, MainActivityPresenter.ScanRequestType.NEW)
         }
+        fab_lessons.setOnClickListener {
+            val intent = Intent(baseContext, SubjectsListActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onStart() {

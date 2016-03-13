@@ -8,6 +8,7 @@ import ru.wutiarn.edustor.android.dagger.module.EventBusModule
 import ru.wutiarn.edustor.android.dagger.module.RetrofitModule
 import ru.wutiarn.edustor.android.data.api.DocumentsApi
 import ru.wutiarn.edustor.android.data.api.LessonsApi
+import ru.wutiarn.edustor.android.data.api.SubjectsApi
 
 /**
  * Created by wutiarn on 03.03.16.
@@ -15,7 +16,8 @@ import ru.wutiarn.edustor.android.data.api.LessonsApi
 @Component(modules = arrayOf(RetrofitModule::class, EventBusModule::class, BuildTypeConfigModule::class))
 @AppScope
 interface AppComponent {
-    var documentsApi: DocumentsApi
-    var lessonsApi: LessonsApi
-    var eventBus: Bus
+    val documentsApi: DocumentsApi
+    val lessonsApi: LessonsApi
+    val subjectsApi: SubjectsApi
+    val eventBus: Bus
 }

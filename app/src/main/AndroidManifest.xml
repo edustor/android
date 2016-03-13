@@ -3,6 +3,7 @@
     package="ru.wutiarn.edustor.android"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -27,6 +28,12 @@
         <activity
             android:name=".activity.LessonDetailsActivity"
             android:label="Lesson details"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.SubjectsListActivity"
+            android:label="Subjects"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
