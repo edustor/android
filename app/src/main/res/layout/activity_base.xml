@@ -51,21 +51,19 @@
         android:orientation="vertical">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/scan_exists"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
+            android:id="@+id/fab_lessons"
+            style="@style/floatingActionButtonStyle"
+            android:src="@drawable/ic_history_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_scan_exists"
+            style="@style/floatingActionButtonStyle"
             android:src="@drawable/ic_search_white_24dp" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/scan_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginLeft="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:layout_marginTop="0dp"
-            android:src="@drawable/ic_scan_qr" />
+            android:id="@+id/fab_scan_new"
+            style="@style/floatingActionButtonStyle"
+            android:src="@drawable/ic_note_add_white_24dp" />
     </LinearLayout>
 
 

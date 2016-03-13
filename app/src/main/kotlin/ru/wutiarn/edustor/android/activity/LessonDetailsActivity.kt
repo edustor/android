@@ -33,7 +33,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
-        scan_exists.visibility = View.GONE
+        fab_scan_exists.visibility = View.GONE
 
         lessonDetailsFragment = LessonDetailsFragment()
         val lessonBundle = Bundle()
@@ -45,15 +45,14 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         lessonBundle.putString("id", id)
         lessonDetailsFragment.arguments = lessonBundle
 
-        scan_new.setOnClickListener {
+        fab_scan_new.visibility = View.VISIBLE
+        fab_scan_new.setOnClickListener {
             presenter.requestQrScan(this)
         }
 
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, lessonDetailsFragment)
                 .commit()
-
-        //        TODO: Scan new fab
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
