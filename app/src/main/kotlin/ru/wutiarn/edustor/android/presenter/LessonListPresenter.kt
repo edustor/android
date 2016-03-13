@@ -13,14 +13,14 @@ import ru.wutiarn.edustor.android.view.LessonsListView
  */
 class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?) : MvpPresenter<LessonsListView> {
 
-    var subject_id: String? = null
+    var subjectId: String? = null
 
     var view: LessonsListView? = null
     var lessons: MutableList<Lesson>? = null
 
 
     init {
-        subject_id = arguments?.getString("subject_id")
+        subjectId = arguments?.getString("subject_id")
     }
 
     override fun detachView(p0: Boolean) {
@@ -32,13 +32,16 @@ class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?
     }
 
     fun loadData() {
-        if (subject_id == null) {
+        if (subjectId == null) {
             appComponent.lessonsApi.today()
                     .map { it.toMutableList() }
                     .configureAsync()
                     .linkToLCEView(view, { lessons = it })
         } else {
-            //TODO: Загрузка уроков определенного предмета
+            appComponent.lessonsApi.bySubjectId(subjectId!!)
+                    .map { it.toMutableList() }
+                    .configureAsync()
+                    .linkToLCEView(view, { lessons = it })
         }
 
     }
