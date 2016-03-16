@@ -10,7 +10,6 @@ import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 
 /**
  * Created by wutiarn on 07.03.16.
@@ -46,7 +45,6 @@ class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapte
         holder.date.text = lesson.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
         holder.view.setOnClickListener {
-            appComponent.eventBus.post(RequestSnackbarEvent("Opening lesson ${lesson.subject?.name}"))
             listener.onLessonClick(lesson)
         }
     }

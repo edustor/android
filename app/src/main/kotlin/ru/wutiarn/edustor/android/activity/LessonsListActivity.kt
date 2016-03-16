@@ -1,11 +1,14 @@
 package ru.wutiarn.edustor.android.activity
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_base.*
 import ru.wutiarn.edustor.android.Application
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonsListFragment
 
 /**
@@ -30,5 +33,20 @@ class LessonsListActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, fragment)
                 .commit()
+    }
+
+    @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
+        Snackbar.make(container, event.message, event.length).show()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        appComponent.eventBus.register(this)
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appComponent.eventBus.unregister(this)
     }
 }
