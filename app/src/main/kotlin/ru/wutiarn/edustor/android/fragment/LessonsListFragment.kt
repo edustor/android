@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_base_list.*
@@ -32,7 +33,10 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_base_list, container, false)
+        val view = inflater?.inflate(R.layout.fragment_base_list, container, false)
+        if (arguments?.getBoolean("allowDatePick") ?: false == true) inflater?.inflate(R.layout.lesson_date_picker, view?.findViewById(R.id.list_header) as FrameLayout, true)
+
+        return view
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

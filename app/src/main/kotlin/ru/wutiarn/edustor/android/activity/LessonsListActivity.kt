@@ -25,6 +25,7 @@ class LessonsListActivity : AppCompatActivity() {
 
         val fragment = LessonsListFragment()
         fragment.arguments = intent.extras
+        fragment.arguments.putBoolean("allowDatePick", true)
 
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, fragment)
