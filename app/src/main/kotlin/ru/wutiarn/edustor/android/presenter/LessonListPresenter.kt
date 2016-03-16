@@ -1,6 +1,8 @@
 package ru.wutiarn.edustor.android.presenter
 
+import android.app.DatePickerDialog
 import android.os.Bundle
+import android.widget.DatePicker
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
@@ -11,7 +13,8 @@ import ru.wutiarn.edustor.android.view.LessonsListView
 /**
  * Created by wutiarn on 10.03.16.
  */
-class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?) : MvpPresenter<LessonsListView> {
+class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?) : MvpPresenter<LessonsListView>,
+        DatePickerDialog.OnDateSetListener {
 
     var subjectId: String? = null
 
@@ -43,6 +46,9 @@ class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?
                     .configureAsync()
                     .linkToLCEView(view, { lessons = it })
         }
+    }
 
+    override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
+        
     }
 }
