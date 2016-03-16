@@ -44,7 +44,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
 
             pickerButton.setOnClickListener {
                 val now = LocalDateTime.now()
-                val dialog = DatePickerDialog(context, presenter, now.year, now.monthValue, now.dayOfMonth)
+                val dialog = DatePickerDialog(context, presenter, now.year, now.monthValue - 1, now.dayOfMonth)
                 dialog.show()
             }
         }

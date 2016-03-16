@@ -52,7 +52,7 @@ class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
-        val date = LocalDate.of(year, month, day)
+        val date = LocalDate.of(year, month + 1, day)
         val dateStr = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
         appComponent.lessonsApi.byDate(subjectId!!, dateStr)
                 .configureAsync()
