@@ -18,14 +18,11 @@ import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.presenter.SubjectListPresenter
 import ru.wutiarn.edustor.android.view.SubjectsListView
 
-/**
- * Created by wutiarn on 13.03.16.
- */
 class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, SubjectsListView, SubjectListPresenter>(), SubjectsListView, SubjectsAdapter.SubjectsAdapterEventsListener {
     lateinit var appComponent: AppComponent
     lateinit var adapter: SubjectsAdapter
 
-    override fun createPresenter(): SubjectListPresenter? {
+    override fun createPresenter(): SubjectListPresenter {
         val application = context.applicationContext as Application
         appComponent = application.appComponent
         return SubjectListPresenter(appComponent)

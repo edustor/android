@@ -20,17 +20,15 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.LessonsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.LessonListPresenter
+import ru.wutiarn.edustor.android.util.EndlessRecyclerViewScrollListener
 import ru.wutiarn.edustor.android.view.LessonsListView
 
-/**
- * Created by wutiarn on 10.03.16.
- */
 class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, LessonsListView, LessonListPresenter>(),
         LessonsListView, LessonsAdapter.LessonsAdapterEventsListener {
     lateinit var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter
 
-    override fun createPresenter(): LessonListPresenter? {
+    override fun createPresenter(): LessonListPresenter {
         val application = context.applicationContext as Application
         appComponent = application.appComponent
         return LessonListPresenter(appComponent, arguments)
@@ -51,6 +49,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
 
         return view
     }
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,13 +61,18 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
         return p0?.message
     }
 
-    override fun loadData(p0: Boolean) {
-        showLoading(p0)
-        presenter.loadData()
+    override fun loadData(isPullRefresh: Boolean) {
+        loadData(isPullRefresh, 0)
+    }
+
+    fun loadData(isPullRefresh: Boolean, page: Int) {
+        showLoading(isPullRefresh)
+        presenter.loadData(page)
     }
 
     override fun setData(lessons: MutableList<Lesson>?) {
-        lessonsAdapter.lessons = lessons ?: mutableListOf()
+        lessonsAdapter.lessons = presenter.lessons
+        lessonsAdapter.notifyDataSetChanged()
         showContent()
     }
 
@@ -80,7 +84,16 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
 
     fun configureRecyclerView() {
         lessonsAdapter = LessonsAdapter(appComponent, this)
-        base_recycler_view.layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context)
+
+        val scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
+            override fun onLoadMore(page: Int) {
+                presenter.loadData(page)
+            }
+        }
+
+        base_recycler_view.layoutManager = layoutManager
+        base_recycler_view.addOnScrollListener(scrollListener)
         base_recycler_view.adapter = lessonsAdapter
     }
 }

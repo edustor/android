@@ -38,7 +38,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     lateinit var documentsAdapter: DocumentsAdapter
     lateinit var wrappedDocumentsAdapter: RecyclerView.Adapter<*>
 
-    override fun createPresenter(): LessonPresenter? {
+    override fun createPresenter(): LessonPresenter {
         val application = context.applicationContext as Application
         appComponent = application.appComponent
         return LessonPresenter(appComponent, arguments)

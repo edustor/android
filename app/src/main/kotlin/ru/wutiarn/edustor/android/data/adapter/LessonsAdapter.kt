@@ -11,9 +11,6 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 
-/**
- * Created by wutiarn on 07.03.16.
- */
 class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapterEventsListener) : RecyclerView.Adapter<LessonsAdapter.LessonViewHolder>() {
     var lessons: MutableList<Lesson> = mutableListOf()
 

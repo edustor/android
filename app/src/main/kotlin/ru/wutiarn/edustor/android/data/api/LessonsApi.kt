@@ -6,9 +6,6 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import rx.Observable
 import java.util.*
 
-/**
- * Created by wutiarn on 02.03.16.
- */
 interface LessonsApi {
 
     @GET("lessons/uuid/{uuid}")
@@ -35,5 +32,5 @@ interface LessonsApi {
     fun setTopic(@Path("lesson") lesson: String, @Field("topic") topic: String): Observable<ResponseBody>
 
     @GET("subjects/{subject_id}/lessons")
-    fun bySubjectId(@Path("subject_id") subject_id: String): Observable<List<Lesson>>
+    fun bySubjectId(@Path("subject_id") subject_id: String, @Query("page") page: Int): Observable<List<Lesson>>
 }
