@@ -62,7 +62,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         topic.setText(lesson?.topic)
 
         getPdf.setOnClickListener {
-            val uri = Uri.parse(appComponent.constants.URL + "pdf/${lesson?.id}.pdf")
+            val uri = Uri.parse(appComponent.constants.URL + "pdf/${lesson?.id}")
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
         }
