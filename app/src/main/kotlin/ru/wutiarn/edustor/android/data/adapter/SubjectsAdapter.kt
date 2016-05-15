@@ -9,9 +9,6 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Subject
 
-/**
- * Created by wutiarn on 07.03.16.
- */
 class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdapterEventsListener) : RecyclerView.Adapter<SubjectsAdapter.SubjectViewHolder>() {
     var subjects: List<Subject> = listOf()
 
@@ -38,7 +35,6 @@ class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdap
         val subject = subjects[position]
 
         holder.name.text = subject.name
-        holder.year.text = subject.year.toString()
 
         holder.view.setOnClickListener {
             listener.onSubjectClick(subject)
@@ -47,11 +43,9 @@ class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdap
 
     class SubjectViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         lateinit var name: TextView
-        lateinit var year: TextView
 
         init {
             name = view.findViewById(R.id.name) as TextView
-            year = view.findViewById(R.id.year) as TextView
         }
     }
 

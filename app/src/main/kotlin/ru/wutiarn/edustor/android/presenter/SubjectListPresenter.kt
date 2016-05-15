@@ -7,9 +7,6 @@ import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.SubjectsListView
 
-/**
- * Created by wutiarn on 10.03.16.
- */
 class SubjectListPresenter(val appComponent: AppComponent) : MvpPresenter<SubjectsListView> {
 
     var view: SubjectsListView? = null

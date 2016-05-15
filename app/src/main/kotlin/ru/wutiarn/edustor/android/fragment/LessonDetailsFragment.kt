@@ -62,13 +62,13 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         topic.setText(lesson?.topic)
 
         getPdf.setOnClickListener {
-            val uri = Uri.parse(appComponent.constants.URL + "pdf/${lesson?.id}")
+            val uri = Uri.parse(appComponent.constants.URL + "pdf/${lesson?.id}.pdf")
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
         }
 
         copyUrl.setOnClickListener {
-            val uri = appComponent.constants.URL + "pdf/${lesson?.id}.pdf"
+            val uri = appComponent.constants.URL + "pdf/${lesson?.id}"
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = ClipData.newPlainText(uri, uri)
             Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()

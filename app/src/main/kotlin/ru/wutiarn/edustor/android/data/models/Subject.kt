@@ -5,6 +5,5 @@ package ru.wutiarn.edustor.android.data.models
  */
 data class Subject(
         var name: String? = null,
-        var year: Int? = 1,
         var id: String? = null
 )

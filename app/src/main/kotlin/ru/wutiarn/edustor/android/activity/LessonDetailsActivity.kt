@@ -17,9 +17,6 @@ import ru.wutiarn.edustor.android.presenter.LessonDetailsActivityPresenter
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
 import ru.wutiarn.edustor.android.view.LessonDetailsActivityView
 
-/**
- * Created by wutiarn on 11.03.16.
- */
 class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetailsActivityPresenter>(), LessonDetailsActivityView {
     lateinit var lessonDetailsFragment: LessonDetailsFragment
     lateinit var appComponent: AppComponent

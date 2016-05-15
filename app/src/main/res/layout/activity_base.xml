@@ -51,11 +51,6 @@
         android:orientation="vertical">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_lessons"
-            style="@style/floatingActionButtonStyle"
-            android:src="@drawable/ic_history_white_24dp" />
-
-        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_scan_exists"
             style="@style/floatingActionButtonStyle"
             android:src="@drawable/ic_search_white_24dp" />

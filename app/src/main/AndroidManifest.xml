@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.SubjectsListActivity"
             android:label="${appLabel}"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -28,13 +28,7 @@
         <activity
             android:name=".activity.LessonDetailsActivity"
             android:label="Lesson details"
-            android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".activity.SubjectsListActivity"
-            android:label="Subjects"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName=".activity.SubjectsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
