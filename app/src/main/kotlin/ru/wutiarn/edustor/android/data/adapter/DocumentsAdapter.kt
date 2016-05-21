@@ -1,6 +1,7 @@
 package ru.wutiarn.edustor.android.data.adapter
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -55,7 +56,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         }
 
         val colorResource = if (document.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded
-        val color = context.resources.getColor(colorResource, null)
+        val color = ContextCompat.getColor(context, colorResource)
         holder.isUploaded.setBackgroundColor(color)
     }
 
