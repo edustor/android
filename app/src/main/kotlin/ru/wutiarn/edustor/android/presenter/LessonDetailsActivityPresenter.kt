@@ -5,9 +5,6 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.view.LessonDetailsActivityView
 
-/**
- * Created by wutiarn on 06.03.16.
- */
 class LessonDetailsActivityPresenter() : MvpPresenter<LessonDetailsActivityView> {
     private var view: LessonDetailsActivityView? = null
 

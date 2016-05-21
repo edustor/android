@@ -7,9 +7,6 @@ import ru.wutiarn.edustor.android.data.models.Document
 import rx.Observable
 import java.util.*
 
-/**
- * Created by wutiarn on 02.03.16.
- */
 interface DocumentsApi {
     @POST("documents/uuid/activate")
     @FormUrlEncoded

@@ -26,9 +26,6 @@ import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 
-/**
- * Created by wutiarn on 07.03.16.
- */
 class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
         DraggableItemAdapter<DocumentsAdapter.DocumentViewHolder>,
         SwipeableItemAdapter<DocumentsAdapter.DocumentViewHolder> {

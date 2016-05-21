@@ -5,9 +5,6 @@ import dagger.Provides
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import javax.inject.Named
 
-/**
- * Created by wutiarn on 13.03.16.
- */
 @Module
 class ConstantsModule {
     @Provides

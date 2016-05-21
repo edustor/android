@@ -15,9 +15,6 @@ import ru.wutiarn.edustor.android.data.api.LessonsApi
 import ru.wutiarn.edustor.android.data.api.SubjectsApi
 import javax.inject.Named
 
-/**
- * Created by wutiarn on 03.03.16.
- */
 @Module
 open class RetrofitModule {
     @Provides

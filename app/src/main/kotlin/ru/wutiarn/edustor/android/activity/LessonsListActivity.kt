@@ -11,9 +11,6 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonsListFragment
 
-/**
- * Created by wutiarn on 11.03.16.
- */
 class LessonsListActivity : AppCompatActivity() {
     lateinit var appComponent: AppComponent
 

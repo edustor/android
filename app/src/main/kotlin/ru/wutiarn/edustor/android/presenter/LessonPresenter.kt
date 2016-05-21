@@ -14,9 +14,6 @@ import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.subscriptions.CompositeSubscription
 
-/**
- * Created by wutiarn on 05.03.16.
- */
 class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
     var view: LessonDetailsView? = null

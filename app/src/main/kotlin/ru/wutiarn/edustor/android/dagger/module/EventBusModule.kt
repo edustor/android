@@ -5,9 +5,6 @@ import dagger.Module
 import dagger.Provides
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 
-/**
- * Created by wutiarn on 08.03.16.
- */
 @Module
 class EventBusModule {
     @Provides

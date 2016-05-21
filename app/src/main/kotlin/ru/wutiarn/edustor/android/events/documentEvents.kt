@@ -4,10 +4,6 @@ import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.data.models.Lesson
 
 /**
- * Created by wutiarn on 08.03.16.
- */
-
-/**
  * Broadcasted when there is open bottom panel with lesson fragment
  */
 data class NewDocumentQrCodeScanned(val string: String)
