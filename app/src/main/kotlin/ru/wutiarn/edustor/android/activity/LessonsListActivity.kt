@@ -5,7 +5,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_base.*
-import ru.wutiarn.edustor.android.Application
+import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
@@ -15,7 +15,7 @@ class LessonsListActivity : AppCompatActivity() {
     lateinit var appComponent: AppComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val application = applicationContext as Application
+        val application = applicationContext as EdustorApplication
         appComponent = application.appComponent
 
         super.onCreate(savedInstanceState)

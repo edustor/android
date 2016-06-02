@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_base_list.*
-import ru.wutiarn.edustor.android.Application
+import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.activity.LessonsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
@@ -23,7 +23,7 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
     lateinit var adapter: SubjectsAdapter
 
     override fun createPresenter(): SubjectListPresenter {
-        val application = context.applicationContext as Application
+        val application = context.applicationContext as EdustorApplication
         appComponent = application.appComponent
         return SubjectListPresenter(appComponent)
     }

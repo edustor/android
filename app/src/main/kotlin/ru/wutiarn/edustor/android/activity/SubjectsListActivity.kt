@@ -6,7 +6,7 @@ import android.view.View
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpActivity
 import kotlinx.android.synthetic.main.activity_base.*
-import ru.wutiarn.edustor.android.Application
+import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.fragment.SubjectsListFragment
@@ -21,7 +21,7 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val application = applicationContext as Application
+        val application = applicationContext as EdustorApplication
         appComponent = application.appComponent
 
         super.onCreate(savedInstanceState)

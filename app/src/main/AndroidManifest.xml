@@ -4,10 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name=".Application"
+        android:name=".EdustorApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="${appLabel}"
@@ -16,26 +16,27 @@
         tools:replace="android:label">
         <activity
             android:name=".activity.SubjectsListActivity"
-            android:label="${appLabel}"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:label="${appLabel}">
+        </activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <activity
+            android:name=".activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
             android:name=".activity.LessonDetailsActivity"
             android:label="Lesson details"
-            android:parentActivityName=".activity.SubjectsListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".activity.SubjectsListActivity"/>
 
         <activity
             android:name=".activity.LessonsListActivity"
             android:label="Lessons"
-            android:parentActivityName=".activity.SubjectsListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".activity.SubjectsListActivity"/>
     </application>
 
 </manifest>

@@ -22,7 +22,7 @@ import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchAct
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_lesson_details.*
 import org.threeten.bp.format.DateTimeFormatter
-import ru.wutiarn.edustor.android.Application
+import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
@@ -43,7 +43,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     lateinit var wrappedDocumentsAdapter: RecyclerView.Adapter<*>
 
     override fun createPresenter(): LessonPresenter {
-        val application = context.applicationContext as Application
+        val application = context.applicationContext as EdustorApplication
         appComponent = application.appComponent
         return LessonPresenter(appComponent, arguments)
     }

@@ -5,7 +5,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.dagger.component.DaggerAppComponent
 
-class Application : Application() {
+class EdustorApplication : Application() {
     lateinit var appComponent: AppComponent
 
     override fun onCreate() {

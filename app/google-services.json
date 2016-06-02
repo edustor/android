@@ -1,0 +1,87 @@
+{
+  "project_info": {
+    "project_number": "99685742253",
+    "project_id": "edustor-1270"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99685742253:android:4e4d17414b192245",
+        "android_client_info": {
+          "package_name": "ru.wutiarn.edustor.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99685742253-iugigsujd04l7qeheg9hu6soe8t62mq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.wutiarn.edustor.android",
+            "certificate_hash": "BB78BB6BC5386A43B6A4B164838E05B6823AF62D"
+          }
+        },
+        {
+          "client_id": "99685742253-41uieqd0vl3e03l62c7t3impd38gdt4q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0ay7FaCuW_D57JSDciz67o4Wub-9bwyw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99685742253:android:3545d94d821c3025",
+        "android_client_info": {
+          "package_name": "ru.wutiarn.edustor.android.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99685742253-ioektfc8k3ea2ihg88p3j5rgo65a8voa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.wutiarn.edustor.android.debug",
+            "certificate_hash": "0FA4A04F2FA31B7DE964FCC06AA8819CA52856A5"
+          }
+        },
+        {
+          "client_id": "99685742253-41uieqd0vl3e03l62c7t3impd38gdt4q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0ay7FaCuW_D57JSDciz67o4Wub-9bwyw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

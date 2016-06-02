@@ -13,7 +13,7 @@ import android.widget.LinearLayout
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import org.threeten.bp.LocalDateTime
-import ru.wutiarn.edustor.android.Application
+import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.activity.LessonDetailsActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
@@ -29,7 +29,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
     lateinit var lessonsAdapter: LessonsAdapter
 
     override fun createPresenter(): LessonListPresenter {
-        val application = context.applicationContext as Application
+        val application = context.applicationContext as EdustorApplication
         appComponent = application.appComponent
         return LessonListPresenter(appComponent, arguments)
     }
