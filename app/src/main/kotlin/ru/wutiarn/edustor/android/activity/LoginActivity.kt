@@ -12,17 +12,22 @@ import com.google.android.gms.common.api.GoogleApiClient
 import kotlinx.android.synthetic.main.activity_login.*
 import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
+import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.util.extension.configureAsync
+import ru.wutiarn.edustor.android.util.makeToast
 
 class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
 
     private lateinit var gapi: GoogleApiClient
     private val RC_SIGN_IN = 0
 
+    private lateinit var appComponent: AppComponent
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val appComponent = (application as EdustorApplication).appComponent
+        appComponent = (application as EdustorApplication).appComponent
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -38,13 +43,16 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         sign_in_button.setOnClickListener { onLogin() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Toast.makeText(this, "Current account: ${appComponent.preferences.token}", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onConnectionFailed(p0: ConnectionResult?) {
         throw UnsupportedOperationException()
     }
 
     fun onLogin() {
-        Toast.makeText(this, "Logging in", Toast.LENGTH_SHORT).show()
-
         val signInIntent = Auth.GoogleSignInApi.getSignInIntent(gapi)
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
@@ -63,6 +71,14 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     fun onLoggedIn(result: GoogleSignInResult) {
-        Toast.makeText(this, "Welcome, ${result.signInAccount.displayName}", Toast.LENGTH_SHORT).show()
+        appComponent.loginApi.login(result.signInAccount.idToken)
+                .configureAsync()
+                .subscribe ({
+                    makeToast("Successfully logged in as ${result.signInAccount.displayName}")
+                    appComponent.preferences.token = it.token
+                }, {
+                    makeToast("Error logging in: ${it.message}")
+                })
+
     }
 }
