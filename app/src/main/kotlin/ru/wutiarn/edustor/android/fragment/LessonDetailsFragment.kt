@@ -13,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
@@ -32,6 +31,7 @@ import ru.wutiarn.edustor.android.events.DocumentChangedEvent
 import ru.wutiarn.edustor.android.events.DocumentMovedEvent
 import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
+import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 
 
@@ -71,7 +71,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
             val uri = appComponent.constants.URL + "pdf/${lesson?.id}"
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = ClipData.newPlainText(uri, uri)
-            Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+            context.makeToast("Copied: $uri")
         }
 
         documentsAdapter.lesson = lesson
