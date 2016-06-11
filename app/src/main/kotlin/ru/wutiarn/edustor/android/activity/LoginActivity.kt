@@ -10,14 +10,15 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.api.LoginView
 import ru.wutiarn.edustor.android.presenter.LoginPresenter
 
-class LoginActivity : MvpActivity<LoginView, LoginPresenter>() {
+class LoginActivity : MvpActivity<LoginView, LoginPresenter>(), LoginView {
     private lateinit var appComponent: AppComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent = (application as EdustorApplication).appComponent
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        appComponent = (application as EdustorApplication).appComponent
 
         sign_in_button.setOnClickListener { presenter.onLogin() }
     }

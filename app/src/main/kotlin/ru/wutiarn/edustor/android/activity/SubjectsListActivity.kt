@@ -23,8 +23,14 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
     override fun onCreate(savedInstanceState: Bundle?) {
         val application = applicationContext as EdustorApplication
         appComponent = application.appComponent
-
         super.onCreate(savedInstanceState)
+
+        val activeSesison = appComponent.activeSesison
+        if (!activeSesison.isLoggedIn) {
+            activeSesison.logout()
+            finish()
+            return
+        }
 
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)

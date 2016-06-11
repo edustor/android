@@ -1,4 +1,4 @@
-package ru.wutiarn.edustor.android.util
+package ru.wutiarn.edustor.android.util.extension
 
 import android.content.Context
 import android.widget.Toast
