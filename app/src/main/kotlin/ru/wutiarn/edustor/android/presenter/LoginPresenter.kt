@@ -38,7 +38,6 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
     fun onLoggedIn() {
         val intent = Intent(activity, SubjectsListActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        activity.makeToast("Logged in")
         activity.startActivity(intent)
     }
 
@@ -67,7 +66,7 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
                 if (result.isSuccess) {
                     onGoogleSignIn(result)
                 } else {
-                    activity.makeToast("Sign in error")
+                    activity.makeToast("Signing in failed")
                 }
             }
         }
