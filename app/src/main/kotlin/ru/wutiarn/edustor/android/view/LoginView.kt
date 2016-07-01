@@ -1,4 +1,4 @@
-package ru.wutiarn.edustor.android.data.api
+package ru.wutiarn.edustor.android.view
 
 import com.hannesdorfmann.mosby.mvp.MvpView
 

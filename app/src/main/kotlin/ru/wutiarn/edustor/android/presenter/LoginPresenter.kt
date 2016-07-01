@@ -11,9 +11,9 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.activity.SubjectsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.api.LoginView
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.makeToast
+import ru.wutiarn.edustor.android.view.LoginView
 
 class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActivity) : MvpPresenter<LoginView>, GoogleApiClient.OnConnectionFailedListener {
     val TAG = LoginPresenter::class.java.simpleName
