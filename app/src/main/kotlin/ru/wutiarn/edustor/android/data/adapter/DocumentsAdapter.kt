@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableSwipeableItemViewHolder
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -88,7 +87,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         appComponent.eventBus.post(DocumentRemovedEvent(document, position))
     }
 
-    class DocumentViewHolder(val view: View, val adapter: DocumentsAdapter) : AbstractDraggableSwipeableItemViewHolder(view) {
+    class DocumentViewHolder(val view: View, val adapter: DocumentsAdapter) : RecyclerView.ViewHolder(view){
         // Nullable only because of kotlin 1.0.3 doesn't support custom setters along with lateinit
         var document: Document? = null
             set(value: Document?) {

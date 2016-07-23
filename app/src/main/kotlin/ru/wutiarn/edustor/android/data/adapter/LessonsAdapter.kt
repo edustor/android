@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableSwipeableItemViewHolder
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
@@ -37,17 +36,16 @@ class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapte
     override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
         val lesson = lessons[position]
 
-        holder.name.text = lesson.subject?.name
+        holder.name.text = lesson.subject.name
         holder.topic.text = lesson.topic ?: "No topic specified"
-        holder.date.text = lesson.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        holder.date.text = lesson.date.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
         holder.view.setOnClickListener {
             listener.onLessonClick(lesson)
         }
     }
 
-    class LessonViewHolder(val view: View) : AbstractDraggableSwipeableItemViewHolder(view) {
-
+    class LessonViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         lateinit var name: TextView
         lateinit var topic: TextView
         lateinit var date: TextView
@@ -56,10 +54,6 @@ class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapte
             name = view.findViewById(R.id.name) as TextView
             topic = view.findViewById(R.id.topic) as TextView
             date = view.findViewById(R.id.date) as TextView
-        }
-
-        override fun getSwipeableContainerView(): View {
-            return view
         }
     }
 
