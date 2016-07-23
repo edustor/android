@@ -110,7 +110,7 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
     }
 
     @Subscribe fun onDocumentAdded(event: DocumentAddedEvent) {
-        lesson?.documents?.add(event.document.copy())
+        lesson?.documents?.add(event.document)
         view?.notifyDocumentsChanged(event.copy(insertedPosition = lesson?.documents?.lastIndex!!))
     }
 }

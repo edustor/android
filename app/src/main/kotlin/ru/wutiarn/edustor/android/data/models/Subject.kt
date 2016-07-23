@@ -1,6 +1,8 @@
 package ru.wutiarn.edustor.android.data.models
 
-data class Subject(
-        var name: String? = null,
-        var id: String? = null
-)
+import org.bson.types.ObjectId
+
+class Subject {
+    lateinit var name: String
+    var id: String = ObjectId.get().toString()
+}
