@@ -104,10 +104,8 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
 
     @Subscribe fun onDocumentRemoved(event: DocumentRemovedEvent) {
         lesson?.let {
-            val removed = lesson?.documents?.remove(event.document)
-            if (removed == true) {
-                view?.notifyDocumentsChanged(event)
-            }
+            lesson?.documents?.remove(event.document)
+            view?.notifyDocumentsChanged(event)
         }
     }
 

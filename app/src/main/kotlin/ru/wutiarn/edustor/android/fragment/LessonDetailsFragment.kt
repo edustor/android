@@ -26,7 +26,7 @@ import ru.wutiarn.edustor.android.events.DocumentChangedEvent
 import ru.wutiarn.edustor.android.events.DocumentMovedEvent
 import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
-import ru.wutiarn.edustor.android.util.EdustorItemTouchHelperCallback
+import ru.wutiarn.edustor.android.util.EdustorDocumentTouchHelperCallback
 import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 
@@ -95,11 +95,10 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         documents_recycler_view.adapter = documentsAdapter
         documents_recycler_view.layoutManager = LinearLayoutManager(context)
 
-        val cb = EdustorItemTouchHelperCallback(context)
+        val cb = EdustorDocumentTouchHelperCallback(context)
         val itemTouchHelper = ItemTouchHelper(cb)
 
         itemTouchHelper.attachToRecyclerView(documents_recycler_view)
-//        documents_recycler_view.addItemDecoration(SimpleListDividerDecorator(ContextCompat.getDrawable(context, R.drawable.list_divider_h), true))
     }
 
     override fun notifyDocumentsChanged(event: DocumentChangedEvent) {
