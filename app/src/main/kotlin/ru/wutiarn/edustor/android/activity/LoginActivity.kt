@@ -19,14 +19,12 @@ class LoginActivity : MvpActivity<LoginView, LoginPresenter>(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-
         sign_in_button.setOnClickListener { presenter.onLogin() }
     }
 
     override fun createPresenter(): LoginPresenter {
         return LoginPresenter(appComponent, this)
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
