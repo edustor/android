@@ -73,6 +73,9 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
     override fun setData(lessons: MutableList<Lesson>?) {
         lessonsAdapter.lessons = presenter.lessons
         lessonsAdapter.notifyDataSetChanged()
+        lessons?.firstOrNull()?.subject?.name?.let {
+            activity.title = it
+        }
         showContent()
     }
 
