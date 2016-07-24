@@ -8,6 +8,7 @@ import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.presenter.LoginPresenter
+import ru.wutiarn.edustor.android.util.extension.assertSynced
 import ru.wutiarn.edustor.android.view.LoginView
 
 class LoginActivity : MvpActivity<LoginView, LoginPresenter>(), LoginView {

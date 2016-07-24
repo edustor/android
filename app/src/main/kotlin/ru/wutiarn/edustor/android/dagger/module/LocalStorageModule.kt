@@ -12,6 +12,12 @@ import ru.wutiarn.edustor.android.data.local.EdustorPreferences
 class LocalStorageModule(val androidPref: SharedPreferences, val application: EdustorApplication) {
     @Provides
     @AppScope
+    fun application(): EdustorApplication {
+        return application
+    }
+
+    @Provides
+    @AppScope
     fun edustorPreferences(): EdustorPreferences {
         return EdustorPreferences(androidPref)
     }

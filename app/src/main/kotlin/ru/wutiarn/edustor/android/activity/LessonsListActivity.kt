@@ -10,6 +10,7 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonsListFragment
+import ru.wutiarn.edustor.android.util.extension.assertSynced
 
 class LessonsListActivity : AppCompatActivity() {
     lateinit var appComponent: AppComponent
@@ -19,6 +20,8 @@ class LessonsListActivity : AppCompatActivity() {
         appComponent = application.appComponent
 
         super.onCreate(savedInstanceState)
+
+        if (!appComponent.assertSynced()) return
 
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)

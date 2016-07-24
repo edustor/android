@@ -11,6 +11,7 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.fragment.SubjectsListFragment
 import ru.wutiarn.edustor.android.presenter.SubjectListActivityPresenter
+import ru.wutiarn.edustor.android.util.extension.assertSynced
 import ru.wutiarn.edustor.android.view.SubjectsListActivityView
 
 class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListActivityPresenter>(), SubjectsListActivityView {
@@ -23,14 +24,10 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
     override fun onCreate(savedInstanceState: Bundle?) {
         val application = applicationContext as EdustorApplication
         appComponent = application.appComponent
+
         super.onCreate(savedInstanceState)
 
-        val activeSession = appComponent.activeSession
-        if (!activeSession.isLoggedIn) {
-            activeSession.logout()
-            finish()
-            return
-        }
+        if (!appComponent.assertSynced()) return
 
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)

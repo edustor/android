@@ -1,8 +1,8 @@
 package ru.wutiarn.edustor.android.data.local
 
-import android.content.Intent
 import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.activity.LoginActivity
+import ru.wutiarn.edustor.android.util.extension.startActivity
 
 class ActiveSession(val edustorPreferences: EdustorPreferences, val application: EdustorApplication) {
     var token: String?
@@ -16,8 +16,6 @@ class ActiveSession(val edustorPreferences: EdustorPreferences, val application:
 
     fun logout() {
         token = null
-        val intent = Intent(application, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        application.startActivity(intent)
+        application.startActivity(LoginActivity::class.java, true)
     }
 }

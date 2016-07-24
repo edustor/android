@@ -2,6 +2,7 @@ package ru.wutiarn.edustor.android.dagger.component
 
 import com.squareup.otto.Bus
 import dagger.Component
+import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.dagger.module.*
 import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
@@ -16,6 +17,7 @@ import ru.wutiarn.edustor.android.data.local.EdustorPreferences
         LocalStorageModule::class))
 @AppScope
 interface AppComponent {
+    val application: EdustorApplication
     val constants: EdustorConstants
     val documentsApi: DocumentsApi
     val lessonsApi: LessonsApi

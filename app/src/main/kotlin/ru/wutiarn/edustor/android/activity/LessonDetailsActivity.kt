@@ -15,6 +15,7 @@ import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
 import ru.wutiarn.edustor.android.presenter.LessonDetailsActivityPresenter
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
+import ru.wutiarn.edustor.android.util.extension.assertSynced
 import ru.wutiarn.edustor.android.view.LessonDetailsActivityView
 
 class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetailsActivityPresenter>(), LessonDetailsActivityView {
@@ -26,6 +27,8 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         appComponent = application.appComponent
 
         super.onCreate(savedInstanceState)
+
+        if (!appComponent.assertSynced()) return
 
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
