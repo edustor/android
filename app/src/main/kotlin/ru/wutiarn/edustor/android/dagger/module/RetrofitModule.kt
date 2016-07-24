@@ -32,7 +32,8 @@ open class RetrofitModule {
                         request = original
                     }
 
-                    return@addInterceptor it.proceed(request)
+                    val result = it.proceed(request)
+                    return@addInterceptor result
                 }
                 .build()
     }
