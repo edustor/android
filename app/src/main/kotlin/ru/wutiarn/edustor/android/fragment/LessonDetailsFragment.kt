@@ -36,7 +36,6 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     lateinit var appComponent: AppComponent
 
     lateinit var documentsAdapter: DocumentsAdapter
-    lateinit var wrappedDocumentsAdapter: RecyclerView.Adapter<*>
 
     override fun createPresenter(): LessonPresenter {
         val application = context.applicationContext as EdustorApplication
