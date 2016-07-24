@@ -1,12 +1,18 @@
 package ru.wutiarn.edustor.android.data.models
 
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import org.bson.types.ObjectId
 import org.threeten.bp.LocalDate
 
-open class Lesson()  {
-    lateinit var subject: Subject
-    lateinit var date: LocalDate
-    var topic: String? = null
-    var documents: MutableList<Document> = mutableListOf()
-    var id: String = ObjectId.get().toString()
+@RealmClass
+open class Lesson(): RealmObject()  {
+    open lateinit var subject: Subject
+    @Ignore open lateinit var date: LocalDate
+    open var topic: String? = null
+    open var documents: RealmList<Document> = RealmList()
+    @PrimaryKey open var id: String = ObjectId.get().toString()
 }

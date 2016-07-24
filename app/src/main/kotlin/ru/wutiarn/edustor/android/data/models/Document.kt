@@ -1,15 +1,19 @@
 package ru.wutiarn.edustor.android.data.models
 
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import org.bson.types.ObjectId
 import org.threeten.bp.Instant
 
-open class Document() {
-    lateinit var owner: User
-    var uuid: String? = null
-    var isUploaded: Boolean = false
-    var timestamp: Instant = Instant.now()
-    var uploadedTimestamp: Instant? = null
-    var id: String = ObjectId.get().toString()
+@RealmClass
+open class Document() : RealmObject() {
+    open var uuid: String? = null
+    open var isUploaded: Boolean = false
+    @Ignore open var timestamp: Instant = Instant.now()
+    @Ignore open var uploadedTimestamp: Instant? = null
+    @PrimaryKey open var id: String = ObjectId.get().toString()
 
     val shortUUID: String
         get() {

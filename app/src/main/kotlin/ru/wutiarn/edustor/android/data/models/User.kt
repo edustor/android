@@ -8,6 +8,5 @@ import org.bson.types.ObjectId
 @RealmClass
 open class User : RealmObject() {
     open lateinit var email: String
-    @PrimaryKey
-    open var id: String = ObjectId.get().toString()
+    @PrimaryKey open var id: String = ObjectId.get().toString()
 }

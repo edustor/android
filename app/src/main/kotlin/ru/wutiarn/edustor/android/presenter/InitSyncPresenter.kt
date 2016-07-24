@@ -3,6 +3,7 @@ package ru.wutiarn.edustor.android.presenter
 import android.content.Context
 import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import io.realm.Realm
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.view.InitScreenView
@@ -17,19 +18,19 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
         appComponent.syncApi.fetch()
                 .configureAsync()
                 .subscribe {
+                    val realm = Realm.getDefaultInstance()
+                    realm.beginTransaction()
+                    realm.deleteAll()
+
+                    realm.copyToRealm(it.user)
+                    realm.copyToRealm(it.subjects)
+                    realm.copyToRealmOrUpdate(it.lessons)
+
+                    realm.commitTransaction()
                     Log.i(TAG, "Sync finished")
                 }
 
-//        val realmConfig = RealmConfiguration.Builder(context)
-//                .inMemory()
-//                .build()
-//        Realm.setDefaultConfiguration(realmConfig)
-//        val realm = Realm.getDefaultInstance()
-//        realm.beginTransaction()
-//        val user = realm.createObject(User::class.java)
-//        user.email = "me@wutiarn.ru"
-//        realm.commitTransaction()
-//        println("Commit")
+//
     }
 
     override fun detachView(retainInstance: Boolean) {

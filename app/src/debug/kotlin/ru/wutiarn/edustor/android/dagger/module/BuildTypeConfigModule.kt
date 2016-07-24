@@ -11,6 +11,6 @@ open class BuildTypeConfigModule {
     @AppScope
     @Named("EDUSTOR_URL")
     open fun url(): String {
-        return "http://192.168.10.4:8080/"
+        return "https://edustor.ru/"
     }
 }
