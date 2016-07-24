@@ -36,7 +36,6 @@ class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapte
     override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
         val lesson = lessons[position]
 
-        holder.name.text = lesson.subject.name
         holder.topic.text = lesson.topic ?: "No topic specified"
         holder.date.text = lesson.date.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
@@ -46,12 +45,10 @@ class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapte
     }
 
     class LessonViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        lateinit var name: TextView
         lateinit var topic: TextView
         lateinit var date: TextView
 
         init {
-            name = view.findViewById(R.id.name) as TextView
             topic = view.findViewById(R.id.topic) as TextView
             date = view.findViewById(R.id.date) as TextView
         }
