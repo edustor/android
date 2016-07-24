@@ -5,10 +5,7 @@ import dagger.Component
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.dagger.module.*
 import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
-import ru.wutiarn.edustor.android.data.api.DocumentsApi
-import ru.wutiarn.edustor.android.data.api.LessonsApi
-import ru.wutiarn.edustor.android.data.api.LoginApi
-import ru.wutiarn.edustor.android.data.api.SubjectsApi
+import ru.wutiarn.edustor.android.data.api.*
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
 
@@ -24,7 +21,8 @@ interface AppComponent {
     val lessonsApi: LessonsApi
     val subjectsApi: SubjectsApi
     val loginApi: LoginApi
+    val syncApi: SyncApi
     val eventBus: Bus
     val preferences: EdustorPreferences
-    val activeSesison: ActiveSession
+    val activeSession: ActiveSession
 }

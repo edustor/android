@@ -52,7 +52,7 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
                 .configureAsync()
                 .subscribe ({
                     activity.makeToast("Successfully logged in as ${result.signInAccount.displayName}")
-                    appComponent.activeSesison.token = it.token
+                    appComponent.activeSession.token = it.token
                     onLoggedIn()
                 }, {
                     activity.makeToast("Error logging in: ${it.message}")

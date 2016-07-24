@@ -11,10 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
-import ru.wutiarn.edustor.android.data.api.DocumentsApi
-import ru.wutiarn.edustor.android.data.api.LessonsApi
-import ru.wutiarn.edustor.android.data.api.LoginApi
-import ru.wutiarn.edustor.android.data.api.SubjectsApi
+import ru.wutiarn.edustor.android.data.api.*
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import javax.inject.Named
 
@@ -81,5 +78,11 @@ open class RetrofitModule {
     @AppScope
     fun loginApi(retrofit: Retrofit): LoginApi {
         return retrofit.create(LoginApi::class.java)
+    }
+
+    @Provides
+    @AppScope
+    fun syncApi(retrofit: Retrofit): SyncApi {
+        return retrofit.create(SyncApi::class.java)
     }
 }
