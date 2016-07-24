@@ -10,6 +10,11 @@ class InitSyncPresenter(val appComponent: AppComponent) : MvpPresenter<InitScree
 
     var view: InitScreenView? = null
 
+    init {
+//        TODO: Remove logging out. Sync and start SLActivity instead
+        appComponent.activeSesison.token = null
+    }
+
     override fun detachView(retainInstance: Boolean) {
         this.view = null
     }

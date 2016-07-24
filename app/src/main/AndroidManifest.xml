@@ -29,6 +29,10 @@
         </activity>
 
         <activity
+            android:name=".activity.InitSyncActivity">
+        </activity>
+
+        <activity
             android:name=".activity.LessonDetailsActivity"
             android:label="Lesson details"
             android:parentActivityName=".activity.SubjectsListActivity"/>
