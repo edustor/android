@@ -3,7 +3,7 @@ package ru.wutiarn.edustor.android.data.models
 import org.bson.types.ObjectId
 import org.threeten.bp.Instant
 
-class Document() {
+open class Document() {
     lateinit var owner: User
     var uuid: String? = null
     var isUploaded: Boolean = false

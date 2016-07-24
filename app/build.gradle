@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'realm-android'
 apply plugin: 'com.google.gms.google-services'
 
 //noinspection GroovyMissingReturnStatement
@@ -20,10 +21,11 @@ android {
         manifestPlaceholders = [
                 appLabel: "@string/app_name"
         ]
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     lintOptions {
         abortOnError false
@@ -67,11 +69,11 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     kapt "com.google.dagger:dagger-compiler:2.0.1"
     compile 'com.google.dagger:dagger:2.0.1'
     compile 'javax.annotation:jsr250-api:1.0'
-
 
 
     compile 'com.google.android.gms:play-services-auth:8.3.0'
@@ -96,7 +98,6 @@ dependencies {
     compile 'com.wang.avi:library:1.0.2'
     compile 'com.squareup:otto:1.3.8'
     compile 'org.mongodb:bson:3.3.0'
-
 
 //    kaptTest "com.google.dagger:dagger-compiler:2.0.1"
 //    testCompile 'junit:junit:4.12'
