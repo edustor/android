@@ -16,6 +16,7 @@ class EdustorApplication : Application() {
         AndroidThreeTen.init(this)
 
         val realmConfig = RealmConfiguration.Builder(applicationContext)
+                .deleteRealmIfMigrationNeeded()
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
 
