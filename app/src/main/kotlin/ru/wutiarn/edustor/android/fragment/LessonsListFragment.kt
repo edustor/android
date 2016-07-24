@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.fragment_base_list.*
 import org.threeten.bp.LocalDateTime
 import ru.wutiarn.edustor.android.EdustorApplication
@@ -35,12 +36,12 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_base_list, container, false)
+        val view = inflater?.inflate(R.layout.fragment_base_list, container, false)!!
         if (arguments?.getBoolean("allowDatePick") ?: false == true) {
-            val datePicker = inflater?.inflate(R.layout.lesson_date_picker, view?.findViewById(R.id.list_header) as FrameLayout, true)
-            val pickerButton = datePicker?.findViewById(R.id.date_picker_button) as Button
+            val calendarFab = activity.fab_calendar
+            calendarFab.visibility = View.VISIBLE
 
-            pickerButton.setOnClickListener {
+            calendarFab.setOnClickListener {
                 val now = LocalDateTime.now()
                 val dialog = DatePickerDialog(context, presenter, now.year, now.monthValue - 1, now.dayOfMonth)
                 dialog.show()

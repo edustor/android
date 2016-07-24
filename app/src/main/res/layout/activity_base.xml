@@ -59,6 +59,11 @@
             android:id="@+id/fab_scan_new"
             style="@style/floatingActionButtonStyle"
             android:src="@drawable/ic_note_add_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_calendar"
+            style="@style/floatingActionButtonStyle"
+            android:src="@drawable/ic_date_range_white_24dp" />
     </LinearLayout>
 
 
