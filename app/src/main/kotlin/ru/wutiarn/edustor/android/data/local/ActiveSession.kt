@@ -15,6 +15,7 @@ class ActiveSession(val edustorPreferences: EdustorPreferences, val application:
         get() = token != null
 
     fun logout() {
+        token = null
         val intent = Intent(application, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         application.startActivity(intent)

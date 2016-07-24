@@ -9,6 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import ru.wutiarn.edustor.android.activity.InitSyncActivity
 import ru.wutiarn.edustor.android.activity.SubjectsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.configureAsync
@@ -51,7 +52,7 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
                 .configureAsync()
                 .subscribe ({
                     activity.makeToast("Successfully logged in as ${result.signInAccount.displayName}")
-                    appComponent.preferences.token = it.token
+                    appComponent.activeSesison.token = it.token
                     onLoggedIn()
                 }, {
                     activity.makeToast("Error logging in: ${it.message}")

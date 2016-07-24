@@ -25,9 +25,9 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
         appComponent = application.appComponent
         super.onCreate(savedInstanceState)
 
-        val activeSesison = appComponent.activeSesison
-        if (!activeSesison.isLoggedIn) {
-            activeSesison.logout()
+        val activeSession = appComponent.activeSesison
+        if (!activeSession.isLoggedIn) {
+            activeSession.logout()
             finish()
             return
         }
