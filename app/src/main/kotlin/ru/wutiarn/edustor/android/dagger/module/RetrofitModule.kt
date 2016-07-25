@@ -13,6 +13,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.data.api.*
 import ru.wutiarn.edustor.android.data.local.ActiveSession
+import ru.wutiarn.edustor.android.data.repo.realm.RealmSubjectRepo
 import javax.inject.Named
 
 @Module
@@ -67,12 +68,6 @@ open class RetrofitModule {
     @AppScope
     fun lessonsApi(retrofit: Retrofit): LessonsApi {
         return retrofit.create(LessonsApi::class.java)
-    }
-
-    @Provides
-    @AppScope
-    fun subjectsApi(retrofit: Retrofit): SubjectsApi {
-        return retrofit.create(SubjectsApi::class.java)
     }
 
     @Provides

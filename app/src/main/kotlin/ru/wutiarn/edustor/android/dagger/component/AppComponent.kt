@@ -9,8 +9,10 @@ import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.api.*
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
+import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
 
 @Component(modules = arrayOf(RetrofitModule::class,
+        RepoModule::class,
         EventBusModule::class,
         BuildTypeConfigModule::class,
         ConstantsModule::class,
@@ -21,7 +23,7 @@ interface AppComponent {
     val constants: EdustorConstants
     val documentsApi: DocumentsApi
     val lessonsApi: LessonsApi
-    val subjectsApi: SubjectsApi
+    val subjectsRepo: SubjectsRepo
     val loginApi: LoginApi
     val syncApi: SyncApi
     val eventBus: Bus
