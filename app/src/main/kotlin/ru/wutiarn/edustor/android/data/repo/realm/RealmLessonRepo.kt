@@ -44,8 +44,19 @@ class RealmLessonRepo() : LessonsRepo {
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun setTopic(lesson: String, topic: String): Observable<ResponseBody> {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setTopic(lesson: String, topic: String): Observable<Unit> {
+        val realm = Realm.getDefaultInstance()
+        return realm.where(Lesson::class.java)
+                .equalTo("id", lesson)
+                .findFirstAsync()
+                .asObservable<Lesson>()
+                .filter { it.isLoaded }
+                .first()
+                .map {
+                    realm.beginTransaction()
+                    it.topic =  if (topic.length != 0) topic else null
+                    realm.commitTransaction()
+                }
     }
 
 }

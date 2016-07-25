@@ -60,7 +60,6 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
 
     fun setTopic(topic: String) {
         lesson?.let {
-            lesson?.topic = topic
             appComponent.lessonsRepo.setTopic(lesson?.id!!, topic)
                     .subscribe(
                             { appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed")) },

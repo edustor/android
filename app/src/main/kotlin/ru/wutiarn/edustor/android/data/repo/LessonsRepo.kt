@@ -23,7 +23,7 @@ interface LessonsRepo {
 
     @FormUrlEncoded
     @POST("lessons/{lesson}/topic")
-    fun setTopic(@Path("lesson") lesson: String, @Field("topic") topic: String): Observable<ResponseBody>
+    fun setTopic(@Path("lesson") lesson: String, @Field("topic") topic: String): Observable<Unit>
 
     @GET("subjects/{subject_id}/lessons")
     fun bySubjectId(@Path("subject_id") subject_id: String): Observable<List<Lesson>>
