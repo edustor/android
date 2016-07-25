@@ -9,6 +9,7 @@ import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.api.*
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
+import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
 
 @Component(modules = arrayOf(RetrofitModule::class,
@@ -22,7 +23,7 @@ interface AppComponent {
     val application: EdustorApplication
     val constants: EdustorConstants
     val documentsApi: DocumentsApi
-    val lessonsApi: LessonsApi
+    val lessonsRepo: LessonsRepo
     val subjectsRepo: SubjectsRepo
     val loginApi: LoginApi
     val syncApi: SyncApi

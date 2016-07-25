@@ -14,7 +14,7 @@ import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.subscriptions.CompositeSubscription
 
-class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : MvpPresenter<LessonDetailsView> {
+class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
     var view: LessonDetailsView? = null
     var subscriptions: CompositeSubscription = CompositeSubscription()
@@ -45,13 +45,13 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
         when {
             uuid != null -> {
                 subscriptions.add(
-                        appComponent.lessonsApi.byUUID(uuid!!)
+                        appComponent.lessonsRepo.byUUID(uuid!!)
                                 .linkToLCEView(view, { lesson = it })
                 )
             }
             lessonId != null -> {
                 subscriptions.add(
-                        appComponent.lessonsApi.byId(lessonId!!)
+                        appComponent.lessonsRepo.byId(lessonId!!)
                                 .linkToLCEView(view, { lesson = it })
                 )
             }
@@ -61,8 +61,7 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
     fun setTopic(topic: String) {
         lesson?.let {
             lesson?.topic = topic
-            appComponent.lessonsApi.setTopic(lesson?.id!!, topic)
-                    .configureAsync()
+            appComponent.lessonsRepo.setTopic(lesson?.id!!, topic)
                     .subscribe(
                             { appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed")) },
                             { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }

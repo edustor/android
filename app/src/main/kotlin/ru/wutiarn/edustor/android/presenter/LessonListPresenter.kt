@@ -35,17 +35,14 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
     }
 
     fun loadData() {
-        appComponent.lessonsApi.bySubjectId(subjectId!!)
+        appComponent.lessonsRepo.bySubjectId(subjectId!!)
                 .map { it.toMutableList() }
-                .configureAsync()
                 .linkToLCEView(view, { lessons.addAll(it) })
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
-        val dateStr = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-        appComponent.lessonsApi.byDate(subjectId!!, dateStr)
-                .configureAsync()
+        appComponent.lessonsRepo.byDate(subjectId!!, date.toEpochDay())
                 .subscribe(
                         { view?.onLessonClick(it) },
                         { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }
