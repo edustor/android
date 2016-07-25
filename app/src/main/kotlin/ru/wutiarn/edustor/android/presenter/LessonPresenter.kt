@@ -49,12 +49,6 @@ class LessonPresenter(val appComponent: AppComponent, val arguments: Bundle) : M
                                 .linkToLCEView(view, { lesson = it })
                 )
             }
-            lessonId == "current" -> {
-                subscriptions.add(
-                        appComponent.lessonsApi.current()
-                                .linkToLCEView(view, { lesson = it })
-                )
-            }
             lessonId != null -> {
                 subscriptions.add(
                         appComponent.lessonsApi.byId(lessonId!!)

@@ -11,14 +11,8 @@ interface LessonsApi {
     @GET("lessons/uuid/{uuid}")
     fun byUUID(@Path("uuid") uuid: String): Observable<Lesson>
 
-    @GET("lessons/current")
-    fun current(@Query("offset") offset: Int = TimeZone.getDefault().rawOffset / 3600000): Observable<Lesson>
-
     @GET("lessons/date")
     fun byDate(@Query("subject") subject: String, @Query("date") date: String): Observable<Lesson>
-
-    @GET("lessons/today")
-    fun today(@Query("offset") offset: Int = TimeZone.getDefault().rawOffset / 3600000): Observable<List<Lesson>>
 
     @GET("lessons/{lesson}")
     fun byId(@Path("lesson") id: String): Observable<Lesson>
@@ -32,5 +26,5 @@ interface LessonsApi {
     fun setTopic(@Path("lesson") lesson: String, @Field("topic") topic: String): Observable<ResponseBody>
 
     @GET("subjects/{subject_id}/lessons")
-    fun bySubjectId(@Path("subject_id") subject_id: String, @Query("page") page: Int): Observable<List<Lesson>>
+    fun bySubjectId(@Path("subject_id") subject_id: String): Observable<List<Lesson>>
 }

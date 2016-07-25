@@ -13,7 +13,7 @@ import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonsListView
 
-class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?) : MvpPresenter<LessonsListView>,
+class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : MvpPresenter<LessonsListView>,
         DatePickerDialog.OnDateSetListener {
 
     var subjectId: String? = null
@@ -34,18 +34,11 @@ class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?
         view = p0
     }
 
-    fun loadData(page: Int = 0) {
-        if (subjectId == null && page == 0) {
-            appComponent.lessonsApi.today()
-                    .map { it.toMutableList() }
-                    .configureAsync()
-                    .linkToLCEView(view, { lessons = it })
-        } else if (subjectId != null) {
-            appComponent.lessonsApi.bySubjectId(subjectId!!, page)
-                    .map { it.toMutableList() }
-                    .configureAsync()
-                    .linkToLCEView(view, { lessons.addAll(it) })
-        }
+    fun loadData() {
+        appComponent.lessonsApi.bySubjectId(subjectId!!)
+                .map { it.toMutableList() }
+                .configureAsync()
+                .linkToLCEView(view, { lessons.addAll(it) })
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {

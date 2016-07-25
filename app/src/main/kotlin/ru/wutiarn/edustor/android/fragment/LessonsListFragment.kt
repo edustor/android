@@ -63,12 +63,8 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
     }
 
     override fun loadData(isPullRefresh: Boolean) {
-        loadData(isPullRefresh, 0)
-    }
-
-    fun loadData(isPullRefresh: Boolean, page: Int) {
         showLoading(isPullRefresh)
-        presenter.loadData(page)
+        presenter.loadData()
     }
 
     override fun setData(lessons: MutableList<Lesson>?) {
@@ -90,14 +86,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
         lessonsAdapter = LessonsAdapter(appComponent, this)
         val layoutManager = LinearLayoutManager(context)
 
-        val scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
-            override fun onLoadMore(page: Int) {
-                presenter.loadData(page)
-            }
-        }
-
         base_recycler_view.layoutManager = layoutManager
-        base_recycler_view.addOnScrollListener(scrollListener)
         base_recycler_view.adapter = lessonsAdapter
     }
 }
