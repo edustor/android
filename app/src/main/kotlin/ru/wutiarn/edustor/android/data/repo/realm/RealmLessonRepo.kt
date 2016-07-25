@@ -1,7 +1,6 @@
 package ru.wutiarn.edustor.android.data.repo.realm
 
 import io.realm.Realm
-import okhttp3.ResponseBody
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import rx.Observable
@@ -59,12 +58,13 @@ class RealmLessonRepo() : LessonsRepo {
                     if (afterDocumentId != null) {
                         val afterDocument = it.documents.first { it.id == afterDocumentId }
 
-                        targetIndex = it.documents.indexOf(document) + 1
+                        targetIndex = it.documents.indexOf(afterDocument) + 1
                     } else {
                         targetIndex = 0
                     }
 
                     it.documents.add(targetIndex, document)
+                    it.calculateDocumentIndexes()
                     realm.commitTransaction()
                 }
     }
@@ -79,7 +79,7 @@ class RealmLessonRepo() : LessonsRepo {
                 .first()
                 .map {
                     realm.beginTransaction()
-                    it.topic =  if (topic.length != 0) topic else null
+                    it.topic = if (topic.length != 0) topic else null
                     realm.commitTransaction()
                 }
     }
