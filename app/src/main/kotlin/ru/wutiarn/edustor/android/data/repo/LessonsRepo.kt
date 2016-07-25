@@ -19,7 +19,7 @@ interface LessonsRepo {
 
     @FormUrlEncoded
     @POST("lessons/{lesson}/documents/reorder")
-    fun reorderDocuments(@Path("lesson") lesson: String, @Field("document") document: String, @Field("after") after: String?): Observable<ResponseBody>
+    fun reorderDocuments(@Path("lesson") lesson: String, @Field("document") documentId: String, @Field("after") afterDocumentId: String?): Observable<Unit>
 
     @FormUrlEncoded
     @POST("lessons/{lesson}/topic")

@@ -40,8 +40,33 @@ class RealmLessonRepo() : LessonsRepo {
                 .map { it.toList() }
     }
 
-    override fun reorderDocuments(lesson: String, document: String, after: String?): Observable<ResponseBody> {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Observable<Unit> {
+        val realm = Realm.getDefaultInstance()
+        return realm.where(Lesson::class.java)
+                .equalTo("id", lesson)
+                .findFirstAsync()
+                .asObservable<Lesson>()
+                .filter { it.isLoaded }
+                .first()
+                .map {
+                    realm.beginTransaction()
+
+                    val document = it.documents.first { it.id == documentId }
+                    it.documents.remove(document)
+
+                    val targetIndex: Int
+
+                    if (afterDocumentId != null) {
+                        val afterDocument = it.documents.first { it.id == afterDocumentId }
+
+                        targetIndex = it.documents.indexOf(document) + 1
+                    } else {
+                        targetIndex = 0
+                    }
+
+                    it.documents.add(targetIndex, document)
+                    realm.commitTransaction()
+                }
     }
 
     override fun setTopic(lesson: String, topic: String): Observable<Unit> {

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
@@ -21,10 +20,6 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.events.DocumentAddedEvent
-import ru.wutiarn.edustor.android.events.DocumentChangedEvent
-import ru.wutiarn.edustor.android.events.DocumentMovedEvent
-import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
 import ru.wutiarn.edustor.android.util.EdustorDocumentTouchHelperCallback
 import ru.wutiarn.edustor.android.util.extension.makeToast
@@ -98,23 +93,5 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         val itemTouchHelper = ItemTouchHelper(cb)
 
         itemTouchHelper.attachToRecyclerView(documents_recycler_view)
-    }
-
-    override fun notifyDocumentsChanged(event: DocumentChangedEvent) {
-        val adapter = this.documentsAdapter
-        when (event) {
-            is DocumentMovedEvent -> {
-                adapter.notifyItemMoved(event.fromPos, event.toPos)
-            }
-            is DocumentRemovedEvent -> {
-                adapter.notifyItemRemoved(event.position)
-            }
-            is DocumentAddedEvent -> {
-                adapter.notifyItemInserted(event.insertedPosition)
-            }
-            else -> {
-                adapter.notifyDataSetChanged()
-            }
-        }
     }
 }

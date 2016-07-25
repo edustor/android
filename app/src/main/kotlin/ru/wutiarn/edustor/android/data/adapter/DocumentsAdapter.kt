@@ -15,17 +15,18 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.events.DocumentMovedEvent
-import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 
 class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>() {
 
     var lesson: Lesson? = null
         set(value) {
-            field = value; documents = lesson?.documents ?: mutableListOf()
+            field = value; documents = lesson?.documents?.toMutableList() ?: mutableListOf()
         }
 
     private var documents: MutableList<Document> = mutableListOf()
+
+    private var lastUnfinishedMovement: Pair<String, String?>? = null
 
 
     init {
@@ -61,17 +62,33 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         else
             after = documents[toPosition]
 
-        appComponent.eventBus.post(DocumentMovedEvent(lesson!!, document, after, fromPosition, toPosition))
+        documents.remove(document)
 
-//        appComponent.lessonsApi.reorderDocuments(lesson?.id!!, document.id!!, after?.id)
-//                .configureAsync().subscribe(
-//                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
-//                { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
-//        )
+        val targetIndex: Int
+
+        if (after != null) {
+            targetIndex = documents.indexOf(after) + 1
+        } else {
+            targetIndex = 0
+        }
+
+        documents.add(targetIndex, document)
+
+        lastUnfinishedMovement = document.id to after?.id
+    }
+
+    fun onMovementFinished() {
+        lastUnfinishedMovement?.let {
+            appComponent.lessonsRepo.reorderDocuments(lesson?.id!!, it.first, it.second)
+                    .subscribe(
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
+                    )
+        }
     }
 
     override fun getItemId(position: Int): Long {
-        return documents[position].hashCode().toLong()
+        return documents[position].id.hashCode().toLong()
     }
 
 
@@ -84,10 +101,9 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
 //                                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: ${document.shortUUID}")) },
 //                                { appComponent.eventBus.post(RequestSnackbarEvent("Error removing ${document.shortUUID}: ${it.message}")) }
 //                        )
-        appComponent.eventBus.post(DocumentRemovedEvent(document, position))
     }
 
-    class DocumentViewHolder(val view: View, val adapter: DocumentsAdapter) : RecyclerView.ViewHolder(view){
+    class DocumentViewHolder(val view: View, val adapter: DocumentsAdapter) : RecyclerView.ViewHolder(view) {
         // Nullable only because of kotlin 1.0.3 doesn't support custom setters along with lateinit
         var document: Document? = null
             set(value: Document?) {
