@@ -21,7 +21,9 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
 
     var lesson: Lesson? = null
         set(value) {
-            field = value; documents = lesson?.documents?.toMutableList() ?: mutableListOf()
+            field = value
+            documents = lesson?.documents?.toMutableList() ?: mutableListOf()
+            documents.sortBy { it.index }
         }
 
     private var documents: MutableList<Document> = mutableListOf()

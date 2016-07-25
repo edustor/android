@@ -71,9 +71,9 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
         lessonsAdapter.lessons = lessons ?: emptyList()
         lessonsAdapter.notifyDataSetChanged()
         lessons?.firstOrNull()?.subject?.name?.let {
-            activity.title = it
+            activity?.title = it
         }
-        showContent()
+        if (isResumed) showContent()
     }
 
     override fun onLessonClick(lesson: Lesson) {

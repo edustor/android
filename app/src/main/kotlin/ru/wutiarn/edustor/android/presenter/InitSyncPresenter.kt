@@ -24,6 +24,10 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
                     realm.beginTransaction()
                     realm.deleteAll()
 
+                    it.lessons.forEach {
+                        it.calculateDocumentIndexes()
+                    }
+
                     realm.copyToRealm(it.user)
                     realm.copyToRealm(it.subjects)
                     realm.copyToRealmOrUpdate(it.lessons)
@@ -32,8 +36,6 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
                     Log.i(TAG, "Sync finished")
                     context.startActivity(SubjectsListActivity::class.java, true)
                 }
-
-//
     }
 
     override fun detachView(retainInstance: Boolean) {

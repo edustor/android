@@ -23,4 +23,9 @@ open class Lesson() : RealmObject() {
     @PrimaryKey open var id: String = ObjectId.get().toString()
 
     @JsonIgnore private var realmDate: Long = 0
+
+    fun calculateDocumentIndexes() {
+        IntRange(0, documents.lastIndex)
+                .forEach { documents[it].index = it}
+    }
 }

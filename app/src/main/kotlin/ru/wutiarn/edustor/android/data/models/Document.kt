@@ -29,6 +29,8 @@ open class Document() : RealmObject() {
     @JsonIgnore private var realmTimestamp: Long = 0
     @JsonIgnore private var realmUploadedTimestamp: Long? = null
 
+    @JsonIgnore var index: Int = 0
+
     val shortUUID: String
         get() {
             val uuidEnd = uuid?.split("-")?.last()
