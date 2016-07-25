@@ -19,7 +19,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
     var subjectId: String? = null
 
     var view: LessonsListView? = null
-    var lessons: MutableList<Lesson> = mutableListOf()
+    var lessons: List<Lesson> = emptyList()
 
 
     init {
@@ -36,8 +36,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
 
     fun loadData() {
         appComponent.lessonsRepo.bySubjectId(subjectId!!)
-                .map { it.toMutableList() }
-                .linkToLCEView(view, { lessons.addAll(it) })
+                .linkToLCEView(view, { lessons = it })
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {

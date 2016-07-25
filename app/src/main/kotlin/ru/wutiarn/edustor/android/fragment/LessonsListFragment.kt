@@ -24,7 +24,7 @@ import ru.wutiarn.edustor.android.presenter.LessonListPresenter
 import ru.wutiarn.edustor.android.util.EndlessRecyclerViewScrollListener
 import ru.wutiarn.edustor.android.view.LessonsListView
 
-class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, LessonsListView, LessonListPresenter>(),
+class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),
         LessonsListView, LessonsAdapter.LessonsAdapterEventsListener {
     lateinit var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter
@@ -67,8 +67,8 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, MutableList<Lesson>, Le
         presenter.loadData()
     }
 
-    override fun setData(lessons: MutableList<Lesson>?) {
-        lessonsAdapter.lessons = presenter.lessons
+    override fun setData(lessons: List<Lesson>?) {
+        lessonsAdapter.lessons = lessons ?: emptyList()
         lessonsAdapter.notifyDataSetChanged()
         lessons?.firstOrNull()?.subject?.name?.let {
             activity.title = it
