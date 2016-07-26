@@ -70,7 +70,7 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
             appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return
         }
 
-        appComponent.documentsRepo.activateUUID(uuid, lesson?.id!!).configureAsync().subscribe({
+        appComponent.documentsRepo.activateUUID(uuid, lesson?.id!!).subscribe({
             appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
         }, {
             appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))

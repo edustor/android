@@ -27,8 +27,8 @@ class RepoModule {
 
     @Provides
     @AppScope
-    fun documentsRepo(): DocumentRepo {
-        return RealmDocumentRepo()
+    fun documentsRepo(lessonRepo: LessonsRepo): DocumentRepo {
+        return RealmDocumentRepo(lessonRepo)
     }
 
 }

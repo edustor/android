@@ -36,4 +36,10 @@ open class Document() : RealmObject() {
             val uuidEnd = uuid?.split("-")?.last()
             return uuidEnd?.let { "#${uuidEnd.substring(0, 4)}-${uuidEnd.substring(4, 8)}-${uuidEnd.substring(8, 12)}" } ?: "No uuid"
         }
+
+    constructor(uuid: String, timestamp: Instant, index: Int) : this() {
+        this.uuid = uuid
+        this.timestamp = timestamp
+        this.index = index
+    }
 }

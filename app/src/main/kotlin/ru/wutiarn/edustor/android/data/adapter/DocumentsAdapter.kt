@@ -22,9 +22,11 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
     var lesson: Lesson? = null
         set(value) {
             field = value
-            documents = lesson?.documents?.toMutableList() ?: mutableListOf()
+            documents = value?.documents?.toMutableList() ?: mutableListOf()
             documents.sortBy { it.index }
             notifyDataSetChanged()
+//            TODO: По непонятным причинам список документов перестает обновляться при добавлении в него новых документов
+//            после удаления любого старого. Хотя событие долетает до этого метода корректно и список документов в нем верный
         }
 
     private var documents: MutableList<Document> = mutableListOf()
