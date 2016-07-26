@@ -11,7 +11,7 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.fragment.SubjectsListFragment
 import ru.wutiarn.edustor.android.presenter.SubjectListActivityPresenter
-import ru.wutiarn.edustor.android.util.extension.assertSynced
+import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 import ru.wutiarn.edustor.android.view.SubjectsListActivityView
 
 class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListActivityPresenter>(), SubjectsListActivityView {
@@ -27,7 +27,7 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
 
         super.onCreate(savedInstanceState)
 
-        if (!appComponent.assertSynced()) return
+        if (!appComponent.assertActivityCanStart(this)) return
 
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
