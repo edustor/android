@@ -6,7 +6,7 @@ import io.realm.annotations.RealmClass
 import org.bson.types.ObjectId
 
 @RealmClass
-open class Subject: RealmObject() {
+open class Subject : RealmObject() {
     open lateinit var name: String
     @PrimaryKey open var id: String = ObjectId.get().toString()
 }

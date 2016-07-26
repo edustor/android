@@ -49,7 +49,7 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
     fun onGoogleSignIn(result: GoogleSignInResult) {
         appComponent.loginApi.login(result.signInAccount.idToken)
                 .configureAsync()
-                .subscribe ({
+                .subscribe({
                     activity.makeToast("Successfully logged in as ${result.signInAccount.displayName}")
                     appComponent.activeSession.token = it.token
                     onLoggedIn()

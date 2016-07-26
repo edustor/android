@@ -26,6 +26,6 @@ open class Lesson() : RealmObject() {
 
     fun calculateDocumentIndexes() {
         IntRange(0, documents.lastIndex)
-                .forEach { documents[it].index = it}
+                .forEach { documents[it].index = it }
     }
 }
