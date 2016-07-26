@@ -17,6 +17,7 @@ class EdustorApplication : Application() {
 
         val realmConfig = RealmConfiguration.Builder(applicationContext)
                 .deleteRealmIfMigrationNeeded()
+                .inMemory()
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
 

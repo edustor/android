@@ -1,10 +1,8 @@
 package ru.wutiarn.edustor.android.data.repo
 
-import okhttp3.ResponseBody
 import retrofit2.http.*
 import ru.wutiarn.edustor.android.data.models.Lesson
 import rx.Observable
-import java.util.*
 
 interface LessonsRepo {
 

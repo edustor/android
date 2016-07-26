@@ -24,6 +24,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
             field = value
             documents = lesson?.documents?.toMutableList() ?: mutableListOf()
             documents.sortBy { it.index }
+            notifyDataSetChanged()
         }
 
     private var documents: MutableList<Document> = mutableListOf()
@@ -96,17 +97,17 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
 
     fun onRemoveItem(holder: DocumentViewHolder) {
         val document = holder.document!!
-        val position = documents.indexOf(document)
-        documents.remove(document)
-//                        appComponent.documentsApi.delete(document.id!!)
-//                                .configureAsync().subscribe(
-//                                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: ${document.shortUUID}")) },
-//                                { appComponent.eventBus.post(RequestSnackbarEvent("Error removing ${document.shortUUID}: ${it.message}")) }
-//                        )
+
+        val shortUUID = document.shortUUID
+        appComponent.documentsRepo.delete(document.id)
+                .subscribe(
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) },
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) }
+                )
     }
 
     class DocumentViewHolder(val view: View, val adapter: DocumentsAdapter) : RecyclerView.ViewHolder(view) {
-        // Nullable only because of kotlin 1.0.3 doesn't support custom setters along with lateinit
+        // Nullable only because kotlin 1.0.3 doesn't support custom setters along with lateinit
         var document: Document? = null
             set(value: Document?) {
                 field = value!!

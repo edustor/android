@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
-import ru.wutiarn.edustor.android.data.api.DocumentsApi
+import ru.wutiarn.edustor.android.data.repo.DocumentRepo
 import ru.wutiarn.edustor.android.data.api.LoginApi
 import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.local.ActiveSession
@@ -57,12 +57,6 @@ open class RetrofitModule {
         return ObjectMapper()
                 .registerModule(ThreeTenModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    }
-
-    @Provides
-    @AppScope
-    fun documentsApi(retrofit: Retrofit): DocumentsApi {
-        return retrofit.create(DocumentsApi::class.java)
     }
 
     @Provides
