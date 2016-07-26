@@ -3,6 +3,7 @@ package ru.wutiarn.edustor.android.data.repo.realm
 import io.realm.Realm
 import org.threeten.bp.Instant
 import ru.wutiarn.edustor.android.data.models.Document
+import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.repo.DocumentRepo
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import rx.Completable
@@ -14,6 +15,11 @@ class RealmDocumentRepo(val lessonRepo: LessonsRepo) : DocumentRepo {
         return lessonRepo.byId(lessonId)
                 .first()
                 .map { lesson ->
+
+                    if (realm.where(Lesson::class.java).equalTo("documents.uuid", uuid).count() != 0L) {
+                        throw IllegalArgumentException("UUID already registered")
+                    }
+
                     realm.executeTransaction {
                         val targetIndex = lesson.documents.max("index").toInt() + 1
                         val document = Document(uuid, instant, targetIndex)

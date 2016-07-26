@@ -8,7 +8,7 @@ import rx.Observable
 class RealmLessonRepo() : LessonsRepo {
     override fun byUUID(uuid: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
-                .equalTo("uuid", uuid)
+                .equalTo("documents.uuid", uuid)
                 .findFirstAsync()
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
