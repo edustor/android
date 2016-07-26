@@ -3,6 +3,7 @@ package ru.wutiarn.edustor.android.data.repo
 import org.threeten.bp.Instant
 import retrofit2.http.*
 import ru.wutiarn.edustor.android.data.models.Document
+import rx.Completable
 import rx.Observable
 import java.util.*
 
@@ -16,5 +17,5 @@ interface DocumentRepo {
     ): Observable<Document>
 
     @DELETE("documents/{document}")
-    fun delete(@Path("document") documentId: String): Observable<Unit>
+    fun delete(@Path("document") documentId: String): Completable
 }

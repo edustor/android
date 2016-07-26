@@ -101,8 +101,8 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         val shortUUID = document.shortUUID
         appComponent.documentsRepo.delete(document.id)
                 .subscribe(
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) },
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) }
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) },
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) }
                 )
     }
 

@@ -3,8 +3,8 @@ package ru.wutiarn.edustor.android.data.repo.realm
 import io.realm.Realm
 import org.threeten.bp.Instant
 import ru.wutiarn.edustor.android.data.models.Document
-import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.repo.DocumentRepo
+import rx.Completable
 import rx.Observable
 
 class RealmDocumentRepo : DocumentRepo {
@@ -12,20 +12,17 @@ class RealmDocumentRepo : DocumentRepo {
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun delete(documentId: String): Observable<Unit> {
+    override fun delete(documentId: String): Completable {
         val realm = Realm.getDefaultInstance()
-        return realm.where(Lesson::class.java)
-                .equalTo("documents.id", documentId)
-                .findAllAsync()
-                .asObservable()
+        return realm.where(Document::class.java)
+                .equalTo("id", documentId)
+                .findFirstAsync()
+                .asObservable<Document>()
                 .filter { it.isLoaded }
                 .first()
-                .map {
-                    realm.beginTransaction()
-                    val document = it.first().documents.first { it.id == documentId }
-                    it.map { it.documents.remove(document) }
-                    document.deleteFromRealm()
-                    realm.commitTransaction()
+                .map { doc ->
+                    realm.executeTransaction({ doc.deleteFromRealm() })
                 }
+                .toCompletable()
     }
 }
