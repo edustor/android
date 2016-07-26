@@ -1,6 +1,8 @@
 package ru.wutiarn.edustor.android
 
 import android.app.Application
+import android.util.Log
+import com.google.firebase.iid.FirebaseInstanceId
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -17,12 +19,16 @@ class EdustorApplication : Application() {
 
         val realmConfig = RealmConfiguration.Builder(applicationContext)
                 .deleteRealmIfMigrationNeeded()
-                .inMemory()
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
 
+        Realm.getDefaultInstance().executeTransaction { it.deleteAll() }
+
         val sharedPreferences = getSharedPreferences("ru.wutiarn.edustor", MODE_PRIVATE)
         val localStorageModule = LocalStorageModule(sharedPreferences, this)
+
+        val token = FirebaseInstanceId.getInstance().token
+        Log.i("EdustorApplication", "Current token: $token")
 
         appComponent = DaggerAppComponent.builder()
                 .localStorageModule(localStorageModule)
