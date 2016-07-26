@@ -86,8 +86,8 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         lastUnfinishedMovement?.let {
             appComponent.lessonsRepo.reorderDocuments(lesson?.id!!, it.first, it.second)
                     .subscribe(
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) },
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) }
                     )
         }
     }

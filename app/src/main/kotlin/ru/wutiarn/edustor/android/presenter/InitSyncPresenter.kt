@@ -19,20 +19,20 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
 
         appComponent.syncApi.fetch()
                 .configureAsync()
-                .subscribe {
+                .subscribe { initData ->
                     val realm = Realm.getDefaultInstance()
-                    realm.beginTransaction()
-                    realm.deleteAll()
+                    realm.executeTransaction {
+                        realm.deleteAll()
 
-                    it.lessons.forEach {
-                        it.calculateDocumentIndexes()
+                        initData.lessons.forEach {
+                            it.calculateDocumentIndexes()
+                        }
+
+                        realm.copyToRealm(initData.user)
+                        realm.copyToRealm(initData.subjects)
+                        realm.copyToRealmOrUpdate(initData.lessons)
                     }
 
-                    realm.copyToRealm(it.user)
-                    realm.copyToRealm(it.subjects)
-                    realm.copyToRealmOrUpdate(it.lessons)
-
-                    realm.commitTransaction()
                     Log.i(TAG, "Sync finished")
                     context.startActivity(SubjectsListActivity::class.java, true)
                 }

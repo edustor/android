@@ -3,6 +3,7 @@ package ru.wutiarn.edustor.android.data.repo.realm
 import io.realm.Realm
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
+import rx.Completable
 import rx.Observable
 
 class RealmLessonRepo() : LessonsRepo {
@@ -39,7 +40,7 @@ class RealmLessonRepo() : LessonsRepo {
                 .map { it.toList() }
     }
 
-    override fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Observable<Unit> {
+    override fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Completable {
         val realm = Realm.getDefaultInstance()
         return realm.where(Lesson::class.java)
                 .equalTo("id", lesson)
@@ -47,29 +48,28 @@ class RealmLessonRepo() : LessonsRepo {
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
                 .first()
-                .map {
-                    realm.beginTransaction()
+                .map { lesson ->
+                    realm.executeTransaction {
+                        val document = lesson.documents.first { it.id == documentId }
+                        lesson.documents.remove(document)
 
-                    val document = it.documents.first { it.id == documentId }
-                    it.documents.remove(document)
+                        val targetIndex: Int
 
-                    val targetIndex: Int
+                        if (afterDocumentId != null) {
+                            val afterDocument = lesson.documents.first { it.id == afterDocumentId }
 
-                    if (afterDocumentId != null) {
-                        val afterDocument = it.documents.first { it.id == afterDocumentId }
+                            targetIndex = lesson.documents.indexOf(afterDocument) + 1
+                        } else {
+                            targetIndex = 0
+                        }
 
-                        targetIndex = it.documents.indexOf(afterDocument) + 1
-                    } else {
-                        targetIndex = 0
+                        lesson.documents.add(targetIndex, document)
+                        lesson.calculateDocumentIndexes()
                     }
-
-                    it.documents.add(targetIndex, document)
-                    it.calculateDocumentIndexes()
-                    realm.commitTransaction()
-                }
+                }.toCompletable()
     }
 
-    override fun setTopic(lesson: String, topic: String): Observable<Unit> {
+    override fun setTopic(lesson: String, topic: String): Completable {
         val realm = Realm.getDefaultInstance()
         return realm.where(Lesson::class.java)
                 .equalTo("id", lesson)
@@ -77,11 +77,11 @@ class RealmLessonRepo() : LessonsRepo {
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
                 .first()
-                .map {
-                    realm.beginTransaction()
-                    it.topic = if (topic.length != 0) topic else null
-                    realm.commitTransaction()
-                }
+                .map { lesson ->
+                    realm.executeTransaction {
+                        lesson.topic = if (topic.length != 0) topic else null
+                    }
+                }.toCompletable()
     }
 
 }
