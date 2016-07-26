@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import ru.wutiarn.edustor.android.activity.LoginActivity
 
 fun Context.makeToast(str: String) {
     Toast.makeText(this, str, Toast.LENGTH_SHORT).show()

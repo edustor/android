@@ -1,8 +1,8 @@
 package ru.wutiarn.edustor.android.data.repo.realm
 
 import io.realm.Realm
-import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
 import ru.wutiarn.edustor.android.data.models.Subject
+import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
 import rx.Observable
 
 class RealmSubjectRepo() : SubjectsRepo {

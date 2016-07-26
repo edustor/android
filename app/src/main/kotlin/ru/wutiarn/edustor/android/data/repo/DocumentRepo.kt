@@ -4,9 +4,7 @@ import org.threeten.bp.Instant
 import retrofit2.http.*
 import ru.wutiarn.edustor.android.data.models.Document
 import rx.Completable
-import rx.Observable
 import rx.Single
-import java.util.*
 
 interface DocumentRepo {
     @POST("documents/uuid/activate")

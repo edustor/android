@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.widget.DatePicker
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonsListView
 

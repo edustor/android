@@ -7,8 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.activity_base.*
@@ -21,7 +19,6 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.LessonsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.LessonListPresenter
-import ru.wutiarn.edustor.android.util.EndlessRecyclerViewScrollListener
 import ru.wutiarn.edustor.android.view.LessonsListView
 
 class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),

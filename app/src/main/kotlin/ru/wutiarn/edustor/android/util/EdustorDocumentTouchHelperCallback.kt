@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
-import ru.wutiarn.edustor.android.util.extension.makeToast
 
 class EdustorDocumentTouchHelperCallback(val context: Context) : ItemTouchHelper.Callback() {
 

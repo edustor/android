@@ -2,7 +2,6 @@ package ru.wutiarn.edustor.android.dagger.module
 
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.data.repo.DocumentRepo
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo

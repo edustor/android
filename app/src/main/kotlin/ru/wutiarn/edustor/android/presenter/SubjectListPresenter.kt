@@ -3,7 +3,6 @@ package ru.wutiarn.edustor.android.presenter
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Subject
-import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.SubjectsListView
 
