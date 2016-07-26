@@ -47,10 +47,10 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
     }
 
     fun onGoogleSignIn(result: GoogleSignInResult) {
-        appComponent.loginApi.login(result.signInAccount.idToken)
+        appComponent.loginApi.login(result.signInAccount!!.idToken!!)
                 .configureAsync()
                 .subscribe({
-                    activity.makeToast("Successfully logged in as ${result.signInAccount.displayName}")
+                    activity.makeToast("Successfully logged in as ${result.signInAccount!!.displayName}")
                     appComponent.activeSession.token = it.token
                     onLoggedIn()
                 }, {
@@ -72,8 +72,8 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
         }
     }
 
-    override fun onConnectionFailed(p0: ConnectionResult?) {
-        throw UnsupportedOperationException()
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        activity.makeToast("Google connection failed: ${p0.errorMessage}")
     }
 
     override fun detachView(retainInstance: Boolean) {
