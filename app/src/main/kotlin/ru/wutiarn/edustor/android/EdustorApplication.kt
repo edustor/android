@@ -24,7 +24,7 @@ class EdustorApplication : Application() {
 
         appComponent = initializeNewAppComponent()
 
-        Realm.getDefaultInstance().executeTransaction { it.deleteAll() }
+//        Realm.getDefaultInstance().executeTransaction { it.deleteAll() }
 
         val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         accountManager.addAccountExplicitly(appComponent.constants.syncAccount, null, null)
