@@ -13,10 +13,10 @@ fun AppComponent.assertActivityCanStart(activity: Activity): Boolean {
     if (!activeSession.isLoggedIn) {
         activeSession.logout()
     } else if (realm.isEmpty) {
-        application.startActivity(InitSyncActivity::class.java, true)
+        context.startActivity(InitSyncActivity::class.java, true)
     } else {
         val googleApiAvailability = GoogleApiAvailability.getInstance()
-        val servicesAvailableResult = googleApiAvailability.isGooglePlayServicesAvailable(this.application.applicationContext)
+        val servicesAvailableResult = googleApiAvailability.isGooglePlayServicesAvailable(this.context)
         if (servicesAvailableResult != ConnectionResult.SUCCESS) {
             val errorDialog = googleApiAvailability.getErrorDialog(activity, servicesAvailableResult, 0)
             errorDialog?.show()

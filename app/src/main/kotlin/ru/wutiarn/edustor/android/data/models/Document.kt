@@ -5,8 +5,8 @@ import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
-import org.bson.types.ObjectId
 import org.threeten.bp.Instant
+import java.util.*
 
 @RealmClass
 open class Document() : RealmObject() {
@@ -24,7 +24,7 @@ open class Document() : RealmObject() {
             field = value
             realmUploadedTimestamp = value?.epochSecond
         }
-    @PrimaryKey open var id: String = ObjectId.get().toString()
+    @PrimaryKey open var id: String = UUID.randomUUID().toString()
 
     @JsonIgnore private var realmTimestamp: Long = 0
     @JsonIgnore private var realmUploadedTimestamp: Long? = null

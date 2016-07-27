@@ -1,4 +1,5 @@
 <resources>
+    <string name="authority">ru.edustor.datasync.provider</string>
     <string name="app_name">Edustor</string>
     <string name="action_settings">Settings</string>
 </resources>

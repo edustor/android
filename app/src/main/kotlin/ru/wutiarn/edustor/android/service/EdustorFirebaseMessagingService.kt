@@ -1,10 +1,12 @@
 package ru.wutiarn.edustor.android.service
 
+import android.content.ContentResolver
+import android.os.Bundle
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import ru.wutiarn.edustor.android.EdustorApplication
-import ru.wutiarn.edustor.android.util.extension.syncNow
+import ru.wutiarn.edustor.android.R
 
 class EdustorFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -13,7 +15,11 @@ class EdustorFirebaseMessagingService : FirebaseMessagingService() {
 
         val application = application as EdustorApplication
         when (msg.data["command"]) {
-            "sync" -> application.appComponent.syncApi.syncNow().subscribe()
+            "sync" -> {
+                val appComponent = application.appComponent
+                ContentResolver.setSyncAutomatically(appComponent.constants.syncAccount, getString(R.string.authority), true)
+                ContentResolver.requestSync(appComponent.constants.syncAccount, getString(R.string.authority), Bundle())
+            }
         }
     }
 }
