@@ -33,13 +33,13 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
     }
 
     fun loadData() {
-        appComponent.lessonsRepo.bySubjectId(subjectId!!)
+        appComponent.repo.lessons.bySubjectId(subjectId!!)
                 .linkToLCEView(view, { lessons = it })
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
-        appComponent.lessonsRepo.byDate(subjectId!!, date.toEpochDay())
+        appComponent.repo.lessons.byDate(subjectId!!, date.toEpochDay())
                 .subscribe(
                         { view?.onLessonClick(it) },
                         { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }

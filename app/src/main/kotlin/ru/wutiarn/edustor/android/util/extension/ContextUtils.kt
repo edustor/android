@@ -1,12 +1,9 @@
 package ru.wutiarn.edustor.android.util.extension
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.dagger.component.DaggerAppComponent
 import ru.wutiarn.edustor.android.dagger.module.LocalStorageModule

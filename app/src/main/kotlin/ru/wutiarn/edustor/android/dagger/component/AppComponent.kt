@@ -4,31 +4,25 @@ import android.content.Context
 import com.squareup.otto.Bus
 import dagger.Component
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
+import ru.wutiarn.edustor.android.dagger.groups.ApiGroup
+import ru.wutiarn.edustor.android.dagger.groups.RepoGroup
 import ru.wutiarn.edustor.android.dagger.module.*
 import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
-import ru.wutiarn.edustor.android.data.api.LoginApi
-import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
-import ru.wutiarn.edustor.android.data.repo.DocumentRepo
-import ru.wutiarn.edustor.android.data.repo.LessonsRepo
-import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
 
 @Component(modules = arrayOf(RetrofitModule::class,
         RepoModule::class,
         EventBusModule::class,
-        BuildTypeConfigModule::class,
-        ConstantsModule::class,
-        LocalStorageModule::class))
+        LocalStorageModule::class,
+        GroupsModule::class))
 @AppScope
 interface AppComponent {
+    val api: ApiGroup
+    val repo: RepoGroup
+
     val context: Context
     val constants: EdustorConstants
-    val documentsRepo: DocumentRepo
-    val lessonsRepo: LessonsRepo
-    val subjectsRepo: SubjectsRepo
-    val loginApi: LoginApi
-    val syncApi: SyncApi
     val eventBus: Bus
     val preferences: EdustorPreferences
     val activeSession: ActiveSession

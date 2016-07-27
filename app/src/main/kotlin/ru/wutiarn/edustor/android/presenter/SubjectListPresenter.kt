@@ -20,7 +20,7 @@ class SubjectListPresenter(val appComponent: AppComponent) : MvpPresenter<Subjec
     }
 
     fun loadData() {
-        appComponent.subjectsRepo.all
+        appComponent.repo.subjects.all
                 .linkToLCEView(view, { subjects = it })
     }
 }

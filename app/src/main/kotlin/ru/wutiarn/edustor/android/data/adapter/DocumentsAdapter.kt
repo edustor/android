@@ -84,7 +84,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
 
     fun onMovementFinished() {
         lastUnfinishedMovement?.let {
-            appComponent.lessonsRepo.reorderDocuments(lesson?.id!!, it.first, it.second)
+            appComponent.repo.lessons.reorderDocuments(lesson?.id!!, it.first, it.second)
                     .subscribe(
                             { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) },
                             { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) }
@@ -101,7 +101,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         val document = holder.document!!
 
         val shortUUID = document.shortUUID
-        appComponent.documentsRepo.delete(document.id)
+        appComponent.repo.documents.delete(document.id)
                 .subscribe(
                         { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) },
                         { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) }

@@ -40,13 +40,13 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
         when {
             uuid != null -> {
                 subscriptions.add(
-                        appComponent.lessonsRepo.byUUID(uuid!!)
+                        appComponent.repo.lessons.byUUID(uuid!!)
                                 .linkToLCEView(view, { lesson = it })
                 )
             }
             lessonId != null -> {
                 subscriptions.add(
-                        appComponent.lessonsRepo.byId(lessonId!!)
+                        appComponent.repo.lessons.byId(lessonId!!)
                                 .linkToLCEView(view, { lesson = it })
                 )
             }
@@ -55,7 +55,7 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
 
     fun setTopic(topic: String) {
         lesson?.let {
-            appComponent.lessonsRepo.setTopic(lesson?.id!!, topic)
+            appComponent.repo.lessons.setTopic(lesson?.id!!, topic)
                     .subscribe(
                             { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) },
                             { appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed")) }
@@ -69,7 +69,7 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
             appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return
         }
 
-        appComponent.documentsRepo.activateUUID(uuid, lesson?.id!!).subscribe({
+        appComponent.repo.documents.activateUUID(uuid, lesson?.id!!).subscribe({
             appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
         }, {
             appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))

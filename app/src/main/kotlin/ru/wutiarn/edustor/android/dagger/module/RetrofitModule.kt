@@ -11,10 +11,10 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
+import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.api.LoginApi
 import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.local.ActiveSession
-import javax.inject.Named
 
 @Module
 open class RetrofitModule {
@@ -41,10 +41,10 @@ open class RetrofitModule {
 
     @Provides
     @AppScope
-    fun retrofitClient(objectMapper: ObjectMapper, client: OkHttpClient, @Named("EDUSTOR_URL") url: String): Retrofit {
+    fun retrofitClient(objectMapper: ObjectMapper, client: OkHttpClient, constants: EdustorConstants): Retrofit {
         return Retrofit.Builder()
                 .client(client)
-                .baseUrl(url + "api/")
+                .baseUrl(constants.URL + "api/")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .build()

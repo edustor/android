@@ -17,7 +17,7 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
 
     init {
 
-        appComponent.syncApi.syncNow().subscribe(
+        appComponent.api.sync.syncNow().subscribe(
                 {
                     Log.w(TAG, "Initial sync failed with exception", it)
                     context.makeToast("Sync failed: $it")

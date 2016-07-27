@@ -20,7 +20,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
             context.makeToast("Edustor is syncing")
         }
         val appComponent = context.initializeNewAppComponent()
-        appComponent.syncApi.syncNow().subscribe()
+        appComponent.api.sync.syncNow().subscribe()
     }
 
 }
