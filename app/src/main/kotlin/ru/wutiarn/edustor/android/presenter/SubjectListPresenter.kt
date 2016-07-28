@@ -1,8 +1,10 @@
 package ru.wutiarn.edustor.android.presenter
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Subject
+import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.SubjectsListView
 import rx.Subscription
@@ -16,11 +18,17 @@ class SubjectListPresenter(val appComponent: AppComponent) : MvpPresenter<Subjec
 
     override fun detachView(p0: Boolean) {
         view = null
+        appComponent.eventBus.unregister(this)
         activeSubscription?.unsubscribe()
     }
 
     override fun attachView(p0: SubjectsListView?) {
+        appComponent.eventBus.register(this)
         view = p0
+    }
+
+    @Subscribe fun onSyncFinished(event: RealmSyncFinishedEvent) {
+        loadData()
     }
 
     fun loadData() {

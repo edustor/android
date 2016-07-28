@@ -22,7 +22,7 @@ fun SyncApi.fullSyncNow(): Observable<Unit> {
                     realm.copyToRealmOrUpdate(initData.lessons)
                 }
 
-                Log.i("SyncApi", "Sync finished")
+                Log.i("SyncApi", "Full sync finished")
                 Unit
             }
 }

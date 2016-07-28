@@ -2,8 +2,10 @@ package ru.wutiarn.edustor.android.presenter
 
 import android.os.Bundle
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonDetailsView
@@ -34,6 +36,10 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
     override fun attachView(p0: LessonDetailsView?) {
         appComponent.eventBus.register(this)
         view = p0
+    }
+
+    @Subscribe fun onSyncFinished(event: RealmSyncFinishedEvent) {
+        loadData()
     }
 
     fun loadData() {

@@ -8,6 +8,7 @@ import android.content.SyncResult
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeToast
@@ -34,7 +35,11 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                 .flatMap { appComponent.api.sync.fullSyncNow() }
                 .onError { Log.d(TAG, "Sync pull failed", it) }
                 .subscribe(
-                        { Log.i(TAG, "Sync finished") },
+                        {
+                            Log.i(TAG, "Sync finished")
+                            makeToast("Sync finished")
+                            appComponent.eventBus.post(RealmSyncFinishedEvent())
+                        },
                         { Log.w(TAG, "Sync failed") }
                 )
     }

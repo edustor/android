@@ -50,6 +50,7 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
 
     override fun setData(lessons: List<Subject>?) {
         adapter.subjects = lessons ?: emptyList()
+        adapter.notifyDataSetChanged()
         showContent()
     }
 
