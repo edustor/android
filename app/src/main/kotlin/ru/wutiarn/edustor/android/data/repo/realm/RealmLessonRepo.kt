@@ -1,14 +1,14 @@
 package ru.wutiarn.edustor.android.data.repo.realm
 
 import io.realm.Realm
-import ru.wutiarn.edustor.android.data.local.SyncTasksManager
+import ru.wutiarn.edustor.android.data.local.SyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import rx.Completable
 import rx.Observable
 
-class RealmLessonRepo(val syncTasksManager: SyncTasksManager) : LessonsRepo {
+class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byUUID(uuid: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("documents.uuid", uuid)

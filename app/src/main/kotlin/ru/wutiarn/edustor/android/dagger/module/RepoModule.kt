@@ -3,7 +3,7 @@ package ru.wutiarn.edustor.android.dagger.module
 import dagger.Module
 import dagger.Provides
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
-import ru.wutiarn.edustor.android.data.local.SyncTasksManager
+import ru.wutiarn.edustor.android.data.local.SyncManager
 import ru.wutiarn.edustor.android.data.repo.DocumentRepo
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
@@ -21,7 +21,7 @@ class RepoModule {
 
     @Provides
     @AppScope
-    fun lessonsRepo(syncTasksManager: SyncTasksManager): LessonsRepo {
+    fun lessonsRepo(syncTasksManager: SyncManager): LessonsRepo {
         return RealmLessonRepo(syncTasksManager)
     }
 

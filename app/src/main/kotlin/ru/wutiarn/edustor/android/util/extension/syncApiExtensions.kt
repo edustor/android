@@ -3,9 +3,9 @@ package ru.wutiarn.edustor.android.util.extension
 import android.util.Log
 import io.realm.Realm
 import ru.wutiarn.edustor.android.data.api.SyncApi
-import rx.Completable
+import rx.Observable
 
-fun SyncApi.syncNow(): Completable {
+fun SyncApi.fullSyncNow(): Observable<Unit> {
     return this.fetch()
             .configureAsync()
             .map { initData ->
@@ -23,5 +23,6 @@ fun SyncApi.syncNow(): Completable {
                 }
 
                 Log.i("SyncApi", "Sync finished")
-            }.toCompletable()
+                Unit
+            }
 }

@@ -1,10 +1,11 @@
 package ru.wutiarn.edustor.android.data.local
 
+import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class SyncTasksManager(val prefs: EdustorPreferences) {
+class SyncManager(val prefs: EdustorPreferences, val syncApi: SyncApi) {
     companion object {
         private val lock = ReentrantLock()
     }
@@ -12,6 +13,21 @@ class SyncTasksManager(val prefs: EdustorPreferences) {
     fun addTask(syncTask: SyncTask) {
         modifyTasksWithLock {
             it.add(syncTask)
+        }
+    }
+
+    fun popAllTasks(): List<SyncTask> {
+        var tasks: List<SyncTask> = listOf()
+        modifyTasksWithLock {
+            tasks = it.toList()
+            it.clear()
+        }
+        return tasks
+    }
+
+    fun pushAllTasks(tasks: List<SyncTask>, toBeginning: Boolean) {
+        modifyTasksWithLock {
+            if (toBeginning) it.addAll(0, tasks) else it.addAll(tasks)
         }
     }
 

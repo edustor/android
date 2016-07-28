@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="EDUSTOR_URL">https://edustor.ru/</string>
+    <string name="EDUSTOR_URL">http://192.168.10.4:8080/</string>
 </resources>

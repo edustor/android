@@ -8,19 +8,41 @@ import android.content.SyncResult
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeToast
-import ru.wutiarn.edustor.android.util.extension.syncNow
+import rx.lang.kotlin.onError
 
 class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
 
+    val handler = Handler(context.mainLooper)
+    val TAG = "SyncAdapter"
+
+
     override fun onPerformSync(account: Account?, extras: Bundle?, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult?) {
-        Log.i("SyncAdapter", "Edustor is syncing")
-        Handler(context.mainLooper).post {
-            context.makeToast("Edustor is syncing")
-        }
+        Log.i(TAG, "Edustor is syncing")
+        makeToast("Edustor is syncing")
+
         val appComponent = context.initializeNewAppComponent()
-        appComponent.api.sync.syncNow().subscribe()
+        val tasks = appComponent.syncManager.popAllTasks()
+
+        appComponent.api.sync.push(tasks)
+                .onError {
+                    Log.w("TAG", "Sync push failed", it)
+                    appComponent.syncManager.pushAllTasks(tasks, true)
+                }
+                .flatMap { appComponent.api.sync.fullSyncNow() }
+                .onError { Log.d(TAG, "Sync pull failed", it) }
+                .subscribe(
+                        { Log.i(TAG, "Sync finished") },
+                        { Log.w(TAG, "Sync failed") }
+                )
+    }
+
+    fun makeToast(str: String) {
+        handler.post {
+            context.makeToast(str)
+        }
     }
 
 }

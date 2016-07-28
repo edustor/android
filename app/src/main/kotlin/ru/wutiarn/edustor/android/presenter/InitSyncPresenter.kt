@@ -7,7 +7,7 @@ import ru.wutiarn.edustor.android.activity.SubjectsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.util.extension.startActivity
-import ru.wutiarn.edustor.android.util.extension.syncNow
+import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.view.InitScreenView
 
 class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : MvpPresenter<InitScreenView> {
@@ -17,13 +17,13 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
 
     init {
 
-        appComponent.api.sync.syncNow().subscribe(
+        appComponent.api.sync.fullSyncNow().subscribe(
+                { context.startActivity(SubjectsListActivity::class.java, true) },
                 {
                     Log.w(TAG, "Initial sync failed with exception", it)
                     context.makeToast("Sync failed: $it")
                     appComponent.activeSession.logout()
-                },
-                { context.startActivity(SubjectsListActivity::class.java, true) }
+                }
         )
     }
 
