@@ -7,12 +7,13 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonDetailsView
+import rx.Subscription
 import rx.subscriptions.CompositeSubscription
 
 class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
     var view: LessonDetailsView? = null
-    var subscriptions: CompositeSubscription = CompositeSubscription()
+    var activeSubscription: Subscription? = null
 
     var uuid: String? = null
     var lessonId: String? = null
@@ -25,9 +26,8 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
     }
 
     override fun detachView(p0: Boolean) {
-
         appComponent.eventBus.unregister(this)
-        subscriptions.clear()
+        activeSubscription?.unsubscribe()
         view = null
     }
 
@@ -37,18 +37,18 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
     }
 
     fun loadData() {
+        activeSubscription?.unsubscribe()
         when {
             uuid != null -> {
-                subscriptions.add(
-                        appComponent.repo.lessons.byUUID(uuid!!)
-                                .linkToLCEView(view, { lesson = it })
-                )
+                activeSubscription = appComponent.repo.lessons.byUUID(uuid!!)
+                        .linkToLCEView(view, { lesson = it })
+
             }
             lessonId != null -> {
-                subscriptions.add(
+                activeSubscription =
                         appComponent.repo.lessons.byId(lessonId!!)
                                 .linkToLCEView(view, { lesson = it })
-                )
+
             }
         }
     }
