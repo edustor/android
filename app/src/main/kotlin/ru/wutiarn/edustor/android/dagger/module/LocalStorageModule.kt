@@ -7,6 +7,7 @@ import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
+import ru.wutiarn.edustor.android.data.local.SyncTasksManager
 
 @Module
 class LocalStorageModule(val context: Context) {
@@ -32,5 +33,11 @@ class LocalStorageModule(val context: Context) {
     @AppScope
     fun edustorConstants(context: Context): EdustorConstants {
         return EdustorConstants(context)
+    }
+
+    @Provides
+    @AppScope
+    fun syncTaskManager(prefs: EdustorPreferences): SyncTasksManager {
+        return SyncTasksManager(prefs)
     }
 }

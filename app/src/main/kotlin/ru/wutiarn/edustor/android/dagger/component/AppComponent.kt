@@ -10,6 +10,7 @@ import ru.wutiarn.edustor.android.dagger.module.*
 import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
+import ru.wutiarn.edustor.android.data.local.SyncTasksManager
 
 @Component(modules = arrayOf(RetrofitModule::class,
         RepoModule::class,
@@ -26,4 +27,5 @@ interface AppComponent {
     val eventBus: Bus
     val preferences: EdustorPreferences
     val activeSession: ActiveSession
+    val syncTaskManager: SyncTasksManager
 }

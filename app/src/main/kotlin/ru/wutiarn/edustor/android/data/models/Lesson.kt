@@ -22,7 +22,7 @@ open class Lesson() : RealmObject() {
     open var documents: RealmList<Document> = RealmList()
     @PrimaryKey open var id: String = UUID.randomUUID().toString()
 
-    @JsonIgnore private var realmDate: Long = 0
+    @JsonIgnore var realmDate: Long = 0
 
     fun calculateDocumentIndexes() {
         IntRange(0, documents.lastIndex)

@@ -1,12 +1,14 @@
 package ru.wutiarn.edustor.android.data.repo.realm
 
 import io.realm.Realm
+import ru.wutiarn.edustor.android.data.local.SyncTasksManager
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import rx.Completable
 import rx.Observable
 
-class RealmLessonRepo() : LessonsRepo {
+class RealmLessonRepo(val syncTasksManager: SyncTasksManager) : LessonsRepo {
     override fun byUUID(uuid: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("documents.uuid", uuid)
@@ -80,8 +82,13 @@ class RealmLessonRepo() : LessonsRepo {
                 .map { lesson ->
                     realm.executeTransaction {
                         lesson.topic = if (topic.length != 0) topic else null
+                        val syncTask = SyncTask("lessons/date/topic/put", mapOf(
+                                "topic" to lesson.topic,
+                                "subject" to lesson.subject.id,
+                                "date" to lesson.realmDate
+                        ))
+                        syncTasksManager.addTask(syncTask)
                     }
                 }.toCompletable()
     }
-
 }
