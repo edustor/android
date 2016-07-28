@@ -1,6 +1,7 @@
 package ru.wutiarn.edustor.android.presenter
 
 import android.os.Bundle
+import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
@@ -78,6 +79,7 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
         appComponent.repo.documents.activateUUID(uuid, lesson?.id!!).subscribe({
             appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
         }, {
+            Log.w("LoginPresenter", "Error while creating document", it)
             appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
         })
     }

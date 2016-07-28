@@ -21,7 +21,7 @@ class RealmDocumentRepo(val lessonRepo: LessonsRepo) : DocumentRepo {
                     }
 
                     realm.executeTransaction {
-                        val targetIndex = lesson.documents.max("index").toInt() + 1
+                        val targetIndex = lesson.documents.max("index")?.toInt()?.plus(1) ?: 0
                         val document = Document(uuid, instant, targetIndex)
                         realm.copyToRealm(document)
                         lesson.documents.add(document)
