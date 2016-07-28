@@ -10,4 +10,5 @@ class EdustorConstants(
     val GOOGLE_BACKEND_CLIENT_ID = "99685742253-41uieqd0vl3e03l62c7t3impd38gdt4q.apps.googleusercontent.com"
     var URL: String = context.getString(R.string.EDUSTOR_URL)
     val syncAccount = Account("Edustor sync", "edustor.ru")
+    val contentProviderAuthority: String = context.getString(R.string.authority)
 }

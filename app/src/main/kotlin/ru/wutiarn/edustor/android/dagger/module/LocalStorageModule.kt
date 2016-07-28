@@ -38,7 +38,7 @@ class LocalStorageModule(val context: Context) {
 
     @Provides
     @AppScope
-    fun syncTaskManager(prefs: EdustorPreferences, syncApi: SyncApi): SyncManager {
-        return SyncManager(prefs, syncApi)
+    fun syncTaskManager(prefs: EdustorPreferences, constants: EdustorConstants, context: Context): SyncManager {
+        return SyncManager(prefs, constants, context)
     }
 }

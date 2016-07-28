@@ -1,14 +1,31 @@
 package ru.wutiarn.edustor.android.data.local
 
-import ru.wutiarn.edustor.android.data.api.SyncApi
+import android.content.ContentResolver
+import android.content.Context
+import android.os.Bundle
+import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class SyncManager(val prefs: EdustorPreferences, val syncApi: SyncApi) {
+class SyncManager(val prefs: EdustorPreferences,
+                  val constants: EdustorConstants,
+                  val context: Context) {
+
     companion object {
-        private val lock = ReentrantLock()
+        private val tasksModificationLock = ReentrantLock()
     }
+
+    var syncEnabled: Boolean
+        get() = ContentResolver.getSyncAutomatically(constants.syncAccount, constants.contentProviderAuthority)
+        set(value) {
+            ContentResolver.setSyncAutomatically(constants.syncAccount, constants.contentProviderAuthority, value)
+        }
+
+    fun requestSync() {
+        ContentResolver.requestSync(constants.syncAccount, constants.contentProviderAuthority, Bundle())
+    }
+
 
     fun addTask(syncTask: SyncTask) {
         modifyTasksWithLock {
@@ -33,7 +50,7 @@ class SyncManager(val prefs: EdustorPreferences, val syncApi: SyncApi) {
 
     //    TODO: Consider executor usage
     fun modifyTasksWithLock(f: (MutableList<SyncTask>) -> Unit) {
-        lock.withLock {
+        tasksModificationLock.withLock {
             val tasks = prefs.syncTasks.toMutableList()
             f(tasks)
             prefs.syncTasks = tasks

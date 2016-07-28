@@ -36,6 +36,7 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
     }
 
     fun onLoggedIn() {
+        appComponent.syncManager.syncEnabled = true
         val intent = Intent(activity, InitSyncActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)

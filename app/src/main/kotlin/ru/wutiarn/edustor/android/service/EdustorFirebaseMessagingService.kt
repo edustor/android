@@ -17,8 +17,7 @@ class EdustorFirebaseMessagingService : FirebaseMessagingService() {
         when (msg.data["command"]) {
             "sync" -> {
                 val appComponent = application.appComponent
-                ContentResolver.setSyncAutomatically(appComponent.constants.syncAccount, getString(R.string.authority), true)
-                ContentResolver.requestSync(appComponent.constants.syncAccount, getString(R.string.authority), Bundle())
+                appComponent.syncManager.requestSync()
             }
         }
     }
