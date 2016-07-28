@@ -1,4 +1,4 @@
-package ru.wutiarn.edustor.android.sync
+package ru.wutiarn.edustor.android.sync.stub
 
 import android.accounts.AbstractAccountAuthenticator
 import android.accounts.Account

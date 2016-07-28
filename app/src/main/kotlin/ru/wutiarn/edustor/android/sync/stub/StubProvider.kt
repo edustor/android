@@ -1,4 +1,4 @@
-package ru.wutiarn.edustor.android.sync
+package ru.wutiarn.edustor.android.sync.stub
 
 import android.content.ContentProvider
 import android.content.ContentValues

@@ -62,7 +62,7 @@
         </service>
 
         <service
-            android:name=".sync.StubAuthenticatorService">
+            android:name=".sync.stub.StubAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -83,7 +83,7 @@
         </service>
 
         <provider
-            android:name=".sync.StubProvider"
+            android:name=".sync.stub.StubProvider"
             android:authorities="@string/authority"
             android:exported="false"
             android:syncable="true"/>
