@@ -3,6 +3,7 @@ package ru.wutiarn.edustor.android.fragment
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_base_list, container, false)!!
+        (view.findViewById(R.id.swipe_refresh_layout) as SwipeRefreshLayout).setOnRefreshListener { appComponent.syncManager.requestSync(true, true) }
         if (arguments?.getBoolean("allowDatePick") ?: false == true) {
             val calendarFab = activity.fab_calendar
             calendarFab.visibility = View.VISIBLE
@@ -71,6 +73,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
             activity?.title = it
         }
         if (isResumed) showContent()
+        swipe_refresh_layout.isRefreshing = false
     }
 
     override fun onLessonClick(lesson: Lesson) {

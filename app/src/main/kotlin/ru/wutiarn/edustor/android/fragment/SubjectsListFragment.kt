@@ -2,6 +2,7 @@ package ru.wutiarn.edustor.android.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,9 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_base_list, container, false)
+        val view = inflater?.inflate(R.layout.fragment_base_list, container, false)!!
+        (view.findViewById(R.id.swipe_refresh_layout) as SwipeRefreshLayout).setOnRefreshListener { appComponent.syncManager.requestSync(true, true) }
+        return view
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -51,6 +54,7 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
     override fun setData(lessons: List<Subject>?) {
         adapter.subjects = lessons ?: emptyList()
         adapter.notifyDataSetChanged()
+        swipe_refresh_layout.isRefreshing = false
         showContent()
     }
 
