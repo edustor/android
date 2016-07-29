@@ -13,6 +13,7 @@ import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeToast
 import rx.lang.kotlin.onError
+import java.io.IOException
 
 class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
 
@@ -20,7 +21,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
     val TAG = "SyncAdapter"
 
 
-    override fun onPerformSync(account: Account?, extras: Bundle?, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult?) {
+    override fun onPerformSync(account: Account?, extras: Bundle?, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult) {
         val appComponent = context.initializeNewAppComponent()
         val tasks = appComponent.syncManager.popAllTasks()
 
@@ -41,7 +42,15 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                             makeToast("Sync finished")
                             appComponent.eventBus.post(RealmSyncFinishedEvent())
                         },
-                        { Log.w(TAG, "Sync failed") }
+                        {
+                            when (it) {
+                                is IOException -> {
+                                    syncResult.stats.numIoExceptions++
+                                }
+                            }
+                            Log.w(TAG, "Sync failed")
+                            makeToast("Sync failed")
+                        }
                 )
     }
 

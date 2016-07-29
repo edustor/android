@@ -31,6 +31,7 @@ class SyncManager(val prefs: EdustorPreferences,
         modifyTasksWithLock {
             it.add(syncTask)
         }
+        requestSync()
     }
 
     fun popAllTasks(): List<SyncTask> {
