@@ -22,7 +22,7 @@ import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.LessonPresenter
 import ru.wutiarn.edustor.android.util.EdustorDocumentTouchHelperCallback
-import ru.wutiarn.edustor.android.util.extension.makeToast
+import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 
 
@@ -61,7 +61,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
             val uri = appComponent.constants.URL + "pdf/${lesson?.id}"
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = ClipData.newPlainText(uri, uri)
-            context.makeToast("Copied: $uri")
+            appComponent.eventBus.makeSnack("Copied: $uri")
         }
 
         documentsAdapter.lesson = lesson

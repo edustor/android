@@ -5,6 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
+import rx.Observable
+import rx.Subscription
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -22,7 +25,21 @@ class SyncManager(val prefs: EdustorPreferences,
             ContentResolver.setSyncAutomatically(constants.syncAccount, constants.contentProviderAuthority, value)
         }
 
-    fun requestSync() {
+    var pendingRequest: Subscription? = null
+
+    fun requestSync(now: Boolean = false) {
+        pendingRequest?.unsubscribe()
+
+        if (now) {
+            requestSyncNow()
+        } else {
+            pendingRequest = Observable.timer(5, TimeUnit.SECONDS)
+                    .subscribe { requestSyncNow() }
+        }
+
+    }
+
+    private fun requestSyncNow() {
         ContentResolver.requestSync(constants.syncAccount, constants.contentProviderAuthority, Bundle())
     }
 
