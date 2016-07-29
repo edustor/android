@@ -26,8 +26,8 @@ open class Document() : RealmObject() {
         }
     @PrimaryKey open var id: String = UUID.randomUUID().toString()
 
-    @JsonIgnore private var realmTimestamp: Long = 0
-    @JsonIgnore private var realmUploadedTimestamp: Long? = null
+    @JsonIgnore var realmTimestamp: Long = 0
+    @JsonIgnore var realmUploadedTimestamp: Long? = null
 
     @JsonIgnore var index: Int = 0
 
