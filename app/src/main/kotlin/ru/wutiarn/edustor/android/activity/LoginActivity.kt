@@ -2,11 +2,14 @@ package ru.wutiarn.edustor.android.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import com.hannesdorfmann.mosby.mvp.MvpActivity
+import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_login.*
 import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.presenter.LoginPresenter
 import ru.wutiarn.edustor.android.view.LoginView
 
@@ -29,5 +32,20 @@ class LoginActivity : MvpActivity<LoginView, LoginPresenter>(), LoginView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         presenter.onActivityResult(requestCode, resultCode, data)
+    }
+
+    @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
+        Snackbar.make(container, event.message, event.length).show()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        appComponent.eventBus.register(this)
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appComponent.eventBus.unregister(this)
     }
 }
