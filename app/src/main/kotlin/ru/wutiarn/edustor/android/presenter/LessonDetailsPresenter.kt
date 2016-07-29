@@ -12,7 +12,7 @@ import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.Subscription
 
-class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
+class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
     var view: LessonDetailsView? = null
     var activeSubscription: Subscription? = null

@@ -20,22 +20,22 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.presenter.LessonPresenter
+import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
 import ru.wutiarn.edustor.android.util.EdustorDocumentTouchHelperCallback
 import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 
 
-class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetailsView, LessonPresenter>(), LessonDetailsView {
+class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetailsView, LessonDetailsPresenter>(), LessonDetailsView {
 
     lateinit var appComponent: AppComponent
 
     lateinit var documentsAdapter: DocumentsAdapter
 
-    override fun createPresenter(): LessonPresenter {
+    override fun createPresenter(): LessonDetailsPresenter {
         val application = context.applicationContext as EdustorApplication
         appComponent = application.appComponent
-        return LessonPresenter(appComponent, arguments)
+        return LessonDetailsPresenter(appComponent, arguments)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

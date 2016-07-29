@@ -14,7 +14,7 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
 import ru.wutiarn.edustor.android.presenter.LessonDetailsActivityPresenter
-import ru.wutiarn.edustor.android.presenter.LessonPresenter
+import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
 import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 import ru.wutiarn.edustor.android.view.LessonDetailsActivityView
 
@@ -58,7 +58,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         return LessonDetailsActivityPresenter()
     }
 
-    override val fragmentPresenter: LessonPresenter?
+    override val fragmentPresenter: LessonDetailsPresenter?
         get() = lessonDetailsFragment.presenter
 
     @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
