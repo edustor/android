@@ -1,11 +1,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="true"
-    android:orientation="vertical"
-    tools:context="ru.wutiarn.edustor.android.fragment.LessonDetailsFragment">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:clickable="true"
+             android:orientation="vertical"
+             android:padding="16dp"
+             tools:context="ru.wutiarn.edustor.android.fragment.LessonDetailsFragment">
 
     <ProgressBar
         style="?android:attr/progressBarStyle"
@@ -50,7 +50,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Subject"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     <TextView
                         android:id="@+id/subject"
@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="Math" />
+                        android:text="Math"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Lesson date"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     <TextView
                         android:id="@+id/date"
@@ -79,19 +79,24 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="01.01.2016" />
+                        android:text="01.01.2016"/>
                 </LinearLayout>
 
             </LinearLayout>
 
-            <Button android:id="@+id/copyUrl" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:text="URL"/>
+            <Button
+                android:id="@+id/copyUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="URL"/>
+
             <Button
                 android:id="@+id/getPdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="PDF" />
+                android:text="PDF"/>
 
         </LinearLayout>
 
@@ -105,26 +110,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Topic"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <EditText
                 android:id="@+id/topic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/topic_save_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="save" />
+                android:text="save"/>
 
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/documents_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
