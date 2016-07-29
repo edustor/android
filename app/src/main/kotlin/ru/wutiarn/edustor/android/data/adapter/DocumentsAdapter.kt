@@ -26,8 +26,6 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
             activeDocumentsSubscription?.unsubscribe()
             value?.addChangeListener<Lesson> { onDocumentsChanged(it.documents) }
             onDocumentsChanged(value?.documents)
-//            TODO: По непонятным причинам список документов перестает обновляться при добавлении в него новых документов
-//            после удаления любого старого. Хотя событие долетает до этого метода корректно и список документов в нем верный
         }
 
     private var documents: MutableList<Document> = mutableListOf()
@@ -42,9 +40,12 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
     }
 
     fun onDocumentsChanged(newDocs: List<Document>?) {
-        documents = newDocs?.toMutableList() ?: mutableListOf()
-        documents.sortBy { it.index }
+        documents = newDocs
+                ?.sortedBy { it.index }
+                ?.toMutableList() ?: mutableListOf()
         notifyDataSetChanged()
+//        TODO: По непонятным причинам список документов перестает обновляться при добавлении в него новых документов
+//        после удаления любого старого. Хотя событие долетает до этого метода корректно и список документов в нем верный
     }
 
 

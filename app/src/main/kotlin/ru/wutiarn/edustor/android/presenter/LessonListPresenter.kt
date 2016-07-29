@@ -48,7 +48,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
     fun loadData() {
         activeSubscription?.unsubscribe()
         activeSubscription = appComponent.repo.lessons.bySubjectId(subjectId!!)
-                .map { it.sortedByDescending { it.date } }
+                .map { it.filter { it.documents.count() > 0 }.sortedByDescending { it.date } }
                 .linkToLCEView(view, { lessons = it })
     }
 
