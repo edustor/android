@@ -3,7 +3,9 @@ build_debug:
   stage: build
   script:
     - ./gradlew assembleDebug assembleCI
+    - mv app/build/outputs/apk/* .
+    - rm *-unaligned.apk
   artifacts:
     name: "edustor-android-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
-      - "app/build/outputs/"
+      - "*.apk"
