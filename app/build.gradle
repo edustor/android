@@ -7,7 +7,7 @@ def debugPass = getEnv("EDUSTOR_ANDROID_DEBUG_KEY_PASSWORD")
 def releasePass = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_PASSWORD")
 def keyFile = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_LOCATION")
 
-def CI_BUILD_REF = getEnv("CI_BUILD_REF")
+def CI_BUILD_REF = getEnv("CI_BUILD_REF")?.substring(0, 8)
 def CI_BUILD_REF_NAME = getEnv("CI_BUILD_REF_NAME")
 
 android {
