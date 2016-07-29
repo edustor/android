@@ -5,14 +5,6 @@ apply plugin: 'realm-android'
 
 //noinspection GroovyMissingReturnStatement
 android {
-    signingConfigs {
-        release {
-            storeFile file(RELEASE_STORE_FILE)
-            storePassword RELEASE_STORE_PASSWORD
-            keyAlias RELEASE_KEY_ALIAS
-            keyPassword RELEASE_KEY_PASSWORD
-        }
-    }
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
     defaultConfig {
@@ -42,19 +34,50 @@ android {
         test.java.srcDirs += 'src/test/kotlin'
 
         debug.res.srcDirs += 'src/debug/res'
+        CI.res.srcDirs += 'src/release/res'
+        unsignedCI.res.srcDirs += 'src/release/res'
         release.res.srcDirs += 'src/release/res'
+    }
+    signingConfigs {
+        debug {
+            def debugPass = getEnv("EDUSTOR_ANDROID_DEBUG_KEY_PASSWORD")
+            storeFile file("../keys/debug.keystore")
+            storePassword debugPass
+            keyAlias "debug"
+            keyPassword debugPass
+        }
+
+        release {
+            def releasePass = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_PASSWORD")
+            storeFile file(getEnv("EDUSTOR_ANDROID_RELEASE_KEY_LOCATION"))
+            storePassword releasePass
+            keyAlias "release"
+            keyPassword releasePass
+        }
     }
     buildTypes {
 
         debug {
+            signingConfig signingConfigs["debug"]
             applicationIdSuffix ".debug"
             manifestPlaceholders = [
                     appLabel: "Edustor Experimental"
             ]
         }
 
+        CI {
+            signingConfig signingConfigs["debug"]
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        unsignedCI {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs["release"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -109,3 +132,7 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+String getEnv(String name) {
+    return project.hasProperty(name) ? project.properties.get(name) : System.getenv(name)
+}

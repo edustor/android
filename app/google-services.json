@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "99685742253-iugigsujd04l7qeheg9hu6soe8t62mq4.apps.googleusercontent.com",
+          "client_id": "99685742253-1t09ldh8ohegpj39d6gocsqapn7lcm8u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ru.wutiarn.edustor.android",
             "certificate_hash": "BB78BB6BC5386A43B6A4B164838E05B6823AF62D"
+          }
+        },
+        {
+          "client_id": "99685742253-0ob51vb1nit7op4fegkbmvmudior8eid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.wutiarn.edustor.android",
+            "certificate_hash": "B1BC602A51B372C280E4BA13A8D33C076AD17EC9"
           }
         },
         {
@@ -63,11 +71,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "99685742253-ioektfc8k3ea2ihg88p3j5rgo65a8voa.apps.googleusercontent.com",
+          "client_id": "99685742253-cg0k459fjnkf0anprb6bqa5imkt9ue3q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ru.wutiarn.edustor.android.debug",
-            "certificate_hash": "0FA4A04F2FA31B7DE964FCC06AA8819CA52856A5"
+            "certificate_hash": "B1BC602A51B372C280E4BA13A8D33C076AD17EC9"
           }
         },
         {
