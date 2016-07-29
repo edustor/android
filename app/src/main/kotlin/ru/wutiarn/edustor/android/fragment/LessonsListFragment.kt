@@ -20,11 +20,12 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.LessonsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.LessonListPresenter
+import ru.wutiarn.edustor.android.util.helpers.PullToRefreshHelper
 import ru.wutiarn.edustor.android.view.LessonsListView
 
 class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),
-        LessonsListView, LessonsAdapter.LessonsAdapterEventsListener {
-    lateinit var appComponent: AppComponent
+        LessonsListView, LessonsAdapter.LessonsAdapterEventsListener, PullToRefreshHelper {
+    lateinit override var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter
 
     override fun createPresenter(): LessonListPresenter {
@@ -35,8 +36,8 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_base_list, container, false)!!
-        (view.findViewById(R.id.swipe_refresh_layout) as SwipeRefreshLayout).setOnRefreshListener { appComponent.syncManager.requestSync(true, true) }
-        if (arguments?.getBoolean("allowDatePick") ?: false == true) {
+        configureSwipeToRefresh(view)
+        if (arguments?.getBoolean("allowDatePick") ?: false) {
             val calendarFab = activity.fab_calendar
             calendarFab.visibility = View.VISIBLE
 
@@ -46,7 +47,6 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
                 dialog.show()
             }
         }
-
         return view
     }
 
@@ -73,7 +73,6 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
             activity?.title = it
         }
         if (isResumed) showContent()
-        swipe_refresh_layout.isRefreshing = false
     }
 
     override fun onLessonClick(lesson: Lesson) {

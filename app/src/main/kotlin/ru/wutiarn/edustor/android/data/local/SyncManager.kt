@@ -2,6 +2,7 @@ package ru.wutiarn.edustor.android.data.local
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.SyncRequest
 import android.os.Bundle
 import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
@@ -27,24 +28,21 @@ class SyncManager(val prefs: EdustorPreferences,
 
     var pendingRequest: Subscription? = null
 
-    fun requestSync(now: Boolean = false, force: Boolean = false) {
+    fun requestSync(now: Boolean = false, manual: Boolean = false) {
         pendingRequest?.unsubscribe()
 
-        if (now) {
-            requestSyncNow(force)
-        } else {
-            pendingRequest = Observable.timer(5, TimeUnit.SECONDS)
-                    .subscribe { requestSyncNow(force) }
-        }
+        val timeout: Long = if (now) 0 else 5
 
-    }
-
-    private fun requestSyncNow(force: Boolean = false) {
-        val bundle = Bundle()
-        if (force) {
-            bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
-        }
-        ContentResolver.requestSync(constants.syncAccount, constants.contentProviderAuthority, bundle)
+        pendingRequest = Observable.timer(timeout, TimeUnit.SECONDS)
+                .subscribe {
+                    val syncRequest = SyncRequest.Builder()
+                            .setSyncAdapter(constants.syncAccount, constants.contentProviderAuthority)
+                            .setExtras(Bundle())
+                            .setManual(manual)
+                            .setExpedited(manual)
+                            .build()
+                    ContentResolver.requestSync(syncRequest)
+                }
     }
 
 

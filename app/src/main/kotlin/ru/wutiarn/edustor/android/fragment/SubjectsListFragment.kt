@@ -17,10 +17,12 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.SubjectsAdapter
 import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.presenter.SubjectListPresenter
+import ru.wutiarn.edustor.android.util.helpers.PullToRefreshHelper
 import ru.wutiarn.edustor.android.view.SubjectsListView
 
-class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, SubjectsListView, SubjectListPresenter>(), SubjectsListView, SubjectsAdapter.SubjectsAdapterEventsListener {
-    lateinit var appComponent: AppComponent
+class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, SubjectsListView, SubjectListPresenter>(),
+        SubjectsListView, SubjectsAdapter.SubjectsAdapterEventsListener, PullToRefreshHelper {
+    lateinit override var appComponent: AppComponent
     lateinit var adapter: SubjectsAdapter
 
     override fun createPresenter(): SubjectListPresenter {
@@ -31,7 +33,7 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_base_list, container, false)!!
-        (view.findViewById(R.id.swipe_refresh_layout) as SwipeRefreshLayout).setOnRefreshListener { appComponent.syncManager.requestSync(true, true) }
+        configureSwipeToRefresh(view)
         return view
     }
 
@@ -54,7 +56,6 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
     override fun setData(lessons: List<Subject>?) {
         adapter.subjects = lessons ?: emptyList()
         adapter.notifyDataSetChanged()
-        swipe_refresh_layout.isRefreshing = false
         showContent()
     }
 
