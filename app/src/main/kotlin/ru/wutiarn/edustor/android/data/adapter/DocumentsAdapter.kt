@@ -16,15 +16,16 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
+import rx.Subscription
 
 class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>() {
 
     var lesson: Lesson? = null
         set(value) {
             field = value
-            documents = value?.documents?.toMutableList() ?: mutableListOf()
-            documents.sortBy { it.index }
-            notifyDataSetChanged()
+            activeDocumentsSubscription?.unsubscribe()
+            value?.addChangeListener<Lesson> { onDocumentsChanged(it.documents) }
+            onDocumentsChanged(value?.documents)
 //            TODO: По непонятным причинам список документов перестает обновляться при добавлении в него новых документов
 //            после удаления любого старого. Хотя событие долетает до этого метода корректно и список документов в нем верный
         }
@@ -32,13 +33,21 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
     private var documents: MutableList<Document> = mutableListOf()
 
     private var lastUnfinishedMovement: Pair<String, String?>? = null
+    var activeDocumentsSubscription: Subscription? = null
+    val TAG: String = "DocumentsAdapter"
 
 
     init {
         setHasStableIds(true)
     }
 
-    val TAG: String = "DocumentsAdapter"
+    fun onDocumentsChanged(newDocs: List<Document>?) {
+        documents = newDocs?.toMutableList() ?: mutableListOf()
+        documents.sortBy { it.index }
+        notifyDataSetChanged()
+    }
+
+
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
         val document = documents[position]
 

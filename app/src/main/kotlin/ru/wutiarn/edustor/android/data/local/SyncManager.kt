@@ -27,20 +27,24 @@ class SyncManager(val prefs: EdustorPreferences,
 
     var pendingRequest: Subscription? = null
 
-    fun requestSync(now: Boolean = false) {
+    fun requestSync(now: Boolean = false, force: Boolean = false) {
         pendingRequest?.unsubscribe()
 
         if (now) {
-            requestSyncNow()
+            requestSyncNow(force)
         } else {
             pendingRequest = Observable.timer(5, TimeUnit.SECONDS)
-                    .subscribe { requestSyncNow() }
+                    .subscribe { requestSyncNow(force) }
         }
 
     }
 
-    private fun requestSyncNow() {
-        ContentResolver.requestSync(constants.syncAccount, constants.contentProviderAuthority, Bundle())
+    private fun requestSyncNow(force: Boolean = false) {
+        val bundle = Bundle()
+        if (force) {
+            bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
+        }
+        ContentResolver.requestSync(constants.syncAccount, constants.contentProviderAuthority, bundle)
     }
 
 
