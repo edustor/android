@@ -3,7 +3,13 @@ apply plugin: "kotlin-android"
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
-//noinspection GroovyMissingReturnStatement
+def debugPass = getEnv("EDUSTOR_ANDROID_DEBUG_KEY_PASSWORD")
+def releasePass = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_PASSWORD")
+def keyFile = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_LOCATION")
+
+def CI_BUILD_REF = getEnv("CI_BUILD_REF")
+def CI_BUILD_REF_NAME = getEnv("CI_BUILD_REF_NAME")
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
@@ -38,9 +44,9 @@ android {
         unsignedCI.res.srcDirs += 'src/release/res'
         release.res.srcDirs += 'src/release/res'
     }
+
     signingConfigs {
         debug {
-            def debugPass = getEnv("EDUSTOR_ANDROID_DEBUG_KEY_PASSWORD")
             storeFile file("../keys/debug.keystore")
             storePassword debugPass
             keyAlias "debug"
@@ -48,8 +54,7 @@ android {
         }
 
         release {
-            def releasePass = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_PASSWORD")
-            storeFile file(getEnv("EDUSTOR_ANDROID_RELEASE_KEY_LOCATION"))
+            storeFile keyFile != null ? file(keyFile) : null
             storePassword releasePass
             keyAlias "release"
             keyPassword releasePass
@@ -60,24 +65,27 @@ android {
         debug {
             signingConfig signingConfigs["debug"]
             applicationIdSuffix ".debug"
+            if (CI_BUILD_REF != null) {
+                versionNameSuffix ".$CI_BUILD_REF_NAME.$CI_BUILD_REF"
+            }
             manifestPlaceholders = [
                     appLabel: "Edustor Experimental"
             ]
         }
 
         CI {
+            if (CI_BUILD_REF != null) {
+                versionNameSuffix ".$CI_BUILD_REF_NAME.$CI_BUILD_REF"
+            }
             signingConfig signingConfigs["debug"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        unsignedCI {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
         release {
-            signingConfig signingConfigs["release"]
+            if (keyFile != null && releasePass != null) {
+                signingConfig signingConfigs["release"]
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
