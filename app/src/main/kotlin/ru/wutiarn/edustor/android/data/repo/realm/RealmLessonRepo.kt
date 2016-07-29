@@ -6,7 +6,6 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
-import rx.Completable
 import rx.Observable
 
 class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
@@ -62,7 +61,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .map { it.toList() }
     }
 
-    override fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Completable {
+    override fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Observable<Unit> {
         val realm = Realm.getDefaultInstance()
         return realm.where(Lesson::class.java)
                 .equalTo("id", lesson)
@@ -88,10 +87,10 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                         lesson.documents.add(targetIndex, document)
                         lesson.calculateDocumentIndexes()
                     }
-                }.toCompletable()
+                }
     }
 
-    override fun setTopic(lesson: String, topic: String): Completable {
+    override fun setTopic(lesson: String, topic: String): Observable<Unit> {
         val realm = Realm.getDefaultInstance()
         return realm.where(Lesson::class.java)
                 .equalTo("id", lesson)
@@ -109,6 +108,6 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                         ))
                         syncTasksManager.addTask(syncTask)
                     }
-                }.toCompletable()
+                }
     }
 }

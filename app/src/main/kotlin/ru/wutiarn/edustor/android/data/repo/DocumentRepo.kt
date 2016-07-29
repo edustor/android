@@ -3,8 +3,7 @@ package ru.wutiarn.edustor.android.data.repo
 import org.threeten.bp.Instant
 import retrofit2.http.*
 import ru.wutiarn.edustor.android.data.models.Document
-import rx.Completable
-import rx.Single
+import rx.Observable
 
 interface DocumentRepo {
     @POST("documents/uuid/activate")
@@ -12,8 +11,8 @@ interface DocumentRepo {
     fun activateUUID(@Field("uuid") uuid: String,
                      @Field("lesson") lessonId: String,
                      @Field("instant") instant: Instant = Instant.now()
-    ): Single<Document>
+    ): Observable<Document>
 
     @DELETE("documents/{document}")
-    fun delete(@Path("document") documentId: String): Completable
+    fun delete(@Path("document") documentId: String): Observable<Unit>
 }

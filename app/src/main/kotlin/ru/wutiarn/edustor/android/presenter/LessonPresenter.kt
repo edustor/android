@@ -64,8 +64,8 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
         lesson?.let {
             appComponent.repo.lessons.setTopic(lesson?.id!!, topic)
                     .subscribe(
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) },
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed")) }
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed")) },
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }
                     )
         }
     }

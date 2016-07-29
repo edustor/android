@@ -86,8 +86,8 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         lastUnfinishedMovement?.let {
             appComponent.repo.lessons.reorderDocuments(lesson?.id!!, it.first, it.second)
                     .subscribe(
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) },
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) }
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
                     )
         }
     }
@@ -103,8 +103,8 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         val shortUUID = document.shortUUID
         appComponent.repo.documents.delete(document.id)
                 .subscribe(
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) },
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) }
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) },
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) }
                 )
     }
 
