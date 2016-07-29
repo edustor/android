@@ -75,7 +75,8 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
 
     override fun onLessonClick(lesson: Lesson) {
         val intent = Intent(context, LessonDetailsActivity::class.java)
-        intent.putExtra("id", lesson.id)
+        intent.putExtra("subject", lesson.subject.id)
+        intent.putExtra("date", lesson.realmDate)
         startActivity(intent)
     }
 

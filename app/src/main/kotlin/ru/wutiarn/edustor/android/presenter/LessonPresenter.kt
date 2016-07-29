@@ -11,7 +11,6 @@ import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.Subscription
-import rx.subscriptions.CompositeSubscription
 
 class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
@@ -19,13 +18,15 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
     var activeSubscription: Subscription? = null
 
     var uuid: String? = null
-    var lessonId: String? = null
+    var subjectId: String? = null
+    var lessonEpochDay: Long? = null
 
     var lesson: Lesson? = null
 
     init {
         uuid = arguments.getString("uuid")
-        lessonId = arguments.getString("id")
+        subjectId = arguments.getString("subject")
+        lessonEpochDay = arguments.getLong("date")
     }
 
     override fun detachView(p0: Boolean) {
@@ -49,11 +50,10 @@ class LessonPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPr
             uuid != null -> {
                 activeSubscription = appComponent.repo.lessons.byUUID(uuid!!)
                         .linkToLCEView(view, { lesson = it })
-
             }
-            lessonId != null -> {
+            subjectId != null -> {
                 activeSubscription =
-                        appComponent.repo.lessons.byId(lessonId!!)
+                        appComponent.repo.lessons.byDate(subjectId!!, lessonEpochDay!!)
                                 .linkToLCEView(view, { lesson = it })
 
             }

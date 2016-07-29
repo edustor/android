@@ -36,14 +36,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         fab_scan_exists.visibility = View.GONE
 
         lessonDetailsFragment = LessonDetailsFragment()
-        val lessonBundle = Bundle()
-
-        val uuid = intent.getStringExtra("uuid")
-        lessonBundle.putString("uuid", uuid)
-
-        val id = intent.getStringExtra("id")
-        lessonBundle.putString("id", id)
-        lessonDetailsFragment.arguments = lessonBundle
+        lessonDetailsFragment.arguments = intent.extras
 
         fab_scan_new.visibility = View.VISIBLE
         fab_scan_new.setOnClickListener {

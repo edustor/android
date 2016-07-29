@@ -16,6 +16,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findFirstAsync()
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
+                .first()
     }
 
     override fun byDate(subject: String, epochDay: Long): Observable<Lesson> {
@@ -40,6 +41,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                                 lesson
                             }
                 }
+                .first()
     }
 
     override fun byId(id: String): Observable<Lesson> {
@@ -48,6 +50,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findFirstAsync()
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
+                .first()
     }
 
     override fun bySubjectId(subject_id: String): Observable<List<Lesson>> {
