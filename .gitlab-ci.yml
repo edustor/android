@@ -2,7 +2,7 @@ build_debug:
   image: wutiarn/android
   stage: build
   script:
-    - ./gradlew assembleDebug
+    - ./gradlew assembleDebug assembleCI
   artifacts:
     name: "edustor-android-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
