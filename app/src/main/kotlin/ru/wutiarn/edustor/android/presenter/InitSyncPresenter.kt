@@ -5,6 +5,7 @@ import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.activity.SubjectsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.util.extension.startActivity
@@ -17,7 +18,7 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
 
     init {
 
-        appComponent.api.sync.fullSyncNow().subscribe(
+        appComponent.api.sync.fullSyncNow().configureAsync().subscribe(
                 { context.startActivity(SubjectsListActivity::class.java, true) },
                 {
                     Log.w(TAG, "Initial sync failed with exception", it)

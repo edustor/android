@@ -26,23 +26,16 @@ class SyncManager(val prefs: EdustorPreferences,
             ContentResolver.setSyncAutomatically(constants.syncAccount, constants.contentProviderAuthority, value)
         }
 
-    var pendingRequest: Subscription? = null
-
-    fun requestSync(now: Boolean = false, manual: Boolean = false) {
-        pendingRequest?.unsubscribe()
-
-        val timeout: Long = if (now) 0 else 5
-
-        pendingRequest = Observable.timer(timeout, TimeUnit.SECONDS)
-                .subscribe {
-                    val syncRequest = SyncRequest.Builder()
-                            .setSyncAdapter(constants.syncAccount, constants.contentProviderAuthority)
-                            .setExtras(Bundle())
-                            .setManual(manual)
-                            .setExpedited(manual)
-                            .build()
-                    ContentResolver.requestSync(syncRequest)
-                }
+    fun requestSync(manual: Boolean = false) {
+        val bundle = Bundle()
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, !manual)
+        val syncRequest = SyncRequest.Builder()
+                .setSyncAdapter(constants.syncAccount, constants.contentProviderAuthority)
+                .setExtras(bundle)
+                .setManual(manual)
+                .setExpedited(manual)
+                .build()
+        ContentResolver.requestSync(syncRequest)
     }
 
 

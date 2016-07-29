@@ -14,7 +14,7 @@ interface PullToRefreshHelper {
     fun configureSwipeToRefresh(baseView: View) {
         val swipeRefreshLayout = baseView.findViewById(R.id.swipe_refresh_layout) as SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener {
-            appComponent.syncManager.requestSync(true, true)
+            appComponent.syncManager.requestSync(true)
             Observable.timer(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
                     .subscribe { swipeRefreshLayout.isRefreshing = false }
         }

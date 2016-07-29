@@ -1,10 +1,7 @@
 package ru.wutiarn.edustor.android.sync
 
 import android.accounts.Account
-import android.content.AbstractThreadedSyncAdapter
-import android.content.ContentProviderClient
-import android.content.Context
-import android.content.SyncResult
+import android.content.*
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
@@ -15,6 +12,7 @@ import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeSnack
+import rx.Observable
 import rx.lang.kotlin.onError
 import java.io.IOException
 
@@ -25,12 +23,18 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
     val TAG = "SyncAdapter"
 
 
-    override fun onPerformSync(account: Account?, extras: Bundle?, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult) {
+    override fun onPerformSync(account: Account?, extras: Bundle, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult) {
+
+        val uploadOnly = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD)
+
+
         val tasks = appComponent.syncManager.popAllTasks()
 
-        val startStr = "Edustor is syncing... (${tasks.count()} local changes)"
-        Log.i(TAG, startStr)
-        makeSnack(startStr, Snackbar.LENGTH_INDEFINITE)
+        val tasksCount = tasks.count()
+        Log.i(TAG, "Sync $tasksCount changes. Full: ${!uploadOnly}")
+        if (!uploadOnly) {
+            makeSnack("Edustor is syncing ($tasksCount local changes)...", Snackbar.LENGTH_INDEFINITE)
+        }
 
         var exceptionAlreadyLogged = false
         var pushResult = emptyList<SyncTaskResult>()
@@ -44,7 +48,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                 .map {
                     pushResult = it
                 }
-                .flatMap { appComponent.api.sync.fullSyncNow() }
+                .flatMap { if (!uploadOnly) appComponent.api.sync.fullSyncNow() else Observable.just(Unit) }
                 .onError { if (!exceptionAlreadyLogged) Log.d(TAG, "Sync pull failed", it) }
                 .subscribe(
                         {
@@ -52,7 +56,9 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                             val msgStr = "Sync finished. Tasks succeeded: $taskSucceeded/${tasks.size}"
                             Log.i(TAG, msgStr)
                             makeSnack(msgStr)
-                            appComponent.eventBus.post(RealmSyncFinishedEvent())
+                            handler.post {
+                                appComponent.eventBus.post(RealmSyncFinishedEvent())
+                            }
                         },
                         {
                             if (it is HttpException) {

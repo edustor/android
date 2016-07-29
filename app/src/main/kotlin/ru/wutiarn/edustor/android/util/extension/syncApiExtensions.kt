@@ -7,7 +7,6 @@ import rx.Observable
 
 fun SyncApi.fullSyncNow(): Observable<Unit> {
     return this.fetch()
-            .configureAsync()
             .map { initData ->
                 val realm = Realm.getDefaultInstance()
                 realm.executeTransaction {
