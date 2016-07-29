@@ -21,11 +21,12 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
 
 
     override fun onPerformSync(account: Account?, extras: Bundle?, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult?) {
-        Log.i(TAG, "Edustor is syncing")
-        makeToast("Edustor is syncing")
-
         val appComponent = context.initializeNewAppComponent()
         val tasks = appComponent.syncManager.popAllTasks()
+
+        val startStr = "Edustor is syncing (${tasks.count()} local changes)"
+        Log.i(TAG, startStr)
+        makeToast(startStr)
 
         appComponent.api.sync.push(tasks)
                 .onError {
