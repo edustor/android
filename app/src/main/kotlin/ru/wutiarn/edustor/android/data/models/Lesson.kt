@@ -24,6 +24,11 @@ open class Lesson() : RealmObject() {
 
     @JsonIgnore var realmDate: Long = 0
 
+    constructor(subject: Subject, realmDate: Long) : this() {
+        this.subject = subject
+        this.realmDate = realmDate
+    }
+
     fun calculateDocumentIndexes() {
         IntRange(0, documents.lastIndex)
                 .forEach { documents[it].index = it }

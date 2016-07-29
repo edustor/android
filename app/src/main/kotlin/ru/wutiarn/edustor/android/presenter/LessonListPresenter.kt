@@ -2,6 +2,7 @@ package ru.wutiarn.edustor.android.presenter
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
@@ -56,7 +57,10 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
         appComponent.repo.lessons.byDate(subjectId!!, date.toEpochDay())
                 .subscribe(
                         { view?.onLessonClick(it) },
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }
+                        {
+                            Log.w("LessonListPresenter", "Error in onDateSet", it)
+                            appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
+                        }
                 )
     }
 }

@@ -3,6 +3,7 @@ package ru.wutiarn.edustor.android.data.repo.realm
 import io.realm.Realm
 import ru.wutiarn.edustor.android.data.local.SyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import rx.Completable
@@ -23,6 +24,22 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findFirstAsync()
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
+                .flatMap {
+                    if (it.isValid) return@flatMap Observable.just(it)
+
+                    return@flatMap Realm.getDefaultInstance().where(Subject::class.java)
+                            .equalTo("id", subject)
+                            .findFirstAsync()
+                            .asObservable<Subject>()
+                            .filter { it.isLoaded }
+                            .map {
+                                val lesson = Lesson(it, epochDay)
+                                Realm.getDefaultInstance().executeTransaction {
+                                    it.copyToRealm(lesson)
+                                }
+                                lesson
+                            }
+                }
     }
 
     override fun byId(id: String): Observable<Lesson> {
