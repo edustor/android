@@ -10,6 +10,7 @@ import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.util.Log
 import retrofit2.adapter.rxjava.HttpException
+import ru.wutiarn.edustor.android.data.models.util.sync.SyncTaskResult
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
@@ -33,6 +34,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
         makeSnack(startStr, Snackbar.LENGTH_INDEFINITE)
 
         var exceptionAlreadyLogged = false
+        var pushResult = emptyList<SyncTaskResult>()
 
         appComponent.api.sync.push(tasks)
                 .onError {
@@ -40,12 +42,17 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                     appComponent.syncManager.pushAllTasks(tasks, true)
                     exceptionAlreadyLogged = true
                 }
+                .map {
+                    pushResult = it
+                }
                 .flatMap { appComponent.api.sync.fullSyncNow() }
                 .onError { if (!exceptionAlreadyLogged) Log.d(TAG, "Sync pull failed", it) }
                 .subscribe(
                         {
-                            Log.i(TAG, "Sync finished")
-                            makeSnack("Sync finished")
+                            val taskSucceeded = pushResult.count { it.success }
+                            val msgStr = "Sync finished. Tasks succeeded: $taskSucceeded/${tasks.size}"
+                            Log.i(TAG, msgStr)
+                            makeSnack(msgStr)
                             appComponent.eventBus.post(RealmSyncFinishedEvent())
                         },
                         {
@@ -58,8 +65,10 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                             } else if (it is IOException) {
                                 syncResult.stats.numIoExceptions++
                             }
+                            val taskSucceeded = pushResult.count { it.success }
                             Log.w(TAG, "Sync failed")
-                            makeSnack("Sync failed: ${it.javaClass.name}: ${it.message}", 10000)
+                            makeSnack("Sync failed: ${it.javaClass.name}: ${it.message}. " +
+                                    "Tasks succeeded: $taskSucceeded/${tasks.size}", 10000)
                         }
                 )
     }
