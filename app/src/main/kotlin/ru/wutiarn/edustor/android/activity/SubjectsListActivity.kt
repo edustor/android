@@ -2,15 +2,19 @@ package ru.wutiarn.edustor.android.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.View
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpActivity
+import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_base.*
 import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.SubjectsListFragment
 import ru.wutiarn.edustor.android.presenter.SubjectListActivityPresenter
+import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 import ru.wutiarn.edustor.android.view.SubjectsListActivityView
 
 class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListActivityPresenter>(), SubjectsListActivityView {
@@ -23,14 +27,10 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
     override fun onCreate(savedInstanceState: Bundle?) {
         val application = applicationContext as EdustorApplication
         appComponent = application.appComponent
+
         super.onCreate(savedInstanceState)
 
-        val activeSesison = appComponent.activeSesison
-        if (!activeSesison.isLoggedIn) {
-            activeSesison.logout()
-            finish()
-            return
-        }
+        if (!appComponent.assertActivityCanStart(this)) return
 
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
@@ -56,5 +56,20 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
         val intent = Intent(this, LessonDetailsActivity::class.java)
         intent.putExtra("uuid", uuid)
         startActivity(intent)
+    }
+
+    @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
+        Snackbar.make(container, event.message, event.length).show()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        appComponent.eventBus.register(this)
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appComponent.eventBus.unregister(this)
     }
 }

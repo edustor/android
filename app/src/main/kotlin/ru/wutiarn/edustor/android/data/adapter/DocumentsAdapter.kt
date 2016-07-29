@@ -8,13 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter
-import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem
-import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableSwipeableItemViewHolder
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -22,49 +15,51 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.events.DocumentMovedEvent
-import ru.wutiarn.edustor.android.events.DocumentRemovedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.util.extension.configureAsync
+import rx.Subscription
 
-class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>(),
-        DraggableItemAdapter<DocumentsAdapter.DocumentViewHolder>,
-        SwipeableItemAdapter<DocumentsAdapter.DocumentViewHolder> {
+class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>() {
 
     var lesson: Lesson? = null
         set(value) {
-            field = value; documents = lesson?.documents ?: mutableListOf()
+            field = value
+            activeDocumentsSubscription?.unsubscribe()
+            value?.addChangeListener<Lesson> { onDocumentsChanged(it.documents) }
+            onDocumentsChanged(value?.documents)
         }
 
     private var documents: MutableList<Document> = mutableListOf()
+
+    private var lastUnfinishedMovement: Pair<String, String?>? = null
+    var activeDocumentsSubscription: Subscription? = null
+    val TAG: String = "DocumentsAdapter"
 
 
     init {
         setHasStableIds(true)
     }
 
-    val TAG: String = "DocumentsAdapter"
+    fun onDocumentsChanged(newDocs: List<Document>?) {
+        documents = newDocs
+                ?.sortedBy { it.index }
+                ?.toMutableList() ?: mutableListOf()
+        notifyDataSetChanged()
+//        TODO: По непонятным причинам список документов перестает обновляться при добавлении в него новых документов
+//        после удаления любого старого. Хотя событие долетает до этого метода корректно и список документов в нем верный
+    }
+
+
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
         val document = documents[position]
-        holder.uuid.text = document.shortUUID
-        holder.timestamp.text = LocalDateTime.ofInstant(document.timestamp, ZoneId.systemDefault())
-                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
-        document.uploadedTimestamp?.let {
-            holder.uploadedTimestamp.text = LocalDateTime.ofInstant(document.uploadedTimestamp, ZoneId.systemDefault())
-                    .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        }
-
-        val colorResource = if (document.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded
-        val color = ContextCompat.getColor(context, colorResource)
-        holder.isUploaded.setBackgroundColor(color)
+        holder.document = document
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentViewHolder? {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.document_recycler_item, parent, false)
 
-        return DocumentViewHolder(view)
+        return DocumentViewHolder(view, this)
     }
 
     override fun getItemCount(): Int {
@@ -72,7 +67,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
     }
 
 
-    override fun onMoveItem(fromPosition: Int, toPosition: Int) {
+    fun onMoveItem(fromPosition: Int, toPosition: Int) {
         Log.d(TAG, "onMoveItem(fromPosition = $fromPosition, toPosition = $toPosition)")
         val document = documents[fromPosition]
         val after: Document?
@@ -82,73 +77,79 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
         else
             after = documents[toPosition]
 
-        appComponent.eventBus.post(DocumentMovedEvent(lesson!!, document, after, fromPosition, toPosition))
+        documents.remove(document)
 
-        appComponent.lessonsApi.reorderDocuments(lesson?.id!!, document.id!!, after?.id)
-                .configureAsync().subscribe(
-                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
-                { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
-        )
+        val targetIndex: Int
+
+        if (after != null) {
+            targetIndex = documents.indexOf(after) + 1
+        } else {
+            targetIndex = 0
+        }
+
+        documents.add(targetIndex, document)
+
+        lastUnfinishedMovement = document.id to after?.id
     }
 
-    override fun onGetItemDraggableRange(p0: DocumentViewHolder?, p1: Int): ItemDraggableRange? {
-        return null
-    }
-
-    override fun onCheckCanStartDrag(p0: DocumentViewHolder?, p1: Int, p2: Int, p3: Int): Boolean {
-        return true
-    }
-
-    override fun getItemId(position: Int): Long {
-        return documents[position].hashCode().toLong()
-    }
-
-    override fun onGetSwipeReactionType(holder: DocumentViewHolder?, position: Int, x: Int, y: Int): Int {
-        return SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H
-    }
-
-    override fun onSetSwipeBackground(holder: DocumentViewHolder?, position: Int, type: Int) {
-
-    }
-
-    override fun onSwipeItem(holder: DocumentViewHolder?, position: Int, result: Int): SwipeResultAction? {
-        when (result) {
-            in arrayOf(SwipeableItemConstants.RESULT_SWIPED_LEFT, SwipeableItemConstants.RESULT_SWIPED_RIGHT) -> {
-                return object : SwipeResultActionRemoveItem() {
-                    override fun onPerformAction() {
-                        val document = documents[position]
-                        documents.removeAt(position)
-                        appComponent.documentsApi.delete(document.id!!)
-                                .configureAsync().subscribe(
-                                { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: ${document.shortUUID}")) },
-                                { appComponent.eventBus.post(RequestSnackbarEvent("Error removing ${document.shortUUID}: ${it.message}")) }
-                        )
-                        appComponent.eventBus.post(DocumentRemovedEvent(document, position))
-                    }
-                }
-            }
-            else -> {
-                return null
-            }
+    fun onMovementFinished() {
+        lastUnfinishedMovement?.let {
+            appComponent.repo.lessons.reorderDocuments(lesson?.id!!, it.first, it.second)
+                    .subscribe(
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
+                            { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
+                    )
         }
     }
 
-    class DocumentViewHolder(val view: View) : AbstractDraggableSwipeableItemViewHolder(view) {
+    override fun getItemId(position: Int): Long {
+        return documents[position].id.hashCode().toLong()
+    }
 
-        lateinit var uuid: TextView
-        lateinit var timestamp: TextView
-        lateinit var uploadedTimestamp: TextView
-        lateinit var isUploaded: View
+
+    fun onRemoveItem(holder: DocumentViewHolder) {
+        val document = holder.document!!
+
+        val shortUUID = document.shortUUID
+        appComponent.repo.documents.delete(document.id)
+                .subscribe(
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) },
+                        { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) }
+                )
+    }
+
+    class DocumentViewHolder(val view: View, val adapter: DocumentsAdapter) : RecyclerView.ViewHolder(view) {
+        // Nullable only because kotlin 1.0.3 doesn't support custom setters along with lateinit
+        var document: Document? = null
+            set(value: Document?) {
+                field = value!!
+
+                uuid.text = value.shortUUID
+                timestamp.text = LocalDateTime.ofInstant(value.timestamp, ZoneId.systemDefault())
+                        .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+                value.uploadedTimestamp?.let {
+                    uploadedTimestamp.text = LocalDateTime.ofInstant(value.uploadedTimestamp, ZoneId.systemDefault())
+                            .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                }
+
+                val colorResource = if (value.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded
+                val color = ContextCompat.getColor(view.context, colorResource)
+                isUploaded.setBackgroundColor(color)
+
+            }
+            get() = field
+
+        private var uuid: TextView
+        private var timestamp: TextView
+        private var uploadedTimestamp: TextView
+        private var isUploaded: View
 
         init {
             uuid = view.findViewById(R.id.uuid) as TextView
             timestamp = view.findViewById(R.id.scanned_timestamp) as TextView
             uploadedTimestamp = view.findViewById(R.id.uploaded_timestamp) as TextView
             isUploaded = view.findViewById(R.id.is_uploaded)
-        }
-
-        override fun getSwipeableContainerView(): View {
-            return view
         }
     }
 

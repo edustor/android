@@ -8,6 +8,6 @@ import rx.Observable
 
 interface LoginApi {
     @FormUrlEncoded
-    @POST("login")
+    @POST("account/login")
     fun login(@Field("token") token: String): Observable<Session>
 }

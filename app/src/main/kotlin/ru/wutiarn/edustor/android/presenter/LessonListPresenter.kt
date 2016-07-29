@@ -2,24 +2,28 @@ package ru.wutiarn.edustor.android.presenter
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import com.squareup.otto.Subscribe
 import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonsListView
+import rx.Subscription
 
-class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?) : MvpPresenter<LessonsListView>,
+class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : MvpPresenter<LessonsListView>,
         DatePickerDialog.OnDateSetListener {
 
     var subjectId: String? = null
 
     var view: LessonsListView? = null
-    var lessons: MutableList<Lesson> = mutableListOf()
+    var lessons: List<Lesson> = emptyList()
+
+    var activeSubscription: Subscription? = null
 
 
     init {
@@ -28,34 +32,35 @@ class LessonListPresenter(val appComponent: AppComponent, val arguments: Bundle?
 
     override fun detachView(p0: Boolean) {
         view = null
+        appComponent.eventBus.unregister(this)
+        activeSubscription?.unsubscribe()
     }
 
     override fun attachView(p0: LessonsListView?) {
+        appComponent.eventBus.register(this)
         view = p0
     }
 
-    fun loadData(page: Int = 0) {
-        if (subjectId == null && page == 0) {
-            appComponent.lessonsApi.today()
-                    .map { it.toMutableList() }
-                    .configureAsync()
-                    .linkToLCEView(view, { lessons = it })
-        } else if (subjectId != null) {
-            appComponent.lessonsApi.bySubjectId(subjectId!!, page)
-                    .map { it.toMutableList() }
-                    .configureAsync()
-                    .linkToLCEView(view, { lessons.addAll(it) })
-        }
+    @Subscribe fun onSyncFinished(event: RealmSyncFinishedEvent) {
+        loadData()
+    }
+
+    fun loadData() {
+        activeSubscription?.unsubscribe()
+        activeSubscription = appComponent.repo.lessons.bySubjectId(subjectId!!)
+                .map { it.filter { it.documents.count() > 0 }.sortedByDescending { it.date } }
+                .linkToLCEView(view, { lessons = it })
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
-        val dateStr = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-        appComponent.lessonsApi.byDate(subjectId!!, dateStr)
-                .configureAsync()
+        appComponent.repo.lessons.byDate(subjectId!!, date.toEpochDay())
                 .subscribe(
                         { view?.onLessonClick(it) },
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }
+                        {
+                            Log.w("LessonListPresenter", "Error in onDateSet", it)
+                            appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
+                        }
                 )
     }
 }

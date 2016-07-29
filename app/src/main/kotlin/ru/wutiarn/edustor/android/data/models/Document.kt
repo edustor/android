@@ -1,15 +1,45 @@
 package ru.wutiarn.edustor.android.data.models
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import org.threeten.bp.Instant
+import java.util.*
 
-data class Document(
-        var owner: User? = null,
-        var uuid: String? = null,
-        var isUploaded: Boolean = false,
-        var timestamp: Instant? = null,
-        var uploadedTimestamp: Instant? = null,
-        var id: String? = null
-) {
-    val shortUUID: String?
-        get() = uuid?.split("-")?.last()
+@RealmClass
+open class Document() : RealmObject() {
+    open var uuid: String? = null
+    open var isUploaded: Boolean = false
+    @Ignore open var timestamp: Instant = Instant.now()
+        get() = Instant.ofEpochSecond(realmTimestamp)
+        set(value) {
+            field = value
+            realmTimestamp = value.epochSecond
+        }
+    @Ignore open var uploadedTimestamp: Instant? = null
+        get() = realmUploadedTimestamp?.let { Instant.ofEpochSecond(it) }
+        set(value) {
+            field = value
+            realmUploadedTimestamp = value?.epochSecond
+        }
+    @PrimaryKey open var id: String = UUID.randomUUID().toString()
+
+    @JsonIgnore var realmTimestamp: Long = 0
+    @JsonIgnore var realmUploadedTimestamp: Long? = null
+
+    @JsonIgnore var index: Int = 0
+
+    val shortUUID: String
+        get() {
+            val uuidEnd = uuid?.split("-")?.last()
+            return uuidEnd?.let { "#${uuidEnd.substring(0, 4)}-${uuidEnd.substring(4, 8)}-${uuidEnd.substring(8, 12)}" } ?: "No uuid"
+        }
+
+    constructor(uuid: String, timestamp: Instant, index: Int) : this() {
+        this.uuid = uuid
+        this.timestamp = timestamp
+        this.index = index
+    }
 }

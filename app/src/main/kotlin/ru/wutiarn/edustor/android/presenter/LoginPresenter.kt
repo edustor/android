@@ -9,7 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
-import ru.wutiarn.edustor.android.activity.SubjectsListActivity
+import ru.wutiarn.edustor.android.activity.InitSyncActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.makeToast
@@ -36,7 +36,8 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
     }
 
     fun onLoggedIn() {
-        val intent = Intent(activity, SubjectsListActivity::class.java)
+        appComponent.syncManager.syncEnabled = true
+        val intent = Intent(activity, InitSyncActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)
     }
@@ -47,11 +48,11 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
     }
 
     fun onGoogleSignIn(result: GoogleSignInResult) {
-        appComponent.loginApi.login(result.signInAccount.idToken)
+        appComponent.api.login.login(result.signInAccount!!.idToken!!)
                 .configureAsync()
-                .subscribe ({
-                    activity.makeToast("Successfully logged in as ${result.signInAccount.displayName}")
-                    appComponent.preferences.token = it.token
+                .subscribe({
+                    activity.makeToast("Successfully logged in as ${result.signInAccount!!.displayName}")
+                    appComponent.activeSession.token = it.token
                     onLoggedIn()
                 }, {
                     activity.makeToast("Error logging in: ${it.message}")
@@ -72,8 +73,8 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
         }
     }
 
-    override fun onConnectionFailed(p0: ConnectionResult?) {
-        throw UnsupportedOperationException()
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        activity.makeToast("Google connection failed: ${p0.errorMessage}")
     }
 
     override fun detachView(retainInstance: Boolean) {

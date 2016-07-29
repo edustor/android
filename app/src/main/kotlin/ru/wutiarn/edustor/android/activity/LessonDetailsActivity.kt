@@ -14,7 +14,8 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
 import ru.wutiarn.edustor.android.presenter.LessonDetailsActivityPresenter
-import ru.wutiarn.edustor.android.presenter.LessonPresenter
+import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
+import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 import ru.wutiarn.edustor.android.view.LessonDetailsActivityView
 
 class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetailsActivityPresenter>(), LessonDetailsActivityView {
@@ -27,20 +28,15 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
 
         super.onCreate(savedInstanceState)
 
+        if (!appComponent.assertActivityCanStart(this)) return
+
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
         fab_scan_exists.visibility = View.GONE
 
         lessonDetailsFragment = LessonDetailsFragment()
-        val lessonBundle = Bundle()
-
-        val uuid = intent.getStringExtra("uuid")
-        lessonBundle.putString("uuid", uuid)
-
-        val id = intent.getStringExtra("id")
-        lessonBundle.putString("id", id)
-        lessonDetailsFragment.arguments = lessonBundle
+        lessonDetailsFragment.arguments = intent.extras
 
         fab_scan_new.visibility = View.VISIBLE
         fab_scan_new.setOnClickListener {
@@ -62,7 +58,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         return LessonDetailsActivityPresenter()
     }
 
-    override val fragmentPresenter: LessonPresenter?
+    override val fragmentPresenter: LessonDetailsPresenter?
         get() = lessonDetailsFragment.presenter
 
     @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {

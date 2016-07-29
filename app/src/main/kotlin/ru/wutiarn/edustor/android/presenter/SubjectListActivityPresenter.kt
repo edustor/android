@@ -17,7 +17,7 @@ class SubjectListActivityPresenter : MvpPresenter<SubjectsListActivityView> {
         view = null
     }
 
-    fun requestQrScan(activity:Activity) {
+    fun requestQrScan(activity: Activity) {
         IntentIntegrator(activity).initiateScan(IntentIntegrator.QR_CODE_TYPES);
     }
 

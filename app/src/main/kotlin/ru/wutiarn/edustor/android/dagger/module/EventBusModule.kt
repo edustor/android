@@ -7,9 +7,14 @@ import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 
 @Module
 class EventBusModule {
+
+    companion object {
+        private val bus = Bus("global-bus")
+    }
+
     @Provides
     @AppScope
     fun eventBus(): Bus {
-        return Bus("global-bus")
+        return bus
     }
 }

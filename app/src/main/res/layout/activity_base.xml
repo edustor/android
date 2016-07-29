@@ -6,8 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".activity.MainActivity">
+    android:fitsSystemWindows="true">
 
 
     <android.support.design.widget.AppBarLayout
@@ -33,10 +32,6 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".activity.MainActivity"
         tools:showIn="@layout/activity_base">
@@ -59,6 +54,11 @@
             android:id="@+id/fab_scan_new"
             style="@style/floatingActionButtonStyle"
             android:src="@drawable/ic_note_add_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_calendar"
+            style="@style/floatingActionButtonStyle"
+            android:src="@drawable/ic_date_range_white_24dp" />
     </LinearLayout>
 
 

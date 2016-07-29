@@ -7,3 +7,5 @@ import android.support.design.widget.Snackbar
  * @since
  */
 data class RequestSnackbarEvent(val message: String, val length: Int = Snackbar.LENGTH_LONG)
+
+class RealmSyncFinishedEvent()
