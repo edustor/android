@@ -86,6 +86,13 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
 
                         lesson.documents.add(targetIndex, document)
                         lesson.calculateDocumentIndexes()
+                        val syncTask = SyncTask("lessons/date/documents/reorder", mapOf(
+                                "subject" to lesson.subject.id,
+                                "date" to lesson.realmDate,
+                                "document" to document.id,
+                                "after" to afterDocumentId
+                        ))
+                        syncTasksManager.addTask(syncTask)
                     }
                 }
     }
