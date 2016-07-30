@@ -20,6 +20,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
 
     override fun byDate(subject: String, epochDay: Long): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
+                .equalTo("subject.id", subject)
                 .equalTo("realmDate", epochDay)
                 .findFirstAsync()
                 .asObservable<Lesson>()
