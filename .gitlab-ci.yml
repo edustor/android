@@ -4,7 +4,7 @@ build_debug:
   script:
     - ./gradlew assembleDebug
     - mv app/build/outputs/apk/* .
-    - rm *-unaligned.apk
+    - rm -f *-unaligned.apk
   artifacts:
     name: "edustor-android-DEBUG-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
@@ -16,7 +16,7 @@ build_CI:
   script:
     - ./gradlew assembleCI
     - mv app/build/outputs/apk/* .
-    - rm *-unaligned.apk
+    - rm -f *-unaligned.apk
   artifacts:
     name: "edustor-android-CI-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
@@ -28,7 +28,7 @@ build_RELEASE:
   script:
     - ./gradlew assembleRelease
     - mv app/build/outputs/apk/* .
-    - rm *-unaligned.apk
+    - rm -f *-unaligned.apk
   artifacts:
     name: "edustor-android-RELEASE-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
