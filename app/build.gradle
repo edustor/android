@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
 def debugPass = getEnv("EDUSTOR_ANDROID_DEBUG_KEY_PASSWORD")
+def ciPass = getEnv("EDUSTOR_ANDROID_CI_KEY_PASSWORD")
 def releasePass = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_PASSWORD")
 def keyFile = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_LOCATION")
 
@@ -53,6 +54,13 @@ android {
             keyPassword debugPass
         }
 
+        CI {
+            storeFile file("../keys/CI.keystore")
+            storePassword ciPass
+            keyAlias "ci"
+            keyPassword ciPass
+        }
+
         release {
             storeFile keyFile != null ? file(keyFile) : null
             storePassword releasePass
@@ -77,7 +85,7 @@ android {
             if (CI_BUILD_REF != null) {
                 versionNameSuffix ".$CI_BUILD_REF_NAME.$CI_BUILD_REF"
             }
-            signingConfig signingConfigs["debug"]
+            signingConfig signingConfigs["CI"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
