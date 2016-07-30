@@ -2,10 +2,36 @@ build_debug:
   image: wutiarn/android
   stage: build
   script:
-    - ./gradlew assembleDebug assembleCI
+    - ./gradlew assembleDebug
     - mv app/build/outputs/apk/* .
     - rm *-unaligned.apk
   artifacts:
-    name: "edustor-android-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
+    name: "edustor-android-DEBUG-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
       - "*.apk"
+
+build_CI:
+  image: wutiarn/android
+  stage: build
+  script:
+    - ./gradlew assembleCI
+    - mv app/build/outputs/apk/* .
+    - rm *-unaligned.apk
+  artifacts:
+    name: "edustor-android-CI-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
+    paths:
+      - "*.apk"
+
+build_RELEASE:
+  image: wutiarn/android
+  stage: build
+  script:
+    - ./gradlew assembleRelease
+    - mv app/build/outputs/apk/* .
+    - rm *-unaligned.apk
+  artifacts:
+    name: "edustor-android-RELEASE-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
+    paths:
+      - "*.apk"
+  only:
+    - master

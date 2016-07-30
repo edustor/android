@@ -4,8 +4,8 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
-import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.local.ActiveSession
+import ru.wutiarn.edustor.android.data.local.EdustorConstants
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
 import ru.wutiarn.edustor.android.data.local.SyncManager
 

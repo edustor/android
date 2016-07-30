@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "99685742253-feja24prltj05qdg9eebj0urjhj2m00h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.wutiarn.edustor.android",
+            "certificate_hash": "F81A28A959FF9685EA6205924113C61C55D14E9F"
+          }
+        },
+        {
           "client_id": "99685742253-1t09ldh8ohegpj39d6gocsqapn7lcm8u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ru.wutiarn.edustor.android",
             "certificate_hash": "BB78BB6BC5386A43B6A4B164838E05B6823AF62D"
-          }
-        },
-        {
-          "client_id": "99685742253-0ob51vb1nit7op4fegkbmvmudior8eid.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ru.wutiarn.edustor.android",
-            "certificate_hash": "B1BC602A51B372C280E4BA13A8D33C076AD17EC9"
           }
         },
         {

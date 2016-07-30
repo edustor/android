@@ -7,8 +7,8 @@ import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.dagger.groups.ApiGroup
 import ru.wutiarn.edustor.android.dagger.groups.RepoGroup
 import ru.wutiarn.edustor.android.dagger.module.*
-import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
 import ru.wutiarn.edustor.android.data.local.ActiveSession
+import ru.wutiarn.edustor.android.data.local.EdustorConstants
 import ru.wutiarn.edustor.android.data.local.EdustorPreferences
 import ru.wutiarn.edustor.android.data.local.SyncManager
 
