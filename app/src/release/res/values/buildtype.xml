@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Edustor Alpha</string>
+    <string name="app_name">Edustor</string>
     <string name="edustor_url">https://edustor.ru/</string>
     <string name="account_type">edustor.ru</string>
     <string name="content_provider_authority">ru.edustor.datasync.provider</string>
