@@ -18,8 +18,8 @@ android {
         applicationId "ru.wutiarn.edustor.android"
         minSdkVersion 21
         targetSdkVersion 24
-        versionCode 3
-        versionName "0.3"
+        versionCode 6
+        versionName "0.3.3"
         multiDexEnabled true
     }
     lintOptions {
@@ -71,13 +71,13 @@ android {
             signingConfig signingConfigs["debug"]
             applicationIdSuffix ".debug"
             if (CI_BUILD_REF != null) {
-                versionNameSuffix ".$CI_BUILD_REF_NAME.$CI_BUILD_REF"
+                versionNameSuffix "-$CI_BUILD_REF_NAME.$CI_BUILD_REF"
             }
         }
 
         CI {
             if (CI_BUILD_REF != null) {
-                versionNameSuffix ".$CI_BUILD_REF_NAME.$CI_BUILD_REF"
+                versionNameSuffix "-$CI_BUILD_REF_NAME.$CI_BUILD_REF"
             }
             signingConfig signingConfigs["CI"]
             minifyEnabled false
