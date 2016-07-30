@@ -32,6 +32,7 @@ class EdustorDocumentTouchHelperCallback(val context: Context) : ItemTouchHelper
     }
 
     override fun clearView(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?) {
+        super.clearView(recyclerView, viewHolder)
         val documentViewHolder = viewHolder as DocumentsAdapter.DocumentViewHolder
         documentViewHolder.adapter.onMovementFinished()
     }
