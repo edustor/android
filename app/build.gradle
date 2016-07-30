@@ -16,9 +16,6 @@ android {
     buildToolsVersion "24.0.1"
     defaultConfig {
         applicationId "ru.wutiarn.edustor.android"
-        manifestPlaceholders = [
-                appLabel: "@string/app_name"
-        ]
         minSdkVersion 21
         targetSdkVersion 24
         versionCode 3
@@ -76,9 +73,6 @@ android {
             if (CI_BUILD_REF != null) {
                 versionNameSuffix ".$CI_BUILD_REF_NAME.$CI_BUILD_REF"
             }
-            manifestPlaceholders = [
-                    appLabel: "Edustor Experimental"
-            ]
         }
 
         CI {

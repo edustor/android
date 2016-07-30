@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.SyncRequest
 import android.os.Bundle
-import ru.wutiarn.edustor.android.dagger.pojo.EdustorConstants
+import ru.wutiarn.edustor.android.data.local.EdustorConstants
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import rx.Observable
 import rx.Subscription

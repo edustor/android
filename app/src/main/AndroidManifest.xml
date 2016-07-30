@@ -13,13 +13,13 @@
         android:name=".EdustorApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="${appLabel}"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label">
         <activity
             android:name=".activity.SubjectsListActivity"
-            android:label="${appLabel}">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -84,7 +84,8 @@
 
         <provider
             android:name=".sync.stub.StubProvider"
-            android:authorities="@string/authority"
+            android:authorities="@string/content_provider_authority"
+            android:label="@string/sync_adapter_name"
             android:exported="false"
             android:syncable="true"/>
 
