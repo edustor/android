@@ -3,7 +3,6 @@ package ru.wutiarn.edustor.android.fragment
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
