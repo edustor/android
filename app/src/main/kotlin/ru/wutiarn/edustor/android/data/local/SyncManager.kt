@@ -8,12 +8,18 @@ import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class SyncManager(val prefs: EdustorPreferences,
-                  val constants: EdustorConstants,
-                  val context: Context) {
+class SyncManager(val context: Context) {
+
+    val prefs: EdustorPreferences
+    val constants: EdustorConstants
 
     companion object {
         private val tasksModificationLock = ReentrantLock()
+    }
+
+    init {
+        prefs = EdustorPreferences(context)
+        constants = EdustorConstants(context)
     }
 
     var syncEnabled: Boolean
