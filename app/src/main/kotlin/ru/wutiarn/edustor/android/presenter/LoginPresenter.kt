@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.activity.InitSyncActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.util.extension.configureAsync
 import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.view.LoginView
@@ -37,6 +38,12 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
 
     fun onLoggedIn() {
         appComponent.syncManager.syncEnabled = true
+
+        val syncTask = SyncTask("account/FCMToken/put", mapOf(
+                "token" to appComponent.preferences.firebaseToken
+        ))
+        appComponent.syncManager.addTask(syncTask)
+
         val intent = Intent(activity, InitSyncActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)
