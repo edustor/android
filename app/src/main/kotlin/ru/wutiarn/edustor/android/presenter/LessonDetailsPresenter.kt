@@ -9,6 +9,7 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
+import ru.wutiarn.edustor.android.util.extension.setUpSyncState
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.Subscription
 
@@ -49,13 +50,14 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
         when {
             uuid != null -> {
                 activeSubscription = appComponent.repo.lessons.byUUID(uuid!!)
+                        .setUpSyncState(appComponent.pdfSyncManager)
                         .linkToLCEView(view, { lesson = it })
             }
             subjectId != null -> {
                 activeSubscription =
                         appComponent.repo.lessons.byDate(subjectId!!, lessonEpochDay!!)
+                                .setUpSyncState(appComponent.pdfSyncManager)
                                 .linkToLCEView(view, { lesson = it })
-
             }
         }
     }

@@ -64,6 +64,11 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
             appComponent.eventBus.makeSnack("Copied: $uri")
         }
 
+        lesson?.syncStatus?.let {
+            syncStatus.text = it.getStatusString
+            syncSwitch.isEnabled = it.markedForSync
+        }
+
         documentsAdapter.lesson = lesson
 
         showContent()

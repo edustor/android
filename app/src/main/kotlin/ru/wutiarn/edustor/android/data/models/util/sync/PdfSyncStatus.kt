@@ -14,4 +14,9 @@ open class PdfSyncStatus() : RealmObject() {
     constructor(lesson: Lesson) : this() {
         this.lesson = lesson
     }
+
+    val getStatusString: String
+        get() {
+            return "Not implemented"
+        }
 }

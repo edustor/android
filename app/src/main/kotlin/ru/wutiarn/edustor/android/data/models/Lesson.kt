@@ -7,6 +7,7 @@ import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import org.threeten.bp.LocalDate
+import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import java.util.*
 
 @RealmClass
@@ -23,6 +24,8 @@ open class Lesson() : RealmObject() {
     @PrimaryKey open var id: String = UUID.randomUUID().toString()
 
     @JsonIgnore var realmDate: Long = 0
+
+    @Ignore var syncStatus: PdfSyncStatus? = null
 
     constructor(subject: Subject, realmDate: Long) : this() {
         this.subject = subject

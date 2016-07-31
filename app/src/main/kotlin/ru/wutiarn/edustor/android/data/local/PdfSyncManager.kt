@@ -24,6 +24,5 @@ class PdfSyncManager(val context: Context) {
 
                     return@flatMap Observable.just(pdfSyncStatus)
                 }
-                .first()
     }
 }
