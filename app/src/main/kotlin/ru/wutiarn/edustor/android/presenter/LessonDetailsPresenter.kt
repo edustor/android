@@ -14,6 +14,7 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
+import ru.wutiarn.edustor.android.util.extension.getPdfUrl
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.util.extension.setUpSyncState
@@ -76,7 +77,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
     }
 
     fun onCopyUrlClicked() {
-        val uri = appComponent.constants.URL + "pdf/${lesson?.id}"
+        val uri = lesson?.getPdfUrl(appComponent.constants.URL)
         val clipboardManager = appComponent.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.primaryClip = ClipData.newPlainText(uri, uri)
         appComponent.eventBus.makeSnack("Copied: $uri")
