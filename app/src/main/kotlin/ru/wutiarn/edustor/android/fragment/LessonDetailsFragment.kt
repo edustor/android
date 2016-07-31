@@ -1,10 +1,5 @@
 package ru.wutiarn.edustor.android.fragment
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -22,7 +17,6 @@ import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
 import ru.wutiarn.edustor.android.util.EdustorDocumentTouchHelperCallback
-import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 
 
@@ -51,25 +45,17 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         topic.setText(lesson?.topic)
 
-        getPdf.setOnClickListener {
-            val uri = Uri.parse(appComponent.constants.URL + "pdf/${lesson?.id}.pdf")
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            startActivity(intent)
-        }
-
-        copyUrl.setOnClickListener {
-            val uri = appComponent.constants.URL + "pdf/${lesson?.id}"
-            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboardManager.primaryClip = ClipData.newPlainText(uri, uri)
-            appComponent.eventBus.makeSnack("Copied: $uri")
-        }
 
         lesson?.syncStatus?.let {
             syncStatus.text = it.getStatusString
-            syncSwitch.isEnabled = it.markedForSync
+            syncSwitch.isChecked = it.markedForSync
         }
 
         documentsAdapter.lesson = lesson
+
+        getPdf.setOnClickListener { presenter.onGetPdfClicked() }
+        copyUrl.setOnClickListener { presenter.onCopyUrlClicked() }
+        syncSwitch.setOnCheckedChangeListener { button, b -> presenter.onSyncSwitchChanged(b) }
 
         showContent()
     }

@@ -1,14 +1,21 @@
 package ru.wutiarn.edustor.android.presenter
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
+import io.realm.Realm
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
+import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.util.extension.setUpSyncState
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.Subscription
@@ -58,6 +65,27 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
                         appComponent.repo.lessons.byDate(subjectId!!, lessonEpochDay!!)
                                 .setUpSyncState(appComponent.pdfSyncManager)
                                 .linkToLCEView(view, { lesson = it })
+            }
+        }
+    }
+
+    fun onGetPdfClicked() {
+        val uri = Uri.parse(appComponent.constants.URL + "pdf/${lesson?.id}.pdf")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        appComponent.context.startActivity(intent)
+    }
+
+    fun onCopyUrlClicked() {
+        val uri = appComponent.constants.URL + "pdf/${lesson?.id}"
+        val clipboardManager = appComponent.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboardManager.primaryClip = ClipData.newPlainText(uri, uri)
+        appComponent.eventBus.makeSnack("Copied: $uri")
+    }
+
+    fun onSyncSwitchChanged(isEnabled: Boolean) {
+        Realm.getDefaultInstance().use {
+            it.executeTransaction {
+                lesson?.syncStatus?.markedForSync = isEnabled
             }
         }
     }
