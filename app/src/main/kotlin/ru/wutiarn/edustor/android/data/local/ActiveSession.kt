@@ -4,7 +4,7 @@ import android.content.Context
 import ru.wutiarn.edustor.android.activity.LoginActivity
 import ru.wutiarn.edustor.android.util.extension.startActivity
 
-class ActiveSession(val edustorPreferences: EdustorPreferences, val context: Context) {
+class ActiveSession(val edustorPreferences: EdustorPreferences, val context: Context, val syncManager: SyncManager) {
     var token: String?
         get() = edustorPreferences.token
         set(value) {
@@ -16,6 +16,7 @@ class ActiveSession(val edustorPreferences: EdustorPreferences, val context: Con
 
     fun logout() {
         token = null
+        syncManager.syncEnabled = false
         context.startActivity(LoginActivity::class.java, true)
     }
 }
