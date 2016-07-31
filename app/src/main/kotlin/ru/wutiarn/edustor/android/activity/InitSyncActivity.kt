@@ -1,15 +1,16 @@
 package ru.wutiarn.edustor.android.activity
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_sync.*
 import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.presenter.InitSyncPresenter
+import ru.wutiarn.edustor.android.util.extension.show
 import ru.wutiarn.edustor.android.view.InitScreenView
 
 class InitSyncActivity : MvpActivity<InitScreenView, InitSyncPresenter>(), InitScreenView {
@@ -29,7 +30,11 @@ class InitSyncActivity : MvpActivity<InitScreenView, InitSyncPresenter>(), InitS
     }
 
     @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
-        Snackbar.make(container, event.message, event.length).show()
+        event.show(container)
+    }
+
+    @Subscribe fun onSyncFinished(event: RealmSyncFinishedEvent) {
+        presenter.onSyncFinished()
     }
 
     override fun onStart() {

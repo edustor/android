@@ -2,4 +2,5 @@
     <string name="action_settings">Settings</string>
     <string name="sync_account_name">Edustor Sync</string>
     <string name="sync_adapter_name">Edustor Sync</string>
+    <string name="initial_sync_message">"Initial sync is in progress. \n This is a background process, so you it's safe to close this screen and come back later"</string>
 </resources>

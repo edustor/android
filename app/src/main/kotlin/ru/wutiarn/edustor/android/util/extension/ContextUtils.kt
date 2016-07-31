@@ -15,8 +15,8 @@ fun Bus.makeSnack(str: String, length: Int = Snackbar.LENGTH_SHORT) {
     this.post(RequestSnackbarEvent(str, length))
 }
 
-fun Context.makeToast(str: String) {
-    Toast.makeText(this, str, Toast.LENGTH_SHORT).show()
+fun Context.makeToast(str: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, str, duration).show()
 }
 
 fun Context.startActivity(activityClass: Class<out AppCompatActivity>, clearStack: Boolean = false) {
