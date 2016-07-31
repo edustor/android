@@ -4,10 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
-import ru.wutiarn.edustor.android.data.local.ActiveSession
-import ru.wutiarn.edustor.android.data.local.EdustorConstants
-import ru.wutiarn.edustor.android.data.local.EdustorPreferences
-import ru.wutiarn.edustor.android.data.local.SyncManager
+import ru.wutiarn.edustor.android.data.local.*
 
 @Module
 class LocalStorageModule(val context: Context) {
@@ -37,7 +34,13 @@ class LocalStorageModule(val context: Context) {
 
     @Provides
     @AppScope
-    fun syncTaskManager(prefs: EdustorPreferences, constants: EdustorConstants, context: Context): SyncManager {
+    fun syncManager(context: Context): SyncManager {
         return SyncManager(context)
+    }
+
+    @Provides
+    @AppScope
+    fun pdfSyncManager(context: Context): PdfSyncManager {
+        return PdfSyncManager(context)
     }
 }
