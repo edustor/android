@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.IBinder
 
 class StubAuthenticatorService : Service() {
-    private lateinit var authenticator: StubAuthenticator
+    private lateinit var authenticator: SyncAuthenticator
 
     override fun onCreate() {
-        authenticator = StubAuthenticator(this)
+        authenticator = SyncAuthenticator(this)
     }
 
     override fun onBind(intent: Intent?): IBinder {
