@@ -6,5 +6,9 @@ import rx.Observable
 
 fun Observable<Lesson>.setUpSyncState(pdfSyncManager: PdfSyncManager): Observable<Lesson> {
     return this.flatMap { pdfSyncManager.getSyncStatus(it) }
-            .map { it.lesson!!.syncStatus = it; it.lesson }
+            .map {
+                val lesson = it.lesson!!
+                lesson.syncStatus = it
+                lesson
+            }
 }
