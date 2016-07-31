@@ -12,6 +12,7 @@ import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeSnack
+import ru.wutiarn.edustor.android.util.extension.makeToast
 import rx.Observable
 import rx.lang.kotlin.onError
 import java.io.IOException
@@ -62,10 +63,10 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                         },
                         {
                             if (it is HttpException) {
-                                if (it.code() == 401) {
-                                    appComponent.syncManager.syncEnabled = false
-                                } else {
-                                    syncResult.stats.numIoExceptions++
+                                when (it.code()) {
+                                    401 -> appComponent.syncManager.syncEnabled = false
+                                    403 -> appComponent.activeSession.logout()
+                                    else -> syncResult.stats.numIoExceptions++
                                 }
                             } else if (it is IOException) {
                                 syncResult.stats.numIoExceptions++
