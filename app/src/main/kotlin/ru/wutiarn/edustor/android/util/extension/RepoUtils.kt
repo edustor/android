@@ -5,10 +5,10 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import rx.Observable
 
 fun Observable<Lesson>.setUpSyncState(pdfSyncManager: PdfSyncManager): Observable<Lesson> {
-    return this.flatMap { pdfSyncManager.getSyncStatus(it) }
+    var lesson: Lesson? = null
+    return this.flatMap { lesson = it; pdfSyncManager.getSyncStatus(it) }
             .map {
-                val lesson = it.lesson!!
-                lesson.syncStatus = it
+                lesson!!.syncStatus = it
                 lesson
             }
 }
