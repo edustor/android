@@ -16,8 +16,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Getting things ready..."
-            android:id="@+id/textView5"/>
+            android:text="@string/initial_sync_message"
+            android:id="@+id/textView5"
+            android:padding="10dp"
+            android:gravity="center"/>
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"

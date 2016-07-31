@@ -12,7 +12,6 @@ import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeSnack
-import ru.wutiarn.edustor.android.util.extension.makeToast
 import rx.Observable
 import rx.lang.kotlin.onError
 import java.io.IOException

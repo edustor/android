@@ -2,7 +2,6 @@ package ru.wutiarn.edustor.android.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.view.View
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpActivity
@@ -16,6 +15,7 @@ import ru.wutiarn.edustor.android.fragment.LessonDetailsFragment
 import ru.wutiarn.edustor.android.presenter.LessonDetailsActivityPresenter
 import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
 import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
+import ru.wutiarn.edustor.android.util.extension.show
 import ru.wutiarn.edustor.android.view.LessonDetailsActivityView
 
 class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetailsActivityPresenter>(), LessonDetailsActivityView {
@@ -62,7 +62,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         get() = lessonDetailsFragment.presenter
 
     @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
-        Snackbar.make(container, event.message, event.length).show()
+        event.show(container)
     }
 
     override fun onStart() {
