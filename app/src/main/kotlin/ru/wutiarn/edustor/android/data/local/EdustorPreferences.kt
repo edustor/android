@@ -17,6 +17,10 @@ class EdustorPreferences(context: Context) {
 
     var syncTasks: List<SyncTask> by JsonPrefDelegate(pref, objectMapper, object : TypeReference<List<SyncTask>>() {})
 
+    fun clear() {
+        pref.edit().clear().commit()
+    }
+
     open private class PrefDelegate(private val androidPref: SharedPreferences) {
         open operator fun getValue(thisRef: Any?, property: KProperty<*>): String? {
             return androidPref.getString(property.name, null)
