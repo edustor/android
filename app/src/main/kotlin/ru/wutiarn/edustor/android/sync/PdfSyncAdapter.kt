@@ -37,6 +37,8 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
         val manuallyMarkedForSync = lessons
                 .filter { it.syncStatus!!.markedForSync }
                 .filter { it.documents.filter { it.isUploaded }.count() > 0 }
+
+        manuallyMarkedForSync.forEach { downloadPdf(it) }
     }
 
     private fun downloadPdf(lesson: Lesson) {
@@ -50,9 +52,13 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
         val request = Request.Builder().url(pdfUrl).build()
         val response = httpClient.newCall(request).execute()
 
-        val out = cacheFile.outputStream().use {
-            response.body().byteStream().copyTo(it)
+        val out = cacheFile.outputStream().use { outStream ->
+            response.body().byteStream().use { inStream ->
+                inStream.copyTo(outStream)
+            }
         }
+
+        lesson.syncStatus!!.copyMD5List(lesson)
     }
 
     private fun makeSnack(str: String, length: Int = Snackbar.LENGTH_SHORT) {

@@ -11,6 +11,6 @@ import io.realm.annotations.RealmClass
  * @see https://github.com/realm/realm-java/issues/575
  */
 @RealmClass
-open class DocumentMD5 : RealmObject() {
-    var md5: String? = null
-}
+open class DocumentMD5(
+        var md5: String? = null
+) : RealmObject()
