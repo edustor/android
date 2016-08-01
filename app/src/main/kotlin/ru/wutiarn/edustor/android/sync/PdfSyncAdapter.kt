@@ -34,10 +34,14 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
                 .toBlocking()
                 .first()
                 .sortedByDescending { it.realmDate }
+
         val manuallyMarkedForSync = lessons
                 .filter { it.syncStatus!!.markedForSync }
                 .filter { it.documents.filter { it.isUploaded }.count() > 0 }
 
+        val otherLessons = lessons.minus(manuallyMarkedForSync)
+
+        removePdfs(otherLessons)
         manuallyMarkedForSync.forEach { downloadPdf(it) }
     }
 
@@ -52,13 +56,22 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
         val request = Request.Builder().url(pdfUrl).build()
         val response = httpClient.newCall(request).execute()
 
-        val out = cacheFile.outputStream().use { outStream ->
+        cacheFile.outputStream().use { outStream ->
             response.body().byteStream().use { inStream ->
                 inStream.copyTo(outStream)
             }
         }
 
         lesson.syncStatus!!.copyMD5List(lesson)
+    }
+
+    private fun removePdfs(lesson: List<Lesson>) {
+        lesson.forEach { it.getCacheFile(context).delete() }
+        Realm.getDefaultInstance().use {
+            it.executeTransaction { realm ->
+                lesson.forEach { it.syncStatus?.documentsMD5?.clear() }
+            }
+        }
     }
 
     private fun makeSnack(str: String, length: Int = Snackbar.LENGTH_SHORT) {
