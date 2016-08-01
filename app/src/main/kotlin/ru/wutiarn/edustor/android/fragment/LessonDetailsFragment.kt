@@ -15,6 +15,7 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
 import ru.wutiarn.edustor.android.util.EdustorDocumentTouchHelperCallback
 import ru.wutiarn.edustor.android.view.LessonDetailsView
@@ -47,8 +48,13 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
 
 
         lesson?.syncStatus?.let {
-            syncStatus.text = it.getStatusString
             syncSwitch.isChecked = it.markedForSync
+            syncStatus.text = when (it.getStatus(lesson, context)) {
+                PdfSyncStatus.SyncStatus.SYNCED -> "Synced"
+                PdfSyncStatus.SyncStatus.OBSOLETE -> "Obsolete"
+                PdfSyncStatus.SyncStatus.MISSING -> "Not synced"
+                else -> "State in unknown"
+            }
         }
 
         documentsAdapter.lesson = lesson
