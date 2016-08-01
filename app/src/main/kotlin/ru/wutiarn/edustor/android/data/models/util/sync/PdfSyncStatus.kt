@@ -1,5 +1,6 @@
 package ru.wutiarn.edustor.android.data.models.util.sync
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.RealmClass
 
@@ -8,8 +9,7 @@ open class PdfSyncStatus() : RealmObject() {
     open var subjectId: String? = null
     open var realmDate: Long = 0
     open var markedForSync = false  // By user on LessonDetails
-    open var synced = false
-    open var fileLocation: String? = null
+    open var documentsMD5 = RealmList<DocumentMD5>()
 
     constructor(subjectId: String, realmDate: Long) : this() {
         this.subjectId = subjectId

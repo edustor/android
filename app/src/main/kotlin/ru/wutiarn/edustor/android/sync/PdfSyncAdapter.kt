@@ -12,7 +12,6 @@ import android.util.Log
 import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.util.ProgressResponseBody
 import ru.wutiarn.edustor.android.util.extension.*
@@ -27,18 +26,17 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
     var updateListener: ((progress: Double, done: Boolean) -> Unit)? = null
 
     override fun onPerformSync(account: Account?, extras: Bundle, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult) {
-        val syncDocumentsSince = LocalDate.now().minusDays(3).toEpochDay()
-        Realm.getDefaultInstance().where(Lesson::class.java)
+        val lessons = Realm.getDefaultInstance().where(Lesson::class.java)
                 .findAll()
                 .toObservable()
                 .setUpSyncState(appComponent.pdfSyncManager, true)
-                .filter { it.syncStatus!!.markedForSync || it.realmDate >= syncDocumentsSince }
-                .filter { it.documents.filter { it.isUploaded }.count() > 0 }
                 .toList()
-                .subscribe {
-                    Log.i("PdfSyncAdapter", "Found ${it.count()} lessons")
-//                    it.firstOrNull()?.let { downloadPdf(it) }
-                }
+                .toBlocking()
+                .first()
+                .sortedByDescending { it.realmDate }
+        val manuallyMarkedForSync = lessons
+                .filter { it.syncStatus!!.markedForSync }
+                .filter { it.documents.filter { it.isUploaded }.count() > 0 }
     }
 
     private fun downloadPdf(lesson: Lesson) {
