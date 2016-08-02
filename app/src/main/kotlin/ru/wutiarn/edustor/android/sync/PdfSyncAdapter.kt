@@ -13,6 +13,7 @@ import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.util.ProgressResponseBody
 import ru.wutiarn.edustor.android.util.extension.*
 import rx.lang.kotlin.toObservable
@@ -42,7 +43,9 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
         val otherLessons = lessons.minus(manuallyMarkedForSync)
 
         removePdfs(otherLessons)
-        manuallyMarkedForSync.forEach { downloadPdf(it) }
+        manuallyMarkedForSync
+                .filter { it.syncStatus!!.getStatus(it, context) != PdfSyncStatus.SyncStatus.SYNCED }
+                .forEach { downloadPdf(it) }
     }
 
     private fun downloadPdf(lesson: Lesson) {
