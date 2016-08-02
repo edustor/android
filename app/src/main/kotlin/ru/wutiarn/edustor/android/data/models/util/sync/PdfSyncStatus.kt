@@ -14,8 +14,17 @@ open class PdfSyncStatus() : RealmObject() {
     open var subjectId: String? = null
     open var realmDate: Long = 0
     open var markedForSync = false  // By user on LessonDetails
+        set(value) {
+            field = value
+            realmValidUntil = null
+        }
     open var documentsMD5 = RealmList<DocumentMD5>()
     open var realmValidUntil: Long? = null
+        get() = if (markedForSync) null else field
+        set(value) {
+            if (markedForSync) field = null
+            else field = value
+        }
 
     constructor(subjectId: String, realmDate: Long) : this() {
         this.subjectId = subjectId

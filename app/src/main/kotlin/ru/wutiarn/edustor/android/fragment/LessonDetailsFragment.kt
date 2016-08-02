@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.fragment_lesson_details.*
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
@@ -55,6 +56,8 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
                 PdfSyncStatus.SyncStatus.MISSING -> "Not synced"
                 else -> "State in unknown"
             }
+            expDate.text = if (it.realmValidUntil != null)
+                LocalDate.ofEpochDay(it.realmValidUntil!!).toString() else "None"
         }
 
         documentsAdapter.lesson = lesson
