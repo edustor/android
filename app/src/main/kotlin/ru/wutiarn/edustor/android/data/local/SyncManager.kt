@@ -23,16 +23,16 @@ class SyncManager(val context: Context) {
     }
 
     var syncEnabled: Boolean
-        get() = ContentResolver.getSyncAutomatically(constants.syncAccount, constants.contentProviderAuthority)
+        get() = ContentResolver.getSyncAutomatically(constants.syncAccount, constants.syncContentProviderAuthority)
         set(value) {
-            ContentResolver.setSyncAutomatically(constants.syncAccount, constants.contentProviderAuthority, value)
+            ContentResolver.setSyncAutomatically(constants.syncAccount, constants.syncContentProviderAuthority, value)
         }
 
     fun requestSync(manual: Boolean = false) {
         val bundle = Bundle()
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, !manual)
         val syncRequest = SyncRequest.Builder()
-                .setSyncAdapter(constants.syncAccount, constants.contentProviderAuthority)
+                .setSyncAdapter(constants.syncAccount, constants.syncContentProviderAuthority)
                 .setExtras(bundle)
                 .setManual(manual)
                 .setExpedited(manual)
