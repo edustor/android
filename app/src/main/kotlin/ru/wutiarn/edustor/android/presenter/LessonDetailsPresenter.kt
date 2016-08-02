@@ -3,8 +3,6 @@ package ru.wutiarn.edustor.android.presenter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
@@ -12,6 +10,7 @@ import com.squareup.otto.Subscribe
 import io.realm.Realm
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
@@ -78,9 +77,21 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
     }
 
     fun onGetPdfClicked() {
-        val uri = Uri.parse(appComponent.constants.URL + "pdf/${lesson?.id}.pdf")
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        appComponent.context.startActivity(intent)
+        if (lesson!!.syncStatus!!.getStatus(lesson!!, appComponent.context) == PdfSyncStatus.SyncStatus.SYNCED) {
+            appComponent.eventBus.makeSnack("Opening document")
+        } else {
+            Realm.getDefaultInstance().use {
+                it.executeTransaction {
+                    lesson?.syncStatus!!.shouldBeSynced = true
+                }
+            }
+            appComponent.pdfSyncManager.requestSync(true)
+            appComponent.eventBus.makeSnack("Pdf sync requested")
+        }
+    }
+
+    private fun openSyncedPdf() {
+
     }
 
     fun onCopyUrlClicked() {

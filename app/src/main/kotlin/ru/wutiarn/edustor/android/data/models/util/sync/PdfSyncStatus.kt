@@ -15,7 +15,7 @@ open class PdfSyncStatus() : RealmObject() {
     open var realmDate: Long = 0
     open var markedForSync = false  // By user on LessonDetails
     open var documentsMD5 = RealmList<DocumentMD5>()
-    private var realmValidUntil: Long? = null
+    open var realmValidUntil: Long? = null
 
     constructor(subjectId: String, realmDate: Long) : this() {
         this.subjectId = subjectId
@@ -23,9 +23,9 @@ open class PdfSyncStatus() : RealmObject() {
     }
 
     var shouldBeSynced: Boolean
-        get() = markedForSync || realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay()
+        get() = markedForSync || (realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay())
         set(value) {
-            realmValidUntil = if (value) realmDate + 7 else null
+            realmValidUntil = if (value) LocalDate.now().toEpochDay() + 7 else null
         }
 
     fun getStatus(lesson: Lesson, context: Context): SyncStatus {
