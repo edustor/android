@@ -32,6 +32,8 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
 
     var lesson: Lesson? = null
 
+    var openPdfAfterSyncFinished = false
+
     init {
         uuid = arguments.getString("uuid")
         subjectId = arguments.getString("subject")
@@ -55,7 +57,15 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
 
     @Subscribe fun onPdfSyncProgress(event: PdfSyncProgressEvent) {
         if (event.lessonId != lesson?.id) return
-        val status = if (event.done) "Synced" else "${event.percent}%"
+        val status: String
+
+        if (event.done) {
+            if (openPdfAfterSyncFinished) openSyncedPdf()
+            status = "Synced"
+        } else {
+            status = "${event.percent}%"
+        }
+
         view?.setPdfSyncStatus(status)
     }
 
@@ -78,8 +88,9 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
 
     fun onGetPdfClicked() {
         if (lesson!!.syncStatus!!.getStatus(lesson!!, appComponent.context) == PdfSyncStatus.SyncStatus.SYNCED) {
-            appComponent.eventBus.makeSnack("Opening document")
+            openSyncedPdf()
         } else {
+            openPdfAfterSyncFinished = true
             Realm.getDefaultInstance().use {
                 it.executeTransaction {
                     lesson?.syncStatus!!.shouldBeSynced = true
@@ -91,7 +102,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
     }
 
     private fun openSyncedPdf() {
-
+        appComponent.eventBus.makeSnack("Opening document")
     }
 
     fun onCopyUrlClicked() {
