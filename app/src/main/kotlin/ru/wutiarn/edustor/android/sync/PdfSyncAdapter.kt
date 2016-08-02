@@ -37,14 +37,14 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
                 .first()
                 .sortedByDescending { it.realmDate }
 
-        val manuallyMarkedForSync = lessons
-                .filter { it.syncStatus!!.markedForSync }
+        val syncable = lessons
+                .filter { it.syncStatus!!.shouldBeSynced }
                 .filter { it.documents.filter { it.isUploaded }.count() > 0 }
 
-        val otherLessons = lessons.minus(manuallyMarkedForSync)
+        val otherLessons = lessons.minus(syncable)
 
         removePdfs(otherLessons)
-        manuallyMarkedForSync
+        syncable
                 .filter { it.syncStatus!!.getStatus(it, context) != PdfSyncStatus.SyncStatus.SYNCED }
                 .forEach { downloadPdf(it) }
     }

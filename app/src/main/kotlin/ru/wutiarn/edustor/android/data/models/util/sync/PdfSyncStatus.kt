@@ -5,6 +5,7 @@ import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.RealmClass
+import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.util.extension.getCacheFile
 
@@ -14,11 +15,18 @@ open class PdfSyncStatus() : RealmObject() {
     open var realmDate: Long = 0
     open var markedForSync = false  // By user on LessonDetails
     open var documentsMD5 = RealmList<DocumentMD5>()
+    private var realmValidUntil: Long? = null
 
     constructor(subjectId: String, realmDate: Long) : this() {
         this.subjectId = subjectId
         this.realmDate = realmDate
     }
+
+    var shouldBeSynced: Boolean
+        get() = markedForSync || realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay()
+        set(value) {
+            realmValidUntil = if (value) realmDate + 7 else null
+        }
 
     fun getStatus(lesson: Lesson, context: Context): SyncStatus {
         val file = lesson.getCacheFile(context)
