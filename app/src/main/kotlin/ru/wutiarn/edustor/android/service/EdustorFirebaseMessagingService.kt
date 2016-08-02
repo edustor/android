@@ -17,8 +17,7 @@ class EdustorFirebaseMessagingService : FirebaseMessagingService() {
                 appComponent.syncManager.requestSync()
             }
             "pdfSync" -> {
-//                TODO: Remove `true` before %v0.4 release
-                appComponent.pdfSyncManager.requestSync(true)
+                appComponent.pdfSyncManager.requestSync()
             }
         }
     }

@@ -95,6 +95,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
             it.executeTransaction {
                 lesson?.syncStatus?.markedForSync = isEnabled
             }
+            appComponent.pdfSyncManager.requestSync(true)
         }
     }
 
