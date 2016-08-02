@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
+import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.util.ProgressResponseBody
 import ru.wutiarn.edustor.android.util.extension.*
 import rx.lang.kotlin.toObservable
@@ -58,7 +59,11 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
             val latestPercent = progress.toInt()
             if (lastReportedPercent != latestPercent || done == true) {
                 lastReportedPercent = latestPercent
-                Log.d(TAG, "Downloading ${lesson.id}. Progress: $latestPercent. Done: $done")
+                val lessonId = lesson.id
+                Log.d(TAG, "Downloading $lessonId. Progress: $latestPercent. Done: $done")
+                handler.post {
+                    appComponent.eventBus.post(PdfSyncProgressEvent(lessonId, latestPercent, done))
+                }
             }
         }
 

@@ -66,6 +66,10 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         showContent()
     }
 
+    override fun setPdfSyncStatus(status: String) {
+        syncStatus.text = status
+    }
+
     override fun loadData(p0: Boolean) {
         showLoading(false)
         presenter.loadData()

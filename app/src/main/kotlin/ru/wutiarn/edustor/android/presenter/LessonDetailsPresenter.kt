@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe
 import io.realm.Realm
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.getPdfUrl
@@ -51,6 +52,12 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
 
     @Subscribe fun onSyncFinished(event: RealmSyncFinishedEvent) {
         loadData()
+    }
+
+    @Subscribe fun onPdfSyncProgress(event: PdfSyncProgressEvent) {
+        if (event.lessonId != lesson?.id) return
+        val status = if (event.done) "Synced" else "${event.percent}%"
+        view?.setPdfSyncStatus(status)
     }
 
     fun loadData() {
