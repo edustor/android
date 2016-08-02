@@ -52,8 +52,14 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
         val pdfUrl = lesson.getPdfUrl(appComponent.constants.URL)
         val cacheFile = lesson.getCacheFile(context)
 
+        var lastReportedPercent = 0
+
         updateListener = { progress, done ->
-            Log.d(TAG, "Downloading ${lesson.id}. Progress: $progress. Done: $done")
+            val latestPercent = progress.toInt()
+            if (lastReportedPercent != latestPercent || done == true) {
+                lastReportedPercent = latestPercent
+                Log.d(TAG, "Downloading ${lesson.id}. Progress: $latestPercent. Done: $done")
+            }
         }
 
         val request = Request.Builder().url(pdfUrl).build()
