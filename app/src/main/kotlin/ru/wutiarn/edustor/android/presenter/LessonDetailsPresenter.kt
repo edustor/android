@@ -3,6 +3,8 @@ package ru.wutiarn.edustor.android.presenter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
@@ -14,14 +16,11 @@ import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.util.extension.getPdfUrl
-import ru.wutiarn.edustor.android.util.extension.linkToLCEView
-import ru.wutiarn.edustor.android.util.extension.makeSnack
-import ru.wutiarn.edustor.android.util.extension.setUpSyncState
+import ru.wutiarn.edustor.android.util.extension.*
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.Subscription
 
-class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
+class LessonDetailsPresenter(val appComponent: AppComponent, val context: Context, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
     var view: LessonDetailsView? = null
     var activeSubscription: Subscription? = null
@@ -102,7 +101,10 @@ class LessonDetailsPresenter(val appComponent: AppComponent, arguments: Bundle) 
     }
 
     private fun openSyncedPdf() {
-        appComponent.eventBus.makeSnack("Opening document")
+        val file = lesson?.getCacheFile(appComponent.context)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(Uri.fromFile(file), "application/pdf")
+        context.startActivity(intent)
     }
 
     fun onCopyUrlClicked() {

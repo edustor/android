@@ -31,7 +31,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     override fun createPresenter(): LessonDetailsPresenter {
         val application = context.applicationContext as EdustorApplication
         appComponent = application.appComponent
-        return LessonDetailsPresenter(appComponent, arguments)
+        return LessonDetailsPresenter(appComponent, context, arguments)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
