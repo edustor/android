@@ -9,4 +9,5 @@ import java.util.*
 open class Subject : RealmObject() {
     open lateinit var name: String
     @PrimaryKey open var id: String = UUID.randomUUID().toString()
+    open var sync: Boolean = false
 }

@@ -31,11 +31,14 @@ open class PdfSyncStatus() : RealmObject() {
         this.realmDate = realmDate
     }
 
-    var shouldBeSynced: Boolean
-        get() = markedForSync || (realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay())
-        set(value) {
-            realmValidUntil = if (value) LocalDate.now().toEpochDay() + 7 else null
-        }
+    fun shouldBeSynced(lesson: Lesson): Boolean {
+        return lesson.subject.sync || markedForSync
+                || (realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay())
+    }
+
+    fun setShouldBeSynced(value: Boolean) {
+        realmValidUntil = if (value) LocalDate.now().toEpochDay() + 7 else null
+    }
 
     fun getStatus(lesson: Lesson, context: Context): SyncStatus {
         val file = lesson.getCacheFile(context)
