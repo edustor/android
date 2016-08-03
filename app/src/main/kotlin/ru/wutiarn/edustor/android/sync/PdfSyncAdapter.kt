@@ -56,7 +56,7 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
                 .sortedByDescending { it.realmDate }
 
         val syncable = lessons
-                .filter { it.syncStatus!!.shouldBeSynced(it) }
+                .filter { it.syncStatus!!.shouldBeSynced(appComponent.pdfSyncManager) }
                 .filter { it.documents.filter { it.isUploaded }.count() > 0 }
 
         val otherLessons = lessons.minus(syncable)
