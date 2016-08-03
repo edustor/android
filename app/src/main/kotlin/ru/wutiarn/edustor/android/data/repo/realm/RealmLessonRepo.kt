@@ -23,24 +23,29 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("subject.id", subject)
                 .equalTo("realmDate", epochDay)
-                .findFirstAsync()
-                .asObservable<Lesson>()
+                .findAllAsync()
+                .asObservable()
                 .filter { it.isLoaded }
-                .flatMap {
-                    if (it.isValid) return@flatMap Observable.just(it)
+                .flatMap { found ->
+                    if (found.isNotEmpty()) {
+                        Observable.just(found.first())
+                    } else {
+                        Realm.getDefaultInstance().use {
+                            it.where(Subject::class.java)
+                                    .equalTo("id", subject)
+                                    .findFirstAsync()
+                                    .asObservable<Subject>()
+                                    .filter { it.isLoaded }
+                                    .map {
+                                        var lesson = Lesson(it, epochDay)
+                                        Realm.getDefaultInstance().executeTransaction {
+                                            lesson = it.copyToRealm(lesson)
+                                        }
+                                        lesson
+                                    }
+                        }
+                    }
 
-                    return@flatMap Realm.getDefaultInstance().where(Subject::class.java)
-                            .equalTo("id", subject)
-                            .findFirstAsync()
-                            .asObservable<Subject>()
-                            .filter { it.isLoaded }
-                            .map {
-                                val lesson = Lesson(it, epochDay)
-                                Realm.getDefaultInstance().executeTransaction {
-                                    it.copyToRealm(lesson)
-                                }
-                                lesson
-                            }
                 }
                 .copyFromRealm()
     }
