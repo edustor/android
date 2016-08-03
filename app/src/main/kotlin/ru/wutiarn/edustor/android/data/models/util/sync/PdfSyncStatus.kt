@@ -6,12 +6,13 @@ import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.RealmClass
 import org.threeten.bp.LocalDate
+import ru.wutiarn.edustor.android.data.local.PdfSyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.util.extension.getCacheFile
 
 @RealmClass
 open class PdfSyncStatus() : RealmObject() {
-    open var subjectId: String? = null
+    open lateinit var subjectId: String
     open var realmDate: Long = 0
     open var markedForSync = false  // By user on LessonDetails
         set(value) {
@@ -31,9 +32,9 @@ open class PdfSyncStatus() : RealmObject() {
         this.realmDate = realmDate
     }
 
-    fun shouldBeSynced(lesson: Lesson): Boolean {
-        return lesson.subject.sync || markedForSync
-                || (realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay())
+    fun shouldBeSynced(pdfSyncManager: PdfSyncManager): Boolean {
+        return markedForSync || (realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay())
+                || pdfSyncManager.getSubjectSyncStatus(subjectId).markedForSync
     }
 
     fun setShouldBeSynced(value: Boolean) {

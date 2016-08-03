@@ -87,7 +87,7 @@ class LessonsListFragment() : MvpLceFragment<LinearLayout, List<Lesson>, Lessons
 
     private fun initializeSwitch(subject: Subject) {
         switch?.isEnabled = true
-        switch?.isChecked = subject.sync
+        switch?.isChecked = appComponent.pdfSyncManager.getSubjectSyncStatus(subject.id).markedForSync
         switch?.setOnCheckedChangeListener { button, b -> presenter.onSyncSwitchChanged(b) }
     }
 

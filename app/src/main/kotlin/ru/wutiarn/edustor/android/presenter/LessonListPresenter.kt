@@ -9,16 +9,15 @@ import io.realm.Realm
 import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonsListView
 import rx.Subscription
 
-class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : MvpPresenter<LessonsListView>,
+class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonsListView>,
         DatePickerDialog.OnDateSetListener {
 
-    var subjectId: String? = null
+    var subjectId: String
 
     var view: LessonsListView? = null
     var lessons: List<Lesson> = emptyList()
@@ -27,7 +26,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
 
 
     init {
-        subjectId = arguments?.getString("subject_id")
+        subjectId = arguments.getString("subject_id")
     }
 
     override fun detachView(p0: Boolean) {
@@ -42,29 +41,26 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
     }
 
     fun onSyncSwitchChanged(b: Boolean) {
-        Realm.getDefaultInstance().use { realm ->
-            realm.where(Subject::class.java)
-                    .equalTo("id", subjectId)
-                    .findFirst()
-                    .let { subject ->
-                        realm.executeTransaction {
-                            subject.sync = b
-                        }
-                    }
+        val subjectSyncStatus = appComponent.pdfSyncManager.getSubjectSyncStatus(subjectId)
+
+        Realm.getDefaultInstance().use {
+            it.executeTransaction {
+                subjectSyncStatus.markedForSync = b
+            }
         }
         appComponent.pdfSyncManager.requestSync(true)
     }
 
     fun loadData() {
         activeSubscription?.unsubscribe()
-        activeSubscription = appComponent.repo.lessons.bySubjectId(subjectId!!)
+        activeSubscription = appComponent.repo.lessons.bySubjectId(subjectId)
                 .map { it.filter { it.documents.count() > 0 }.sortedByDescending { it.date } }
                 .linkToLCEView(view, { lessons = it })
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
-        appComponent.repo.lessons.byDate(subjectId!!, date.toEpochDay())
+        appComponent.repo.lessons.byDate(subjectId, date.toEpochDay())
                 .subscribe(
                         { view?.onLessonClick(it) },
                         {
