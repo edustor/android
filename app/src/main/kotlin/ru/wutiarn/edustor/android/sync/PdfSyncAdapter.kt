@@ -14,6 +14,7 @@ import android.util.Log
 import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.threeten.bp.Instant
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
@@ -66,36 +67,27 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
 
         val filesPercentSum = toSyncCount * 100
 
-        var lastReportedPercent = 0
-
-        var totalLastReportedPercent: Int = 0
-        var lastReportedLessonIndex: Int = -1
+        var nextReportInstant: Instant = Instant.now()
 
         if (toSyncCount > 0) {
             Observable.range(0, toSyncCount).map { i ->
                 val lesson = toSync[i]
 
                 updateListener = { progress, done ->
-                    val latestPercent = progress.toInt()
-                    if (lastReportedPercent != latestPercent || done == true) {
-                        lastReportedPercent = latestPercent
+                    val now = Instant.now()
+                    if (now > nextReportInstant) {
+                        nextReportInstant = now.plusSeconds(1)
+                        val latestPercent = progress.toInt()
                         val lessonId = lesson.id
 
-                        val totalPercent = ((100 * i + latestPercent).toFloat() / filesPercentSum * 100).toInt()
+                        val progressNotification = notificationBuilder.setProgress(filesPercentSum, 100 * i + latestPercent, false)
+                                .setContentText("[$i/$toSyncCount] Current file: $latestPercent%")
+                                .build()
 
-                        if (totalPercent != totalLastReportedPercent || lastReportedLessonIndex != i) {
-                            totalLastReportedPercent = totalPercent
-                            lastReportedLessonIndex = i
+                        notificationService.notify(NOTIFICATION_ID, progressNotification)
 
-                            val progressNotification = notificationBuilder.setProgress(100, totalPercent, false)
-                                    .setContentText("[$i/$toSyncCount] Current file: $latestPercent%")
-                                    .build()
-
-                            notificationService.notify(NOTIFICATION_ID, progressNotification)
-
-                            handler.post {
-                                appComponent.eventBus.post(PdfSyncProgressEvent(lessonId, latestPercent, done))
-                            }
+                        handler.post {
+                            appComponent.eventBus.post(PdfSyncProgressEvent(lessonId, latestPercent, done))
                         }
                     }
                 }
