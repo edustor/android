@@ -62,12 +62,17 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
 
         removePdfs(otherLessons)
         val toSync = syncable.filter { it.syncStatus!!.getStatus(it, context) != PdfSyncStatus.SyncStatus.SYNCED }
-        val toSyncSize = toSync.size
+        val toSyncCount = toSync.size
+
+        val filesPercentSum = toSyncCount * 100
 
         var lastReportedPercent = 0
 
-        if (toSyncSize > 0) {
-            Observable.range(0, toSyncSize).map { i ->
+        var totalLastReportedPercent: Int = 0
+        var lastReportedLessonIndex: Int = -1
+
+        if (toSyncCount > 0) {
+            Observable.range(0, toSyncCount).map { i ->
                 val lesson = toSync[i]
 
                 updateListener = { progress, done ->
@@ -76,15 +81,21 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
                         lastReportedPercent = latestPercent
                         val lessonId = lesson.id
 
-                        val progressNotification = notificationBuilder.setProgress(toSyncSize * 100, 100 * i + latestPercent, false)
-                                .setContentText("[$i/$toSyncSize] Current file: $latestPercent%")
-                                .build()
+                        val totalPercent = ((100 * i + latestPercent).toFloat() / filesPercentSum * 100).toInt()
 
-                        notificationService.notify(NOTIFICATION_ID, progressNotification)
+                        if (totalPercent != totalLastReportedPercent || lastReportedLessonIndex != i) {
+                            totalLastReportedPercent = totalPercent
+                            lastReportedLessonIndex = i
 
-                        Log.d(TAG, "Downloading $lessonId. Progress: $latestPercent. Done: $done")
-                        handler.post {
-                            appComponent.eventBus.post(PdfSyncProgressEvent(lessonId, latestPercent, done))
+                            val progressNotification = notificationBuilder.setProgress(100, totalPercent, false)
+                                    .setContentText("[$i/$toSyncCount] Current file: $latestPercent%")
+                                    .build()
+
+                            notificationService.notify(NOTIFICATION_ID, progressNotification)
+
+                            handler.post {
+                                appComponent.eventBus.post(PdfSyncProgressEvent(lessonId, latestPercent, done))
+                            }
                         }
                     }
                 }
