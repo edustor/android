@@ -13,9 +13,10 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byUUID(uuid: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("documents.uuid", uuid)
-                .findFirstAsync()
-                .asObservable<Lesson>()
+                .findAllAsync()
+                .asObservable()
                 .filter { it.isLoaded }
+                .map { it.first() }
                 .copyFromRealm()
     }
 
@@ -53,9 +54,10 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byId(id: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("id", id)
-                .findFirstAsync()
-                .asObservable<Lesson>()
+                .findAllAsync()
+                .asObservable()
                 .filter { it.isLoaded }
+                .map { it.first() }
                 .copyFromRealm()
     }
 
