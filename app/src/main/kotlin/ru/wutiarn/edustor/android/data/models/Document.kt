@@ -12,6 +12,8 @@ import java.util.*
 open class Document() : RealmObject() {
     open var uuid: String? = null
     open var isUploaded: Boolean = false
+    open var fileMD5: String? = null
+    open var contentType: String? = null
     @Ignore open var timestamp: Instant = Instant.now()
         get() = Instant.ofEpochSecond(realmTimestamp)
         set(value) {

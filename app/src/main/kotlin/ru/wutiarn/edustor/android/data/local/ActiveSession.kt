@@ -1,10 +1,11 @@
 package ru.wutiarn.edustor.android.data.local
 
 import android.content.Context
+import io.realm.Realm
 import ru.wutiarn.edustor.android.activity.LoginActivity
 import ru.wutiarn.edustor.android.util.extension.startActivity
 
-class ActiveSession(val edustorPreferences: EdustorPreferences, val context: Context) {
+class ActiveSession(val edustorPreferences: EdustorPreferences, val context: Context, val syncManager: SyncManager) {
     var token: String?
         get() = edustorPreferences.token
         set(value) {
@@ -16,6 +17,9 @@ class ActiveSession(val edustorPreferences: EdustorPreferences, val context: Con
 
     fun logout() {
         token = null
+        syncManager.syncEnabled = false
+        edustorPreferences.clear()
+        Realm.getDefaultInstance().use { it.executeTransaction { it.deleteAll() } }
         context.startActivity(LoginActivity::class.java, true)
     }
 }

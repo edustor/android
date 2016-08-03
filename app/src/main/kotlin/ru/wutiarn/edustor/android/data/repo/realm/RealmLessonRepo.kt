@@ -6,51 +6,59 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
+import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import rx.Observable
 
 class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byUUID(uuid: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("documents.uuid", uuid)
-                .findFirstAsync()
-                .asObservable<Lesson>()
+                .findAllAsync()
+                .asObservable()
                 .filter { it.isLoaded }
-                .first()
+                .map { it.first() }
+                .copyFromRealm()
     }
 
     override fun byDate(subject: String, epochDay: Long): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("subject.id", subject)
                 .equalTo("realmDate", epochDay)
-                .findFirstAsync()
-                .asObservable<Lesson>()
+                .findAllAsync()
+                .asObservable()
                 .filter { it.isLoaded }
-                .flatMap {
-                    if (it.isValid) return@flatMap Observable.just(it)
+                .flatMap { found ->
+                    if (found.isNotEmpty()) {
+                        Observable.just(found.first())
+                    } else {
+                        Realm.getDefaultInstance().use {
+                            it.where(Subject::class.java)
+                                    .equalTo("id", subject)
+                                    .findFirstAsync()
+                                    .asObservable<Subject>()
+                                    .filter { it.isLoaded }
+                                    .map {
+                                        var lesson = Lesson(it, epochDay)
+                                        Realm.getDefaultInstance().executeTransaction {
+                                            lesson = it.copyToRealm(lesson)
+                                        }
+                                        lesson
+                                    }
+                        }
+                    }
 
-                    return@flatMap Realm.getDefaultInstance().where(Subject::class.java)
-                            .equalTo("id", subject)
-                            .findFirstAsync()
-                            .asObservable<Subject>()
-                            .filter { it.isLoaded }
-                            .map {
-                                val lesson = Lesson(it, epochDay)
-                                Realm.getDefaultInstance().executeTransaction {
-                                    it.copyToRealm(lesson)
-                                }
-                                lesson
-                            }
                 }
-                .first()
+                .copyFromRealm()
     }
 
     override fun byId(id: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("id", id)
-                .findFirstAsync()
-                .asObservable<Lesson>()
+                .findAllAsync()
+                .asObservable()
                 .filter { it.isLoaded }
-                .first()
+                .map { it.first() }
+                .copyFromRealm()
     }
 
     override fun bySubjectId(subject_id: String): Observable<List<Lesson>> {
@@ -59,7 +67,8 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findAllAsync()
                 .asObservable()
                 .filter { it.isLoaded }
-                .map { it.toList() }
+                .map { it.toList().map { it.copyFromRealm<Lesson>() } }
+//                .flatMap { it.toObservable().flatMap { Observable.just(it).setUpSyncState(pdfSyncManager).toList() } }
     }
 
     override fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Observable<Unit> {

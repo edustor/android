@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Switch
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.fragment_base_list.*
@@ -18,14 +19,17 @@ import ru.wutiarn.edustor.android.activity.LessonDetailsActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.LessonsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.presenter.LessonListPresenter
 import ru.wutiarn.edustor.android.util.helpers.PullToRefreshHelper
 import ru.wutiarn.edustor.android.view.LessonsListView
 
-class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),
+class LessonsListFragment() : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),
         LessonsListView, LessonsAdapter.LessonsAdapterEventsListener, PullToRefreshHelper {
     lateinit override var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter
+    var switch: Switch? = null
+    var subject: Subject? = null
 
     override fun createPresenter(): LessonListPresenter {
         val application = context.applicationContext as EdustorApplication
@@ -68,10 +72,23 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
     override fun setData(lessons: List<Lesson>?) {
         lessonsAdapter.lessons = lessons ?: emptyList()
         lessonsAdapter.notifyDataSetChanged()
-        lessons?.firstOrNull()?.subject?.name?.let {
-            activity?.title = it
+        lessons?.firstOrNull()?.subject?.let {
+            subject = it
+            activity?.title = it.name
+            initializeSwitch(it)
         }
         if (isResumed) showContent()
+    }
+
+    fun setSyncSwitch(switch: Switch) {
+        this.switch = switch
+        if (subject != null) initializeSwitch(subject!!)
+    }
+
+    private fun initializeSwitch(subject: Subject) {
+        switch?.isEnabled = true
+        switch?.isChecked = appComponent.pdfSyncManager.getSubjectSyncStatus(subject.id).markedForSync
+        switch?.setOnCheckedChangeListener { button, b -> presenter.onSyncSwitchChanged(b) }
     }
 
     override fun onLessonClick(lesson: Lesson) {

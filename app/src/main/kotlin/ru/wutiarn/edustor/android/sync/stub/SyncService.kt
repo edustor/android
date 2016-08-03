@@ -1,8 +1,9 @@
-package ru.wutiarn.edustor.android.sync
+package ru.wutiarn.edustor.android.sync.stub
 
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import ru.wutiarn.edustor.android.sync.SyncAdapter
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 

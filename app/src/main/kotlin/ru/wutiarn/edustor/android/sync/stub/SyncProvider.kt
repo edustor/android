@@ -5,7 +5,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 
-class StubProvider : ContentProvider() {
+class SyncProvider : ContentProvider() {
     override fun insert(p0: Uri?, p1: ContentValues?): Uri? {
         return null
     }

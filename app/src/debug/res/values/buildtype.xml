@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Edustor Experimental</string>
-    <string name="edustor_url">https://edustor.ru/</string>
+    <string name="edustor_url">http://192.168.10.4:8080/</string>
     <string name="account_type">debug.edustor.ru</string>
-    <string name="content_provider_authority">ru.edustor.debug.datasync.provider</string>
+    <string name="sync_content_provider_authority">ru.edustor.debug.datasync.provider</string>
+    <string name="pdf_sync_content_provider_authority">ru.edustor.debug.datasync.pdf.provider</string>
 </resources>
