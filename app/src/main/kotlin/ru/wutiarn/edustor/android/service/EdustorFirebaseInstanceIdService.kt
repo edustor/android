@@ -19,7 +19,6 @@ class EdustorFirebaseInstanceIdService : FirebaseInstanceIdService() {
 
     override fun onTokenRefresh() {
         val token = FirebaseInstanceId.getInstance().token
-        prefs.firebaseToken = token
 
         val syncTask = SyncTask("account/FCMToken/put", mapOf(
                 "token" to token

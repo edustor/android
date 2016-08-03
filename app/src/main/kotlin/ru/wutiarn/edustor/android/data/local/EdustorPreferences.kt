@@ -13,7 +13,6 @@ class EdustorPreferences(context: Context) {
     private val objectMapper = ObjectMapper()
 
     var token: String? by PrefDelegate(pref)
-    var firebaseToken: String? by PrefDelegate(pref)
 
     var syncTasks: List<SyncTask> by JsonPrefDelegate(pref, objectMapper, object : TypeReference<List<SyncTask>>() {})
 

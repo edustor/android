@@ -4,6 +4,7 @@ import android.accounts.AccountManager
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import com.google.firebase.iid.FirebaseInstanceId
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -30,6 +31,6 @@ class EdustorApplication : Application() {
         accountManager.addAccountExplicitly(appComponent.constants.syncAccount, null, null)
 
         Log.i("EdustorApplication", "Edustor token: ${appComponent.preferences.token}")
-        Log.i("EdustorApplication", "Firebase token: ${appComponent.preferences.firebaseToken}")
+        Log.i("EdustorApplication", "Firebase token: ${FirebaseInstanceId.getInstance().token}")
     }
 }

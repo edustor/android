@@ -8,6 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.firebase.iid.FirebaseInstanceId
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.activity.InitSyncActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
@@ -38,7 +39,7 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
 
     fun onLoggedIn() {
         val syncTask = SyncTask("account/FCMToken/put", mapOf(
-                "token" to appComponent.preferences.firebaseToken
+                "token" to FirebaseInstanceId.getInstance().token
         ))
         appComponent.syncManager.addTask(syncTask)
         appComponent.syncManager.syncEnabled = true
