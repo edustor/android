@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.DatePicker
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
-import com.squareup.otto.Subscribe
 import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonsListView
@@ -39,10 +37,6 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
     override fun attachView(p0: LessonsListView?) {
         appComponent.eventBus.register(this)
         view = p0
-    }
-
-    @Subscribe fun onSyncFinished(event: RealmSyncFinishedEvent) {
-        loadData()
     }
 
     fun loadData() {
