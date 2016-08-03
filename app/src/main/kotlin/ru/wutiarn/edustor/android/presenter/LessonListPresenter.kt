@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.DatePicker
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import io.realm.Realm
 import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.LessonsListView
@@ -37,6 +39,20 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle?) : 
     override fun attachView(p0: LessonsListView?) {
         appComponent.eventBus.register(this)
         view = p0
+    }
+
+    fun onSyncSwitchChanged(b: Boolean) {
+        Realm.getDefaultInstance().use { realm ->
+            realm.where(Subject::class.java)
+                    .equalTo("id", subjectId)
+                    .findFirst()
+                    .let { subject ->
+                        realm.executeTransaction {
+                            subject.sync = b
+                        }
+                    }
+        }
+        appComponent.pdfSyncManager.requestSync(true)
     }
 
     fun loadData() {
