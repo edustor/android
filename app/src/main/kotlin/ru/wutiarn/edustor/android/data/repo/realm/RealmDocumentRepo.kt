@@ -8,12 +8,15 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.DocumentRepo
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
+import ru.wutiarn.edustor.android.util.extension.copyFromRealm
+import ru.wutiarn.edustor.android.util.extension.copyToRealm
 import rx.Observable
 
 class RealmDocumentRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManager) : DocumentRepo {
     override fun activateUUID(uuid: String, lessonId: String, instant: Instant): Observable<Document> {
         val realm = Realm.getDefaultInstance()
         return lessonRepo.byId(lessonId)
+                .map { it.copyToRealm<Lesson>() }
                 .first()
                 .map { lesson ->
 
@@ -36,7 +39,7 @@ class RealmDocumentRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncM
                         ))
                         syncTasksManager.addTask(syncTask)
                     }
-                    return@map lesson.documents.first { it.uuid == uuid }
+                    return@map lesson.documents.first { it.uuid == uuid }.copyFromRealm<Document>()
                 }
     }
 

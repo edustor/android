@@ -14,7 +14,6 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
-import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.*
 import ru.wutiarn.edustor.android.view.LessonDetailsView
@@ -48,10 +47,6 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     override fun attachView(p0: LessonDetailsView?) {
         appComponent.eventBus.register(this)
         view = p0
-    }
-
-    @Subscribe fun onSyncFinished(event: RealmSyncFinishedEvent) {
-        loadData()
     }
 
     @Subscribe fun onPdfSyncProgress(event: PdfSyncProgressEvent) {
