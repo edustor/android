@@ -42,3 +42,16 @@ fun <T : RealmObject> RealmObject.copyFromRealm(): T {
         }
     }
 }
+
+@Suppress("UNCHECKED_CAST")
+fun <T : RealmObject> RealmObject.copyToRealm(): T {
+    return Realm.getDefaultInstance().use {
+        Realm.getDefaultInstance().use {
+            var result: T? = null
+            it.executeTransaction {
+                result = (it.copyToRealmOrUpdate(this) as T)
+            }
+            result!!
+        }
+    }
+}
