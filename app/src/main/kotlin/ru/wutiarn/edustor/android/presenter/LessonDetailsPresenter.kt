@@ -87,7 +87,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
             openPdfAfterSyncFinished = true
             Realm.getDefaultInstance().use {
                 it.executeTransaction {
-                    lesson?.syncStatus!!.shouldBeSynced = true
+                    lesson?.syncStatus!!.setShouldBeSynced(true)
                 }
             }
             appComponent.pdfSyncManager.requestSync(true)
