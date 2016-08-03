@@ -6,6 +6,7 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Subject
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
+import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import rx.Observable
 
 class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
@@ -15,6 +16,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findFirstAsync()
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
+                .copyFromRealm()
     }
 
     override fun byDate(subject: String, epochDay: Long): Observable<Lesson> {
@@ -40,6 +42,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                                 lesson
                             }
                 }
+                .copyFromRealm()
     }
 
     override fun byId(id: String): Observable<Lesson> {
@@ -48,6 +51,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findFirstAsync()
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
+                .copyFromRealm()
     }
 
     override fun bySubjectId(subject_id: String): Observable<List<Lesson>> {
@@ -56,7 +60,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findAllAsync()
                 .asObservable()
                 .filter { it.isLoaded }
-                .map { it.toList() }
+                .map { it.toList().map { it.copyFromRealm<Lesson>() } }
 //                .flatMap { it.toObservable().flatMap { Observable.just(it).setUpSyncState(pdfSyncManager).toList() } }
     }
 
