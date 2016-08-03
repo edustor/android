@@ -26,6 +26,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
     override fun onPerformSync(account: Account?, extras: Bundle, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult) {
 
         val uploadOnly = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD)
+        val isManual = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL)
 
 
         val tasks = appComponent.syncManager.popAllTasks()
@@ -56,6 +57,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                             val msgStr = "Sync finished. Tasks succeeded: $taskSucceeded/${tasks.size}"
                             Log.i(TAG, msgStr)
                             makeSnack(msgStr)
+                            appComponent.pdfSyncManager.requestSync(isManual)
                             handler.post {
                                 appComponent.eventBus.post(RealmSyncFinishedEvent())
                             }

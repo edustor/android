@@ -31,11 +31,11 @@ class SyncManager(val context: Context) {
     fun requestSync(manual: Boolean = false, uploadOnly: Boolean = true) {
         val bundle = Bundle()
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, if (manual) false else uploadOnly)
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, manual)
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, manual)
         val syncRequest = SyncRequest.Builder()
                 .setSyncAdapter(constants.syncAccount, constants.syncContentProviderAuthority)
                 .setExtras(bundle)
-                .setManual(manual)
-                .setExpedited(manual)
                 .build()
         ContentResolver.requestSync(syncRequest)
     }
