@@ -23,6 +23,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
 
     val appComponent = context.initializeNewAppComponent()
     val handler = Handler(context.mainLooper)
+    val notificationService = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val TAG = "SyncAdapter"
     val NOTIFICATION_ID = 0
 
@@ -31,7 +32,6 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
         val uploadOnly = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD)
         val isManual = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL)
 
-        val notificationService = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(appComponent.context)
                 .setSmallIcon(R.drawable.ic_cached_black_24dp)
                 .setContentTitle("Edustor Sync")
