@@ -28,9 +28,9 @@ class SyncManager(val context: Context) {
             ContentResolver.setSyncAutomatically(constants.syncAccount, constants.syncContentProviderAuthority, value)
         }
 
-    fun requestSync(manual: Boolean = false) {
+    fun requestSync(manual: Boolean = false, uploadOnly: Boolean = true) {
         val bundle = Bundle()
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, !manual)
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, if (manual) false else uploadOnly)
         val syncRequest = SyncRequest.Builder()
                 .setSyncAdapter(constants.syncAccount, constants.syncContentProviderAuthority)
                 .setExtras(bundle)

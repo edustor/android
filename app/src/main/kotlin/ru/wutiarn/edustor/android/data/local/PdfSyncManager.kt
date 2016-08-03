@@ -19,7 +19,6 @@ class PdfSyncManager(val context: Context) {
 
     fun requestSync(manual: Boolean = false) {
         val bundle = Bundle()
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, !manual)
         val syncRequest = SyncRequest.Builder()
                 .setSyncAdapter(constants.syncAccount, constants.pdfContentProviderAuthority)
                 .setExtras(bundle)
