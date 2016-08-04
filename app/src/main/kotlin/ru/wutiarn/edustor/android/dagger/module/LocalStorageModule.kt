@@ -22,8 +22,8 @@ class LocalStorageModule(val context: Context) {
 
     @Provides
     @AppScope
-    fun activeSession(prefs: EdustorPreferences, syncManager: SyncManager): ActiveSession {
-        return ActiveSession(prefs, context, syncManager)
+    fun activeSession(prefs: EdustorPreferences, syncManager: SyncManager, pdfSyncManager: PdfSyncManager): ActiveSession {
+        return ActiveSession(prefs, context, syncManager, pdfSyncManager)
     }
 
     @Provides

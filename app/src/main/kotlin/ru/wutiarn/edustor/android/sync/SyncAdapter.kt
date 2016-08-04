@@ -78,7 +78,6 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                         {
                             if (it is HttpException) {
                                 when (it.code()) {
-                                    401 -> appComponent.syncManager.syncEnabled = false
                                     403 -> appComponent.activeSession.logout()
                                     else -> syncResult.stats.numIoExceptions++
                                 }

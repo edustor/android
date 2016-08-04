@@ -18,6 +18,12 @@ class PdfSyncManager(val context: Context) {
         constants = EdustorConstants(context)
     }
 
+    var syncEnabled: Boolean
+        get() = ContentResolver.getSyncAutomatically(constants.syncAccount, constants.pdfContentProviderAuthority)
+        set(value) {
+            ContentResolver.setSyncAutomatically(constants.syncAccount, constants.pdfContentProviderAuthority, value)
+        }
+
     fun requestSync(manual: Boolean = false) {
         val bundle = Bundle()
         val syncRequest = SyncRequest.Builder()
