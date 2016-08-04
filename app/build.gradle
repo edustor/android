@@ -56,6 +56,7 @@ android {
             storePassword ciPass
             keyAlias "ci"
             keyPassword ciPass
+
         }
 
         release {
@@ -82,6 +83,7 @@ android {
             signingConfig signingConfigs["CI"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
         }
 
         release {
