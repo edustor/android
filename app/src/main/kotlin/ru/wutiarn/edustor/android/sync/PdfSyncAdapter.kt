@@ -75,7 +75,7 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
 
                 updateListener = { progress, done ->
                     val now = Instant.now()
-                    if (now > nextReportInstant) {
+                    if (now > nextReportInstant || done) {
                         nextReportInstant = now.plusSeconds(1)
                         val latestPercent = progress.toInt()
                         val lessonId = lesson.id
