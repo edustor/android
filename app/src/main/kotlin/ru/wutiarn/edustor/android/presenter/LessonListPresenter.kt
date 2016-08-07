@@ -61,6 +61,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
         appComponent.repo.lessons.byDate(subjectId, date.toEpochDay())
+                .first()
                 .subscribe(
                         { view?.onLessonClick(it) },
                         {
