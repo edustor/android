@@ -14,7 +14,7 @@ class EdustorFirebaseMessagingService : FirebaseMessagingService() {
         val appComponent = application.appComponent
         when (msg.data["command"]) {
             "sync" -> {
-                appComponent.syncManager.requestSync(uploadOnly = false)
+                appComponent.syncManager.requestSync(false, false)
             }
         }
     }

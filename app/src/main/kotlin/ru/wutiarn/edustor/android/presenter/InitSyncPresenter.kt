@@ -16,7 +16,7 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
 
     override fun attachView(view: InitScreenView?) {
         this.view = view
-        appComponent.syncManager.requestSync(true)
+        appComponent.syncManager.requestSync(true, false)
     }
 
     fun onSyncFinished() {

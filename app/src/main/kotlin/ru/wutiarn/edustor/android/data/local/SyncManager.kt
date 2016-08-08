@@ -28,9 +28,9 @@ class SyncManager(val context: Context) {
             ContentResolver.setSyncAutomatically(constants.syncAccount, constants.syncContentProviderAuthority, value)
         }
 
-    fun requestSync(manual: Boolean = false, uploadOnly: Boolean = true) {
+    fun requestSync(manual: Boolean, uploadOnly: Boolean) {
         val bundle = Bundle()
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, if (manual) false else uploadOnly)
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, uploadOnly)
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, manual)
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, manual)
         val syncRequest = SyncRequest.Builder()
@@ -45,7 +45,7 @@ class SyncManager(val context: Context) {
         modifyTasksWithLock {
             it.add(syncTask)
         }
-        requestSync()
+        requestSync(true, true)
     }
 
     fun popAllTasks(): List<SyncTask> {
