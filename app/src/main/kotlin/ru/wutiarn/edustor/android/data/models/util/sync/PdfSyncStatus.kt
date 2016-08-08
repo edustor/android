@@ -14,6 +14,10 @@ import ru.wutiarn.edustor.android.util.extension.getCacheFile
 open class PdfSyncStatus() : RealmObject() {
     open lateinit var subjectId: String
     open var realmDate: Long = 0
+        set(value) {
+            field = value
+            realmValidUntil = value + 7
+        }
     open var markedForSync = false  // By user on LessonDetails
         set(value) {
             field = value
