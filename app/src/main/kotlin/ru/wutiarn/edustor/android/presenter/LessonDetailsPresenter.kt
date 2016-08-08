@@ -54,7 +54,10 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
         val status: String
 
         if (event.done) {
-            if (openPdfAfterSyncFinished) openSyncedPdf()
+            if (openPdfAfterSyncFinished) {
+                openPdfAfterSyncFinished = false
+                openSyncedPdf()
+            }
             status = "Synced"
         } else {
             status = "${event.percent}%"
