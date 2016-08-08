@@ -54,7 +54,10 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
         val status: String
 
         if (event.done) {
-            if (openPdfAfterSyncFinished) openSyncedPdf()
+            if (openPdfAfterSyncFinished) {
+                openPdfAfterSyncFinished = false
+                openSyncedPdf()
+            }
             status = "Synced"
         } else {
             status = "${event.percent}%"
@@ -81,15 +84,15 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     }
 
     fun onGetPdfClicked() {
+        Realm.getDefaultInstance().use {
+            it.executeTransaction {
+                lesson?.syncStatus!!.setShouldBeSynced(true)  // Update realmValidUntil even if document is already synced
+            }
+        }
         if (lesson!!.syncStatus!!.getStatus(lesson!!, appComponent.context) == PdfSyncStatus.SyncStatus.SYNCED) {
             openSyncedPdf()
         } else {
             openPdfAfterSyncFinished = true
-            Realm.getDefaultInstance().use {
-                it.executeTransaction {
-                    lesson?.syncStatus!!.setShouldBeSynced(true)
-                }
-            }
             appComponent.pdfSyncManager.requestSync(true)
             appComponent.eventBus.makeSnack("Pdf sync requested")
         }
