@@ -13,6 +13,7 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.fragment.SubjectsListFragment
 import ru.wutiarn.edustor.android.presenter.SubjectListActivityPresenter
+import ru.wutiarn.edustor.android.util.extension.EdustorURIParser
 import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 import ru.wutiarn.edustor.android.util.extension.show
 import ru.wutiarn.edustor.android.view.SubjectsListActivityView
@@ -52,9 +53,15 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
         }
     }
 
-    override fun showLessonInfo(uuid: String) {
+    override fun onDocumentQRCodeScanned(result: String) {
+        val (type, id) = EdustorURIParser.parse(result)
+
+        if (type != EdustorURIParser.URIType.DOCUMENT) {
+            appComponent.eventBus.post(RequestSnackbarEvent("Error: incorrect QR code payload")); return
+        }
+
         val intent = Intent(this, LessonDetailsActivity::class.java)
-        intent.putExtra("uuid", uuid)
+        intent.putExtra("uuid", id)
         startActivity(intent)
     }
 

@@ -22,7 +22,7 @@ class SubjectListActivityPresenter : MvpPresenter<SubjectsListActivityView> {
     }
 
     fun processQrScanResult(result: String) {
-        view?.showLessonInfo(result)
+        view?.onDocumentQRCodeScanned(result)
     }
 
 }
