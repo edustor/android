@@ -131,13 +131,19 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
         }
     }
 
-    fun onQrCodeScanned(uuid: String) {
+    fun onQrCodeScanned(result: String) {
+
+        val (type, id) = EdustorURIParser.parse(result)
+
+        if (type != EdustorURIParser.URIType.DOCUMENT) {
+            appComponent.eventBus.post(RequestSnackbarEvent("Error: incorrect QR code payload")); return
+        }
 
         if (lesson == null) {
             appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return
         }
 
-        appComponent.repo.documents.activateUUID(uuid, lesson?.id!!).subscribe({
+        appComponent.repo.documents.activateUUID(id, lesson?.id!!).subscribe({
             appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
         }, {
             Log.w("LoginPresenter", "Error while creating document", it)
