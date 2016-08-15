@@ -36,7 +36,16 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         fab_scan_exists.visibility = View.GONE
 
         lessonDetailsFragment = LessonDetailsFragment()
-        lessonDetailsFragment.arguments = intent.extras
+
+        val extras = Bundle()
+        intent.extras?.let { extras.putAll(it) }
+
+        if (intent.action == Intent.ACTION_VIEW) {
+            val uuid = intent.data.pathSegments[0]
+            extras.putString("uuid", uuid)
+        }
+
+        lessonDetailsFragment.arguments = extras
 
         fab_scan_new.visibility = View.VISIBLE
         fab_scan_new.setOnClickListener {

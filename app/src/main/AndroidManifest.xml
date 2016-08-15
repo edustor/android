@@ -38,7 +38,18 @@
         <activity
             android:name=".activity.LessonDetailsActivity"
             android:label="Lesson details"
-            android:parentActivityName=".activity.SubjectsListActivity"/>
+            android:parentActivityName=".activity.SubjectsListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:scheme="edustor"
+                    android:host="d"/>
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".activity.LessonsListActivity"
