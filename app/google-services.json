@@ -15,24 +15,12 @@
       },
       "oauth_client": [
         {
-          "client_id": "99685742253-feja24prltj05qdg9eebj0urjhj2m00h.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ru.wutiarn.edustor.android",
-            "certificate_hash": "F81A28A959FF9685EA6205924113C61C55D14E9F"
-          }
-        },
-        {
           "client_id": "99685742253-1t09ldh8ohegpj39d6gocsqapn7lcm8u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ru.wutiarn.edustor.android",
             "certificate_hash": "BB78BB6BC5386A43B6A4B164838E05B6823AF62D"
           }
-        },
-        {
-          "client_id": "99685742253-qdm1r5o0gmfdgdjm48bmeh0l16d4hrkt.apps.googleusercontent.com",
-          "client_type": 3
         },
         {
           "client_id": "99685742253-41uieqd0vl3e03l62c7t3impd38gdt4q.apps.googleusercontent.com",
@@ -52,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "99685742253-qdm1r5o0gmfdgdjm48bmeh0l16d4hrkt.apps.googleusercontent.com",
+              "client_id": "99685742253-41uieqd0vl3e03l62c7t3impd38gdt4q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -79,10 +67,6 @@
           }
         },
         {
-          "client_id": "99685742253-qdm1r5o0gmfdgdjm48bmeh0l16d4hrkt.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
           "client_id": "99685742253-41uieqd0vl3e03l62c7t3impd38gdt4q.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -100,7 +84,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "99685742253-qdm1r5o0gmfdgdjm48bmeh0l16d4hrkt.apps.googleusercontent.com",
+              "client_id": "99685742253-41uieqd0vl3e03l62c7t3impd38gdt4q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
