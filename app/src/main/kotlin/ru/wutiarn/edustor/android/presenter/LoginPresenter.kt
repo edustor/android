@@ -75,7 +75,7 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
                 if (result.isSuccess) {
                     onGoogleSignIn(result)
                 } else {
-                    activity.makeToast("Signing in failed")
+                    activity.makeToast("Signing in failed: ${result.status.statusCode}")
                 }
             }
         }

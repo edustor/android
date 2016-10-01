@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "99685742253-vqq83l5sc95qc3okb24s9u2ljn2iu5h4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.wutiarn.edustor.android",
+            "certificate_hash": "F81A28A959FF9685EA6205924113C61C55D14E9F"
+          }
+        },
+        {
           "client_id": "99685742253-1t09ldh8ohegpj39d6gocsqapn7lcm8u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -29,7 +37,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB0ay7FaCuW_D57JSDciz67o4Wub-9bwyw"
+          "current_key": "AIzaSyCQ23MUrZueegctrsUiYpFqbB7gyLfoSqw"
         }
       ],
       "services": {
@@ -73,7 +81,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB0ay7FaCuW_D57JSDciz67o4Wub-9bwyw"
+          "current_key": "AIzaSyCQ23MUrZueegctrsUiYpFqbB7gyLfoSqw"
         }
       ],
       "services": {
