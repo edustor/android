@@ -1,6 +1,7 @@
 package ru.wutiarn.edustor.android.dagger.module
 
 import android.content.Context
+import com.fasterxml.jackson.databind.ObjectMapper
 import dagger.Module
 import dagger.Provides
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
@@ -16,8 +17,8 @@ class LocalStorageModule(val context: Context) {
 
     @Provides
     @AppScope
-    fun edustorPreferences(): EdustorPreferences {
-        return EdustorPreferences(context)
+    fun edustorPreferences(objectMapper: ObjectMapper): EdustorPreferences {
+        return EdustorPreferences(context, objectMapper)
     }
 
     @Provides
@@ -34,8 +35,8 @@ class LocalStorageModule(val context: Context) {
 
     @Provides
     @AppScope
-    fun syncManager(context: Context): SyncManager {
-        return SyncManager(context)
+    fun syncManager(context: Context, prefs: EdustorPreferences, constants: EdustorConstants): SyncManager {
+        return SyncManager(context, prefs, constants)
     }
 
     @Provides

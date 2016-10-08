@@ -16,7 +16,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
-import ru.wutiarn.edustor.android.data.api.LoginApi
+import ru.wutiarn.edustor.android.data.api.AccountsApi
 import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorConstants
@@ -26,18 +26,26 @@ import ru.wutiarn.edustor.android.util.ConversionUtils
 open class RetrofitModule {
     @Provides
     @AppScope
-    open fun httpClient(session: ActiveSession): OkHttpClient {
+    open fun httpClient(session: ActiveSession, objectMapper: ObjectMapper, edustorConstants: EdustorConstants): OkHttpClient {
         return OkHttpClient.Builder()
                 .addInterceptor {
-                    return@addInterceptor intercept(it, session)
+                    return@addInterceptor intercept(it, session, objectMapper, edustorConstants)
                 }
                 .build()
     }
 
-    private fun intercept(it: Interceptor.Chain, session: ActiveSession): Response? {
+    private fun intercept(it: Interceptor.Chain, session: ActiveSession, objectMapper: ObjectMapper, edustorConstants: EdustorConstants): Response? {
         val original = it.request()
         val request: Request
         if (session.isLoggedIn) {
+
+            if (session.expired) {
+                val accountsApi = accountsApi(objectMapper, edustorConstants)
+                val oauthRespObservable = accountsApi.token("refresh_token", refreshToken = session.refreshToken)
+                val result = oauthRespObservable.toBlocking().first()
+                session.setFromOAuthTokenResult(result)
+            }
+
             request = original.newBuilder()
                     .header("token", session.token)
                     .build()
@@ -52,12 +60,7 @@ open class RetrofitModule {
     @Provides
     @AppScope
     fun retrofitClient(objectMapper: ObjectMapper, client: OkHttpClient, constants: EdustorConstants): Retrofit {
-        return Retrofit.Builder()
-                .client(client)
-                .baseUrl(constants.URL + "api/")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-                .build()
+        return makeRetrofit(constants.core_url + "api/", client, objectMapper)
     }
 
     @Provides
@@ -75,13 +78,23 @@ open class RetrofitModule {
 
     @Provides
     @AppScope
-    fun loginApi(retrofit: Retrofit): LoginApi {
-        return retrofit.create(LoginApi::class.java)
+    fun accountsApi(objectMapper: ObjectMapper, constants: EdustorConstants): AccountsApi {
+        val retrofit = makeRetrofit(constants.accounts_url, OkHttpClient(), objectMapper)
+        return retrofit.create(AccountsApi::class.java)
     }
 
     @Provides
     @AppScope
     fun syncApi(retrofit: Retrofit): SyncApi {
         return retrofit.create(SyncApi::class.java)
+    }
+
+    private fun makeRetrofit(baseUrl: String, client: OkHttpClient, objectMapper: ObjectMapper): Retrofit {
+        return Retrofit.Builder()
+                .client(client)
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                .build()
     }
 }

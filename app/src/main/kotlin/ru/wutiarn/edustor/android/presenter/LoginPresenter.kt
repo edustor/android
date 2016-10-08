@@ -56,11 +56,12 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
     }
 
     fun onGoogleSignIn(result: GoogleSignInResult) {
-        appComponent.api.login.login(result.signInAccount!!.idToken!!)
+        val googleIdToken: String = result.signInAccount!!.idToken!!
+        appComponent.api.accounts.token("password", username = "@google", password = googleIdToken, scope = "offline")
                 .configureAsync()
                 .subscribe({
                     activity.makeToast("Successfully logged in as ${result.signInAccount!!.displayName}")
-                    appComponent.activeSession.token = it.token
+                    appComponent.activeSession.setFromOAuthTokenResult(it)
                     onLoggedIn()
                 }, {
                     activity.makeToast("Error logging in: ${it.message}")

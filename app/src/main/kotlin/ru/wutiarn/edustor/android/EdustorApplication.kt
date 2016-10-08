@@ -30,7 +30,7 @@ class EdustorApplication : Application() {
         val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         accountManager.addAccountExplicitly(appComponent.constants.syncAccount, null, null)
 
-        Log.i("EdustorApplication", "Edustor token: ${appComponent.preferences.token}")
+        Log.i("EdustorApplication", "Edustor token: ${appComponent.activeSession.token}")
         Log.i("EdustorApplication", "Firebase token: ${FirebaseInstanceId.getInstance().token}")
     }
 }

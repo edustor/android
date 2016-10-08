@@ -18,7 +18,7 @@ fun Observable<Lesson>.setUpSyncState(pdfSyncManager: PdfSyncManager, sync: Bool
 }
 
 fun Lesson.getPdfUrl(edustorUrl: String): String {
-    return "${edustorUrl}pdf/${this.id}"
+    return "$edustorUrl${this.id}"
 }
 
 fun Lesson.getCacheFile(context: Context): File {

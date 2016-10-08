@@ -5,7 +5,7 @@ import dagger.Provides
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.dagger.groups.ApiGroup
 import ru.wutiarn.edustor.android.dagger.groups.RepoGroup
-import ru.wutiarn.edustor.android.data.api.LoginApi
+import ru.wutiarn.edustor.android.data.api.AccountsApi
 import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.repo.DocumentRepo
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
@@ -15,9 +15,9 @@ import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
 class GroupsModule {
     @Provides
     @AppScope
-    fun apiGroup(loginApi: LoginApi,
+    fun apiGroup(accountsApi: AccountsApi,
                  syncApi: SyncApi): ApiGroup {
-        return ApiGroup(loginApi, syncApi)
+        return ApiGroup(accountsApi, syncApi)
     }
 
     @Provides
