@@ -54,9 +54,14 @@ open class RetrofitModule {
                 val oauthResult: OAuthTokenResult
                 try {
                     oauthResult = oauthRespObservable.toBlocking().first()
-                } catch (e: HttpException) {
-                    session.logout()
-                    return result
+                } catch (e: RuntimeException) {
+                    val cause = e.cause
+                    if (cause is HttpException && cause.code() == 400) {
+                        session.logout()
+                        return result
+                    } else {
+                        throw e.cause ?: e
+                    }
                 }
                 session.setFromOAuthTokenResult(oauthResult)
 
