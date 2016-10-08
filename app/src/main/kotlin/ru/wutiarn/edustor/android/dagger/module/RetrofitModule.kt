@@ -39,7 +39,8 @@ open class RetrofitModule {
         val request: Request
         if (session.isLoggedIn) {
 
-            if (session.expired) {
+            val expired = session.expired
+            if (expired) {
                 val accountsApi = accountsApi(objectMapper, edustorConstants)
                 val oauthRespObservable = accountsApi.token("refresh_token", refreshToken = session.refreshToken)
                 val result = oauthRespObservable.toBlocking().first()

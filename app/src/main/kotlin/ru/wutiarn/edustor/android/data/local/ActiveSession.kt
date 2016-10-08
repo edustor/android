@@ -3,6 +3,7 @@ package ru.wutiarn.edustor.android.data.local
 import android.content.Context
 import io.realm.Realm
 import org.threeten.bp.Instant
+import org.threeten.bp.temporal.ChronoUnit
 import ru.wutiarn.edustor.android.activity.LoginActivity
 import ru.wutiarn.edustor.android.data.models.OAuthTokenResult
 import ru.wutiarn.edustor.android.util.extension.startActivity
@@ -17,11 +18,11 @@ class ActiveSession(val edustorPreferences: EdustorPreferences,
         get() = token != null
 
     val expired: Boolean
-        get() = expirationDate?.let { it > Instant.now() } ?: false
+        get() = expirationDate?.let { it < Instant.now() } ?: false
 
     fun setFromOAuthTokenResult(result: OAuthTokenResult) {
         token = result.token
-        expirationDate = Instant.now().plusSeconds(result.expiresIn)
+        expirationDate = Instant.now().plus(result.expiresIn, ChronoUnit.SECONDS)
         result.refreshToken?.let { refreshToken = it }
     }
 
