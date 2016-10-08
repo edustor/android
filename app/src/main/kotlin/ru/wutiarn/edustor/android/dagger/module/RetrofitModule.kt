@@ -121,7 +121,7 @@ open class RetrofitModule {
 
     private fun Request.injectToken(token: String): Request {
         return this.newBuilder()
-                .header("token", token)
+                .header("Authorization", token)
                 .build()
     }
 }
