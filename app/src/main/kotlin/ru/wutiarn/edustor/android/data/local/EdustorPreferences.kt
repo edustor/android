@@ -11,18 +11,18 @@ import kotlin.reflect.KProperty
 class EdustorPreferences(context: Context, private val objectMapper: ObjectMapper) {
     private val pref = context.getSharedPreferences("ru.wutiarn.edustor", Application.MODE_PRIVATE)
 
-    var syncTasks: List<SyncTask> by JsonPrefDelegate(pref, objectMapper, object : TypeReference<List<SyncTask>>() {}, "[]")
+    var syncTasks: List<SyncTask> by getDelegate(object : TypeReference<List<SyncTask>>() {}, "[]")
 
     fun clear() {
         pref.edit().clear().commit()
     }
 
-    fun <T> getDelegate(type: TypeReference<T>): JsonPrefDelegate<T> {
-        return JsonPrefDelegate(pref, objectMapper, type)
+    fun <T> getDelegate(type: TypeReference<T>, defaultValue: String = "null"): JsonPrefDelegate<T> {
+        return JsonPrefDelegate(pref, objectMapper, type, defaultValue)
     }
 
-    fun <T> getDelegate(clazz: Class<T>): JsonPrefDelegate<T> {
-        return JsonPrefDelegate(pref, objectMapper, clazz)
+    fun <T> getDelegate(clazz: Class<T>, defaultValue: String = "null"): JsonPrefDelegate<T> {
+        return JsonPrefDelegate(pref, objectMapper, clazz, defaultValue)
     }
 
     open private class PrefDelegate(private val androidPref: SharedPreferences) {
