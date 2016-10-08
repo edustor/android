@@ -48,7 +48,7 @@ open class RetrofitModule {
         var result = it.proceed(request)
 
         if (result.code() == 401) {
-            if (session.isLoggedIn) {
+            if (session.refreshToken != null) {
                 val accountsApi = accountsApi(objectMapper, edustorConstants)
                 val oauthRespObservable = accountsApi.token("refresh_token", refreshToken = session.refreshToken)
                 val oauthResult: OAuthTokenResult
