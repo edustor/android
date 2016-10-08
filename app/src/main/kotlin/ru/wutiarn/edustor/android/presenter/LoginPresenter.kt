@@ -35,6 +35,9 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
                 .enableAutoManage(activity, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build()
+
+        appComponent.syncManager.syncEnabled = false
+        appComponent.pdfSyncManager.syncEnabled = false
     }
 
     fun onLoggedIn() {

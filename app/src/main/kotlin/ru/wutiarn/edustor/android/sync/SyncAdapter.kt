@@ -76,13 +76,8 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                             notificationService.cancel(NOTIFICATION_ID)
                         },
                         {
-                            if (it is HttpException) {
-                                when (it.code()) {
-                                    403 -> appComponent.activeSession.logout()
-                                    else -> syncResult.stats.numIoExceptions++
-                                }
-                            } else if (it is IOException) {
-                                syncResult.stats.numIoExceptions++
+                            if (it is HttpException || it is IOException) {
+                                syncResult.stats.numIoExceptions++ // 401 is already handled in retrofit interceptor
                             }
                             val taskSucceeded = pushResult.count { it.success }
                             Log.w(TAG, "Sync failed")

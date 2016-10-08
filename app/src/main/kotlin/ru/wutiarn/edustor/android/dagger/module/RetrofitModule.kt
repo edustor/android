@@ -13,6 +13,7 @@ import okhttp3.Request
 import okhttp3.Response
 import org.threeten.bp.LocalDate
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava.HttpException
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import ru.wutiarn.edustor.android.dagger.annotation.AppScope
@@ -20,6 +21,7 @@ import ru.wutiarn.edustor.android.data.api.AccountsApi
 import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorConstants
+import ru.wutiarn.edustor.android.data.models.OAuthTokenResult
 import ru.wutiarn.edustor.android.util.ConversionUtils
 
 @Module
@@ -38,23 +40,36 @@ open class RetrofitModule {
         val original = it.request()
         val request: Request
         if (session.isLoggedIn) {
-
-            val expired = session.expired
-            if (expired) {
-                val accountsApi = accountsApi(objectMapper, edustorConstants)
-                val oauthRespObservable = accountsApi.token("refresh_token", refreshToken = session.refreshToken)
-                val result = oauthRespObservable.toBlocking().first()
-                session.setFromOAuthTokenResult(result)
-            }
-
-            request = original.newBuilder()
-                    .header("token", session.token)
-                    .build()
+            request = original.injectToken(session.token!!)
         } else {
             request = original
         }
 
-        val result = it.proceed(request)
+        var result = it.proceed(request)
+
+        if (result.code() == 401) {
+            if (session.isLoggedIn) {
+                val accountsApi = accountsApi(objectMapper, edustorConstants)
+                val oauthRespObservable = accountsApi.token("refresh_token", refreshToken = session.refreshToken)
+                val oauthResult: OAuthTokenResult
+                try {
+                    oauthResult = oauthRespObservable.toBlocking().first()
+                } catch (e: HttpException) {
+                    session.logout()
+                    return result
+                }
+                session.setFromOAuthTokenResult(oauthResult)
+
+                result = it.proceed(request.injectToken(session.token!!))
+
+                if (result.code() == 401) {
+                    session.logout()
+                }
+            } else {
+                session.logout()
+            }
+        }
+
         return result
     }
 
@@ -96,6 +111,12 @@ open class RetrofitModule {
                 .baseUrl(baseUrl)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                .build()
+    }
+
+    private fun Request.injectToken(token: String): Request {
+        return this.newBuilder()
+                .header("token", token)
                 .build()
     }
 }
