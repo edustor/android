@@ -61,7 +61,7 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
         }
 
         val intent = Intent(this, LessonDetailsActivity::class.java)
-        intent.putExtra("uuid", id)
+        intent.putExtra("qr", id)
         startActivity(intent)
     }
 

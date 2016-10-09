@@ -99,7 +99,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
     fun onRemoveItem(holder: DocumentViewHolder) {
         val document = holder.document!!
 
-        val shortUUID = document.shortUUID
+        val shortUUID = document.shortQR
         appComponent.repo.documents.delete(document.id)
                 .subscribe(
                         { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) },
@@ -113,7 +113,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
             set(value: Document?) {
                 field = value!!
 
-                uuid.text = value.shortUUID
+                uuid.text = value.shortQR
                 timestamp.text = LocalDateTime.ofInstant(value.timestamp, ZoneId.systemDefault())
                         .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 

@@ -10,7 +10,7 @@ import java.util.*
 
 @RealmClass
 open class Document() : RealmObject() {
-    open var uuid: String? = null
+    open var qr: String? = null
     open var isUploaded: Boolean = false
     open var fileMD5: String? = null
     open var contentType: String? = null
@@ -33,14 +33,15 @@ open class Document() : RealmObject() {
 
     @JsonIgnore var index: Int = 0
 
-    val shortUUID: String
+    val shortQR: String
         get() {
-            val uuidEnd = uuid?.split("-")?.last()
-            return uuidEnd?.let { "#${uuidEnd.substring(0, 4)}-${uuidEnd.substring(4, 8)}-${uuidEnd.substring(8, 12)}" } ?: "No uuid"
+            val uuidEnd = qr?.split("-")?.last()
+            return uuidEnd?.let { "#${uuidEnd.substring(0, 4)}-${uuidEnd.substring(4, 8)}-${uuidEnd.substring(8, 12)}" } ?: "No qr"
         }
 
-    constructor(uuid: String, timestamp: Instant, index: Int) : this() {
-        this.uuid = uuid
+    @Suppress("LeakingThis")
+    constructor(qr: String, timestamp: Instant, index: Int) : this() {
+        this.qr = qr
         this.timestamp = timestamp
         this.index = index
     }

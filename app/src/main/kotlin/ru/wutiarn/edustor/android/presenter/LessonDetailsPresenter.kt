@@ -24,7 +24,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     var view: LessonDetailsView? = null
     var activeSubscription: Subscription? = null
 
-    var uuid: String? = null
+    var qr: String? = null
     var subjectId: String? = null
     var lessonEpochDay: Long? = null
 
@@ -33,7 +33,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     var openPdfAfterSyncFinished = false
 
     init {
-        uuid = arguments.getString("uuid")
+        qr = arguments.getString("qr")
         subjectId = arguments.getString("subject")
         lessonEpochDay = arguments.getLong("date")
     }
@@ -69,8 +69,8 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     fun loadData() {
         activeSubscription?.unsubscribe()
         when {
-            uuid != null -> {
-                activeSubscription = appComponent.repo.lessons.byUUID(uuid!!)
+            qr != null -> {
+                activeSubscription = appComponent.repo.lessons.byQR(qr!!)
                         .setUpSyncState(appComponent.pdfSyncManager)
                         .linkToLCEView(view, { lesson = it })
             }
@@ -140,11 +140,11 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
         }
 
         if (lesson == null) {
-            appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson id is not found")); return
+            appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson uuid is not found")); return
         }
 
-        appComponent.repo.documents.activateUUID(id, lesson?.id!!).subscribe({
-            appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortUUID}! ID: ${it.id}"))
+        appComponent.repo.documents.activateQR(id, lesson?.id!!).subscribe({
+            appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortQR}! ID: ${it.id}"))
         }, {
             Log.w("LoginPresenter", "Error while creating document", it)
             appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
