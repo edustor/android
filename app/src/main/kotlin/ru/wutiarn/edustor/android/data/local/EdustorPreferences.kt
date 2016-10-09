@@ -8,16 +8,21 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import kotlin.reflect.KProperty
 
-class EdustorPreferences(context: Context) {
+class EdustorPreferences(context: Context, private val objectMapper: ObjectMapper) {
     private val pref = context.getSharedPreferences("ru.wutiarn.edustor", Application.MODE_PRIVATE)
-    private val objectMapper = ObjectMapper()
 
-    var token: String? by PrefDelegate(pref)
-
-    var syncTasks: List<SyncTask> by JsonPrefDelegate(pref, objectMapper, object : TypeReference<List<SyncTask>>() {})
+    var syncTasks: List<SyncTask> by getDelegate(object : TypeReference<List<SyncTask>>() {}, "[]")
 
     fun clear() {
         pref.edit().clear().commit()
+    }
+
+    fun <T> getDelegate(type: TypeReference<T>, defaultValue: String = "null"): JsonPrefDelegate<T> {
+        return JsonPrefDelegate(pref, objectMapper, type, defaultValue)
+    }
+
+    fun <T> getDelegate(clazz: Class<T>, defaultValue: String = "null"): JsonPrefDelegate<T> {
+        return JsonPrefDelegate(pref, objectMapper, clazz, defaultValue)
     }
 
     open private class PrefDelegate(private val androidPref: SharedPreferences) {
@@ -30,13 +35,44 @@ class EdustorPreferences(context: Context) {
         }
     }
 
-    private class JsonPrefDelegate<T>(private val androidPref: SharedPreferences,
-                                      val objectMapper: ObjectMapper,
-                                      val type: TypeReference<T>
-    ) {
+    class JsonPrefDelegate<T> {
+
+        private var androidPref: SharedPreferences
+        private var objectMapper: ObjectMapper
+        private var defaultValue: String = "null"
+        private var type: TypeReference<T>? = null
+        private var clazz: Class<T>? = null
+
+        constructor(androidPref: SharedPreferences,
+                    objectMapper: ObjectMapper,
+                    type: TypeReference<T>,
+                    defaultValue: String = "null") {
+            this.androidPref = androidPref
+            this.objectMapper = objectMapper
+            this.defaultValue = defaultValue
+
+            this.type = type
+        }
+
+        constructor(androidPref: SharedPreferences,
+                    objectMapper: ObjectMapper,
+                    clazz: Class<T>,
+                    defaultValue: String = "null") {
+            this.androidPref = androidPref
+            this.objectMapper = objectMapper
+            this.defaultValue = defaultValue
+
+            this.clazz = clazz
+
+        }
+
         operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-            val str = androidPref.getString(property.name, "[]")
-            return objectMapper.readValue<T>(str, type)
+            val str = androidPref.getString(property.name, defaultValue)
+            if (clazz != null) {
+                return objectMapper.readValue<T>(str, clazz)
+            } else {
+                return objectMapper.readValue<T>(str, type)
+            }
         }
 
         operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) {

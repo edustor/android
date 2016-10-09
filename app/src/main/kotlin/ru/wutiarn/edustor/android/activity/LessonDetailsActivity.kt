@@ -42,7 +42,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
 
         if (intent.action == Intent.ACTION_VIEW) {
             val uuid = intent.data.pathSegments[0]
-            extras.putString("uuid", uuid)
+            extras.putString("qr", uuid)
         }
 
         lessonDetailsFragment.arguments = extras

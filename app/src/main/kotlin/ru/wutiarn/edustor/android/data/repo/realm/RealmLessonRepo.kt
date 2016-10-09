@@ -10,9 +10,9 @@ import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import rx.Observable
 
 class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
-    override fun byUUID(uuid: String): Observable<Lesson> {
+    override fun byQR(qr: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
-                .equalTo("documents.uuid", uuid)
+                .equalTo("documents.qr", qr)
                 .findAllAsync()
                 .asObservable()
                 .filter { it.isLoaded }

@@ -5,4 +5,10 @@
     <string name="account_type">edustor.ru</string>
     <string name="sync_content_provider_authority">ru.edustor.datasync.provider</string>
     <string name="pdf_sync_content_provider_authority">ru.edustor.datasync.pdf.provider</string>
+
+    <string name="edustor_core_url">https://edustor.ru/</string>
+    <string name="edustor_accounts_url">https://accounts.edustor.ru/</string>
+
+    <string name="edustor_ui_url">https://edustor.ru/</string>
+    <string name="edustor_pdf_url">https://edustor.ru/pdf/</string>
 </resources>

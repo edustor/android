@@ -13,33 +13,33 @@ import ru.wutiarn.edustor.android.util.extension.copyToRealm
 import rx.Observable
 
 class RealmDocumentRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManager) : DocumentRepo {
-    override fun activateUUID(uuid: String, lessonId: String, instant: Instant): Observable<Document> {
+    override fun activateQR(qr: String, lessonId: String, instant: Instant): Observable<Document> {
         val realm = Realm.getDefaultInstance()
         return lessonRepo.byId(lessonId)
                 .map { it.copyToRealm<Lesson>() }
                 .first()
                 .map { lesson ->
 
-                    if (realm.where(Lesson::class.java).equalTo("documents.uuid", uuid).count() != 0L) {
-                        throw IllegalArgumentException("UUID already registered")
+                    if (realm.where(Lesson::class.java).equalTo("documents.qr", qr).count() != 0L) {
+                        throw IllegalArgumentException("QR already registered")
                     }
 
                     realm.executeTransaction {
                         val targetIndex = lesson.documents.max("index")?.toInt()?.plus(1) ?: 0
-                        val document = Document(uuid, instant, targetIndex)
+                        val document = Document(qr, instant, targetIndex)
                         realm.copyToRealm(document)
                         lesson.documents.add(document)
 
-                        val syncTask = SyncTask("documents/uuid/activate/date", mapOf(
+                        val syncTask = SyncTask("documents/qr/activate/date", mapOf(
                                 "id" to document.id,
-                                "uuid" to document.uuid,
+                                "qr" to document.qr,
                                 "subject" to lesson.subject.id,
                                 "date" to lesson.realmDate,
                                 "instant" to document.realmTimestamp
                         ))
                         syncTasksManager.addTask(syncTask)
                     }
-                    return@map lesson.documents.first { it.uuid == uuid }.copyFromRealm<Document>()
+                    return@map lesson.documents.first { it.qr == qr }.copyFromRealm<Document>()
                 }
     }
 
