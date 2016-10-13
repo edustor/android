@@ -30,12 +30,11 @@ class RealmDocumentRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncM
                         realm.copyToRealm(document)
                         lesson.documents.add(document)
 
-                        val syncTask = SyncTask("documents/qr/activate/date", mapOf(
+                        val syncTask = SyncTask("documents/qr/activate", mapOf(
                                 "id" to document.id,
                                 "qr" to document.qr,
-                                "subject" to lesson.subject.id,
-                                "date" to lesson.realmDate,
-                                "instant" to document.realmTimestamp
+                                "instant" to document.realmTimestamp,
+                                "lesson" to lesson.id
                         ))
                         syncTasksManager.addTask(syncTask)
                     }
