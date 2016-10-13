@@ -40,6 +40,14 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                                         Realm.getDefaultInstance().executeTransaction {
                                             lesson = it.copyToRealm(lesson)
                                         }
+
+                                        val syncTask = SyncTask("lessons/create", mapOf(
+                                                "id" to lesson.id,
+                                                "date" to lesson.date.toEpochDay(),
+                                                "subject" to subject
+                                        ))
+                                        syncTasksManager.addTask(syncTask)
+
                                         lesson
                                     }
                         }
