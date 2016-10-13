@@ -13,11 +13,9 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byQR(qr: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("documents.qr", qr)
-                .findAllAsync()
-                .asObservable()
+                .findFirstAsync()
+                .asObservable<Lesson>()
                 .filter { it.isLoaded }
-                .map { it.first() }
-                .copyFromRealm()
     }
 
     override fun byDate(subject: String, epochDay: Long): Observable<Lesson> {
@@ -42,6 +40,14 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                                         Realm.getDefaultInstance().executeTransaction {
                                             lesson = it.copyToRealm(lesson)
                                         }
+
+                                        val syncTask = SyncTask("lessons/create", mapOf(
+                                                "id" to lesson.id,
+                                                "date" to lesson.date.toEpochDay(),
+                                                "subject" to subject
+                                        ))
+                                        syncTasksManager.addTask(syncTask)
+
                                         lesson
                                     }
                         }
@@ -96,9 +102,8 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
 
                         lesson.documents.add(targetIndex, document)
                         lesson.calculateDocumentIndexes()
-                        val syncTask = SyncTask("lessons/date/documents/reorder", mapOf(
-                                "subject" to lesson.subject.id,
-                                "date" to lesson.realmDate,
+                        val syncTask = SyncTask("lessons/documents/reorder", mapOf(
+                                "lesson" to lesson.id,
                                 "document" to document.id,
                                 "after" to afterDocumentId
                         ))
@@ -118,10 +123,9 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .map { lesson ->
                     realm.executeTransaction {
                         lesson.topic = if (topic.length != 0) topic else null
-                        val syncTask = SyncTask("lessons/date/topic/put", mapOf(
+                        val syncTask = SyncTask("lessons/topic/put", mapOf(
                                 "topic" to lesson.topic,
-                                "subject" to lesson.subject.id,
-                                "date" to lesson.realmDate
+                                "lesson" to lesson.id
                         ))
                         syncTasksManager.addTask(syncTask)
                     }

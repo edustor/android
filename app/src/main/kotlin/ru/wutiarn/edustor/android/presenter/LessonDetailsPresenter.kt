@@ -24,18 +24,14 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     var view: LessonDetailsView? = null
     var activeSubscription: Subscription? = null
 
-    var qr: String? = null
-    var subjectId: String? = null
-    var lessonEpochDay: Long? = null
+    val lessonId: String
 
     var lesson: Lesson? = null
 
     var openPdfAfterSyncFinished = false
 
     init {
-        qr = arguments.getString("qr")
-        subjectId = arguments.getString("subject")
-        lessonEpochDay = arguments.getLong("date")
+        lessonId = arguments.getString("id")
     }
 
     override fun detachView(p0: Boolean) {
@@ -68,19 +64,10 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
 
     fun loadData() {
         activeSubscription?.unsubscribe()
-        when {
-            qr != null -> {
-                activeSubscription = appComponent.repo.lessons.byQR(qr!!)
-                        .setUpSyncState(appComponent.pdfSyncManager)
-                        .linkToLCEView(view, { lesson = it })
-            }
-            subjectId != null -> {
-                activeSubscription =
-                        appComponent.repo.lessons.byDate(subjectId!!, lessonEpochDay!!)
-                                .setUpSyncState(appComponent.pdfSyncManager)
-                                .linkToLCEView(view, { lesson = it })
-            }
-        }
+
+        activeSubscription = appComponent.repo.lessons.byId(lessonId)
+                .setUpSyncState(appComponent.pdfSyncManager)
+                .linkToLCEView(view, { lesson = it })
     }
 
     fun onGetPdfClicked() {

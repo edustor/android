@@ -15,6 +15,7 @@ import ru.wutiarn.edustor.android.fragment.SubjectsListFragment
 import ru.wutiarn.edustor.android.presenter.SubjectListActivityPresenter
 import ru.wutiarn.edustor.android.util.extension.EdustorURIParser
 import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
+import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.util.extension.show
 import ru.wutiarn.edustor.android.view.SubjectsListActivityView
 
@@ -54,15 +55,29 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
     }
 
     override fun onDocumentQRCodeScanned(result: String) {
-        val (type, id) = EdustorURIParser.parse(result)
+        val (type, qrData) = EdustorURIParser.parse(result)
 
         if (type != EdustorURIParser.URIType.DOCUMENT) {
             appComponent.eventBus.post(RequestSnackbarEvent("Error: incorrect QR code payload")); return
         }
 
-        val intent = Intent(this, LessonDetailsActivity::class.java)
-        intent.putExtra("qr", id)
-        startActivity(intent)
+        appComponent.repo.lessons.byQR(qrData).first().subscribe(
+                {
+                    if (!it.isValid) {
+                        appComponent.context.makeToast("Unknown QR code: $qrData")
+                        return@subscribe
+                    }
+
+                    val intent = Intent(this, LessonDetailsActivity::class.java)
+                    intent.putExtra("id", it.id)
+                    startActivity(intent)
+                },
+                {
+                    appComponent.context.makeToast("Failed to open lesson by qr: $it")
+                }
+        )
+
+
     }
 
     @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
