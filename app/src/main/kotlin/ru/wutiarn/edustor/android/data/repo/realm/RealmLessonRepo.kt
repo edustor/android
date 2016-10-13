@@ -102,9 +102,8 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
 
                         lesson.documents.add(targetIndex, document)
                         lesson.calculateDocumentIndexes()
-                        val syncTask = SyncTask("lessons/date/documents/reorder", mapOf(
-                                "subject" to lesson.subject.id,
-                                "date" to lesson.realmDate,
+                        val syncTask = SyncTask("lessons/documents/reorder", mapOf(
+                                "lesson" to lesson.id,
                                 "document" to document.id,
                                 "after" to afterDocumentId
                         ))
@@ -124,10 +123,9 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .map { lesson ->
                     realm.executeTransaction {
                         lesson.topic = if (topic.length != 0) topic else null
-                        val syncTask = SyncTask("lessons/date/topic/put", mapOf(
+                        val syncTask = SyncTask("lessons/topic/put", mapOf(
                                 "topic" to lesson.topic,
-                                "subject" to lesson.subject.id,
-                                "date" to lesson.realmDate
+                                "lesson" to lesson.id
                         ))
                         syncTasksManager.addTask(syncTask)
                     }
