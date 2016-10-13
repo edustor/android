@@ -43,6 +43,7 @@ class RealmDocumentRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncM
                 }
     }
 
+
     override fun delete(documentId: String): Observable<Unit> {
         val realm = Realm.getDefaultInstance()
         return realm.where(Document::class.java)

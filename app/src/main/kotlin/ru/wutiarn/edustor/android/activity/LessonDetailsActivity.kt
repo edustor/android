@@ -37,15 +37,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
 
         lessonDetailsFragment = LessonDetailsFragment()
 
-        val extras = Bundle()
-        intent.extras?.let { extras.putAll(it) }
-
-        if (intent.action == Intent.ACTION_VIEW) {
-            val uuid = intent.data.pathSegments[0]
-            extras.putString("qr", uuid)
-        }
-
-        lessonDetailsFragment.arguments = extras
+        lessonDetailsFragment.arguments = intent.extras
 
         fab_scan_new.visibility = View.VISIBLE
         fab_scan_new.setOnClickListener {

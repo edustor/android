@@ -13,11 +13,9 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byQR(qr: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("documents.qr", qr)
-                .findAllAsync()
-                .asObservable()
+                .findFirstAsync()
+                .asObservable<Lesson>()
                 .filter { it.isLoaded }
-                .map { it.first() }
-                .copyFromRealm()
     }
 
     override fun byDate(subject: String, epochDay: Long): Observable<Lesson> {
