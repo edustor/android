@@ -93,7 +93,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     }
 
     fun onCopyUrlClicked() {
-        val uri = lesson?.getPdfUrl(appComponent.constants.ui_url)
+        val uri = lesson?.getPdfUrl(appComponent.constants.pdf_url)
         val clipboardManager = appComponent.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.primaryClip = ClipData.newPlainText(uri, uri)
         appComponent.eventBus.makeSnack("Copied: $uri")
