@@ -1,8 +1,11 @@
 package ru.wutiarn.edustor.android.util.extension
 
 import android.content.Context
+import io.realm.Realm
+import io.realm.RealmObject
 import ru.wutiarn.edustor.android.data.local.PdfSyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
+import rx.Observable
 import java.io.File
 
 fun Observable<Lesson>.setUpSyncState(pdfSyncManager: PdfSyncManager, sync: Boolean = false): Observable<Lesson> {

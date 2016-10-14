@@ -7,15 +7,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import com.hannesdorfmann.mosby.mvp.MvpPresenter
+import com.squareup.otto.Subscribe
+import io.realm.Realm
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.util.extension.EdustorURIParser
-import ru.wutiarn.edustor.android.util.extension.getCacheFile
-import ru.wutiarn.edustor.android.util.extension.getPdfUrl
+import ru.wutiarn.edustor.android.util.extension.*
 import ru.wutiarn.edustor.android.view.LessonDetailsView
+import rx.Subscription
 
 class LessonDetailsPresenter(val appComponent: AppComponent, val context: Context, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
