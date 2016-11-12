@@ -4,4 +4,4 @@ Edustor is a cloud service for storing scanned notes.
 
 ## Any details?
 
-[Check out Edustor Server repository](https://gitlab.com/edustor/core)
+[Check out Edustor Server repository](https://bitbucket.org/edustor/core)
