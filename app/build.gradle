@@ -8,8 +8,8 @@ def ciPass = getEnv("EDUSTOR_ANDROID_CI_KEY_PASSWORD")
 def releasePass = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_PASSWORD")
 def keyFile = getEnv("EDUSTOR_ANDROID_RELEASE_KEY_LOCATION")
 
-def CI_BUILD_REF = getEnv("CI_BUILD_REF")?.substring(0, 8)
-def CI_BUILD_REF_NAME = getEnv("CI_BUILD_REF_NAME")
+def CI_BUILD_NUMBER = getEnv("BUILD_NUMBER")
+def BRANCH_NAME = getEnv("BRANCH_NAME")
 
 android {
     compileSdkVersion 24
@@ -71,14 +71,14 @@ android {
         debug {
             signingConfig signingConfigs["debug"]
             applicationIdSuffix ".debug"
-            if (CI_BUILD_REF != null) {
-                versionNameSuffix "-$CI_BUILD_REF_NAME.$CI_BUILD_REF"
+            if (CI_BUILD_NUMBER != null) {
+                versionNameSuffix "-$BRANCH_NAME.$CI_BUILD_NUMBER"
             }
         }
 
         CI {
-            if (CI_BUILD_REF != null) {
-                versionNameSuffix "-$CI_BUILD_REF_NAME.$CI_BUILD_REF"
+            if (CI_BUILD_NUMBER != null) {
+                versionNameSuffix "-$BRANCH_NAME.$CI_BUILD_NUMBER"
             }
             signingConfig signingConfigs["CI"]
             minifyEnabled false
