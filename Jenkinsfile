@@ -9,7 +9,7 @@ node {
 
     stage "Environment preparation"
 
-    docker.image("wutiarn/android").inside {
+    docker.image("wutiarn/android").inside("-v /mnt/media/jenkins/cache/.gradle:/root/.gradle") {
         checkout scm
 
         stage "Dependencies download"
