@@ -57,7 +57,7 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
 
         val syncable = lessons
                 .filter { it.syncStatus!!.shouldBeSynced(appComponent.pdfSyncManager) }
-                .filter { it.documents.filter { it.isUploaded }.count() > 0 }
+                .filter { it.pages.filter { it.isUploaded }.count() > 0 }
 
         val otherLessons = lessons.minus(syncable)
 
@@ -136,7 +136,7 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
         lesson.forEach { it.getCacheFile(context).delete() }
         Realm.getDefaultInstance().use {
             it.executeTransaction { realm ->
-                lesson.forEach { it.syncStatus?.documentsMD5?.clear() }
+                lesson.forEach { it.syncStatus?.pageMD5?.clear() }
             }
         }
     }

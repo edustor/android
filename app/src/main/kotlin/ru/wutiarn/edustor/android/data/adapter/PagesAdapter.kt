@@ -13,77 +13,77 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.models.Document
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.Page
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 
-class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<DocumentsAdapter.DocumentViewHolder>() {
+class PagesAdapter(val context: Context, val appComponent: AppComponent) : RecyclerView.Adapter<PagesAdapter.PageViewHolder>() {
 
     var lesson: Lesson? = null
         set(value) {
             field = value
-            documents = (value?.documents ?: emptyList<Document>())
+            pages = (value?.pages ?: emptyList<Page>())
                     .sortedBy { it.index }
                     .toMutableList()
             notifyDataSetChanged()
         }
 
-    private var documents: MutableList<Document> = mutableListOf()
+    private var pages: MutableList<Page> = mutableListOf()
 
     private var lastUnfinishedMovement: Pair<String, String?>? = null
-    val TAG: String = "DocumentsAdapter"
+    val TAG: String = "PagesAdapter"
 
 
     init {
         setHasStableIds(true)
     }
 
-    override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
-        val document = documents[position]
+    override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
+        val page = pages[position]
 
-        holder.document = document
+        holder.page = page
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder? {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.document_recycler_item, parent, false)
+                .inflate(R.layout.page_recycler_item, parent, false)
 
-        return DocumentViewHolder(view, this)
+        return PageViewHolder(view, this)
     }
 
     override fun getItemCount(): Int {
-        return documents.count()
+        return pages.count()
     }
 
 
     fun onMoveItem(fromPosition: Int, toPosition: Int) {
         Log.d(TAG, "onMoveItem(fromPosition = $fromPosition, toPosition = $toPosition)")
-        val document = documents[fromPosition]
-        val after: Document?
+        val page = pages[fromPosition]
+        val after: Page?
 
         if (fromPosition > toPosition)
-            after = if (toPosition > 0) documents[toPosition - 1] else null
+            after = if (toPosition > 0) pages[toPosition - 1] else null
         else
-            after = documents[toPosition]
+            after = pages[toPosition]
 
-        documents.remove(document)
+        pages.remove(page)
 
         val targetIndex: Int
 
         if (after != null) {
-            targetIndex = documents.indexOf(after) + 1
+            targetIndex = pages.indexOf(after) + 1
         } else {
             targetIndex = 0
         }
 
-        documents.add(targetIndex, document)
+        pages.add(targetIndex, page)
 
-        lastUnfinishedMovement = document.id to after?.id
+        lastUnfinishedMovement = page.id to after?.id
     }
 
     fun onMovementFinished() {
         lastUnfinishedMovement?.let {
-            appComponent.repo.lessons.reorderDocuments(lesson?.id!!, it.first, it.second)
+            appComponent.repo.lessons.reorderPages(lesson?.id!!, it.first, it.second)
                     .subscribe(
                             { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
                             { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
@@ -92,25 +92,25 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
     }
 
     override fun getItemId(position: Int): Long {
-        return documents[position].id.hashCode().toLong()
+        return pages[position].id.hashCode().toLong()
     }
 
 
-    fun onRemoveItem(holder: DocumentViewHolder) {
-        val document = holder.document!!
+    fun onRemoveItem(holder: PageViewHolder) {
+        val page = holder.page!!
 
-        val shortUUID = document.shortQR
-        appComponent.repo.documents.delete(document.id)
+        val shortUUID = page.shortQR
+        appComponent.repo.pages.delete(page.id)
                 .subscribe(
                         { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) },
                         { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) }
                 )
     }
 
-    class DocumentViewHolder(val view: View, val adapter: DocumentsAdapter) : RecyclerView.ViewHolder(view) {
+    class PageViewHolder(val view: View, val adapter: PagesAdapter) : RecyclerView.ViewHolder(view) {
         // Nullable only because kotlin 1.0.3 doesn't support custom setters along with lateinit
-        var document: Document? = null
-            set(value: Document?) {
+        var page: Page? = null
+            set(value: Page?) {
                 field = value!!
 
                 uuid.text = value.shortQR
@@ -122,7 +122,7 @@ class DocumentsAdapter(val context: Context, val appComponent: AppComponent) : R
                             .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                 }
 
-                val colorResource = if (value.isUploaded) R.color.documentUploaded else R.color.documentNotUploaded
+                val colorResource = if (value.isUploaded) R.color.pageUploaded else R.color.pageNotUploaded
                 val color = ContextCompat.getColor(view.context, colorResource)
                 isUploaded.setBackgroundColor(color)
 

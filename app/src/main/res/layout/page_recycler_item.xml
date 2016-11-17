@@ -9,7 +9,7 @@
         android:id="@+id/is_uploaded"
         android:layout_width="5dp"
         android:layout_height="match_parent"
-        android:background="@color/documentUploaded" />
+        android:background="@color/pageUploaded"/>
 
     <LinearLayout
         android:layout_width="match_parent"

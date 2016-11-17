@@ -12,7 +12,7 @@ import rx.Observable
 class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byQR(qr: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
-                .equalTo("documents.qr", qr)
+                .equalTo("pages.qr", qr)
                 .findFirstAsync()
                 .asObservable<Lesson>()
                 .filter { it.isLoaded }
@@ -77,7 +77,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
 //                .flatMap { it.toObservable().flatMap { Observable.just(it).setUpSyncState(pdfSyncManager).toList() } }
     }
 
-    override fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Observable<Unit> {
+    override fun reorderPages(lesson: String, pageId: String, afterPageId: String?): Observable<Unit> {
         val realm = Realm.getDefaultInstance()
         return realm.where(Lesson::class.java)
                 .equalTo("id", lesson)
@@ -87,25 +87,25 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .first()
                 .map { lesson ->
                     realm.executeTransaction {
-                        val document = lesson.documents.first { it.id == documentId }
-                        lesson.documents.remove(document)
+                        val page = lesson.pages.first { it.id == pageId }
+                        lesson.pages.remove(page)
 
                         val targetIndex: Int
 
-                        if (afterDocumentId != null) {
-                            val afterDocument = lesson.documents.first { it.id == afterDocumentId }
+                        if (afterPageId != null) {
+                            val afterPage = lesson.pages.first { it.id == afterPageId }
 
-                            targetIndex = lesson.documents.indexOf(afterDocument) + 1
+                            targetIndex = lesson.pages.indexOf(afterPage) + 1
                         } else {
                             targetIndex = 0
                         }
 
-                        lesson.documents.add(targetIndex, document)
-                        lesson.calculateDocumentIndexes()
-                        val syncTask = SyncTask("lessons/documents/reorder", mapOf(
+                        lesson.pages.add(targetIndex, page)
+                        lesson.calculatePageIndexes()
+                        val syncTask = SyncTask("lessons/pages/reorder", mapOf(
                                 "lesson" to lesson.id,
-                                "document" to document.id,
-                                "after" to afterDocumentId
+                                "page" to page.id,
+                                "after" to afterPageId
                         ))
                         syncTasksManager.addTask(syncTask)
                     }

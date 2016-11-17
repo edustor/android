@@ -1,14 +1,14 @@
 package ru.wutiarn.edustor.android.data.repo
 
 import org.threeten.bp.Instant
-import ru.wutiarn.edustor.android.data.models.Document
+import ru.wutiarn.edustor.android.data.models.Page
 import rx.Observable
 
-interface DocumentRepo {
+interface PageRepo {
     fun activateQR(qr: String,
                    lessonId: String,
                    instant: Instant = Instant.now()
-    ): Observable<Document>
+    ): Observable<Page>
 
-    fun delete(documentId: String): Observable<Unit>
+    fun delete(pagetId: String): Observable<Unit>
 }

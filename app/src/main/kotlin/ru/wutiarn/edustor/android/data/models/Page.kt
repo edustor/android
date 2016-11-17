@@ -9,7 +9,7 @@ import org.threeten.bp.Instant
 import java.util.*
 
 @RealmClass
-open class Document() : RealmObject() {
+open class Page() : RealmObject() {
     open var qr: String? = null
     open var isUploaded: Boolean = false
     open var fileMD5: String? = null

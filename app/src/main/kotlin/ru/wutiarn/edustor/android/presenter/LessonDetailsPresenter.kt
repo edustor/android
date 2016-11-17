@@ -73,7 +73,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     fun onGetPdfClicked() {
         Realm.getDefaultInstance().use {
             it.executeTransaction {
-                lesson?.syncStatus!!.setShouldBeSynced(true)  // Update realmValidUntil even if document is already synced
+                lesson?.syncStatus!!.setShouldBeSynced(true)  // Update realmValidUntil even if page is already synced
             }
         }
         if (lesson!!.syncStatus!!.getStatus(lesson!!, appComponent.context) == PdfSyncStatus.SyncStatus.SYNCED) {
@@ -122,7 +122,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
 
         val (type, id) = EdustorURIParser.parse(result)
 
-        if (type != EdustorURIParser.URIType.DOCUMENT) {
+        if (type != EdustorURIParser.URIType.PAGE) {
             appComponent.eventBus.post(RequestSnackbarEvent("Error: incorrect QR code payload")); return
         }
 
@@ -130,10 +130,10 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
             appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson uuid is not found")); return
         }
 
-        appComponent.repo.documents.activateQR(id, lesson?.id!!).subscribe({
+        appComponent.repo.pages.activateQR(id, lesson?.id!!).subscribe({
             appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortQR}! ID: ${it.id}"))
         }, {
-            Log.w("LoginPresenter", "Error while creating document", it)
+            Log.w("LessonDetailsPresenter", "Error while creating page", it)
             appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
         })
     }

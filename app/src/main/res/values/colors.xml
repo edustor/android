@@ -6,6 +6,6 @@
     <color name="colorText">#37474F</color>
     <color name="colorBottomSheet">#E0E0E0</color>
 
-    <color name="documentUploaded">#4caf50</color>
-    <color name="documentNotUploaded">#455a64</color>
+    <color name="pageUploaded">#4caf50</color>
+    <color name="pageNotUploaded">#455a64</color>
 </resources>
