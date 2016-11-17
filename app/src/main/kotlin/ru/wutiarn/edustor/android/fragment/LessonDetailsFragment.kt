@@ -14,11 +14,11 @@ import org.threeten.bp.format.DateTimeFormatter
 import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.adapter.DocumentsAdapter
+import ru.wutiarn.edustor.android.data.adapter.PagesAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
-import ru.wutiarn.edustor.android.util.EdustorDocumentTouchHelperCallback
+import ru.wutiarn.edustor.android.util.EdustorPageTouchHelperCallback
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 
 
@@ -26,7 +26,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
 
     lateinit var appComponent: AppComponent
 
-    lateinit var documentsAdapter: DocumentsAdapter
+    lateinit var pagesAdapter: PagesAdapter
 
     override fun createPresenter(): LessonDetailsPresenter {
         val application = context.applicationContext as EdustorApplication
@@ -60,7 +60,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
                 LocalDate.ofEpochDay(it.realmValidUntil!!).toString() else "None"
         }
 
-        documentsAdapter.lesson = lesson
+        pagesAdapter.lesson = lesson
 
         getPdf.setOnClickListener { presenter.onGetPdfClicked() }
         copyUrl.setOnClickListener { presenter.onCopyUrlClicked() }
@@ -87,15 +87,15 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     }
 
     fun configureRecyclerView() {
-        documentsAdapter = DocumentsAdapter(context, appComponent)
+        pagesAdapter = PagesAdapter(context, appComponent)
 
 
-        documents_recycler_view.adapter = documentsAdapter
-        documents_recycler_view.layoutManager = LinearLayoutManager(context)
+        page_recycler_view.adapter = pagesAdapter
+        page_recycler_view.layoutManager = LinearLayoutManager(context)
 
-        val cb = EdustorDocumentTouchHelperCallback(context)
+        val cb = EdustorPageTouchHelperCallback(context)
         val itemTouchHelper = ItemTouchHelper(cb)
 
-        itemTouchHelper.attachToRecyclerView(documents_recycler_view)
+        itemTouchHelper.attachToRecyclerView(page_recycler_view)
     }
 }

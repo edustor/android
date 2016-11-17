@@ -23,6 +23,7 @@ import ru.wutiarn.edustor.android.data.local.ActiveSession
 import ru.wutiarn.edustor.android.data.local.EdustorConstants
 import ru.wutiarn.edustor.android.data.models.OAuthTokenResult
 import ru.wutiarn.edustor.android.util.ConversionUtils
+import java.util.concurrent.TimeUnit
 
 @Module
 open class RetrofitModule {
@@ -33,6 +34,8 @@ open class RetrofitModule {
                 .addInterceptor {
                     return@addInterceptor intercept(it, session, objectMapper, edustorConstants)
                 }
+                .readTimeout(3, TimeUnit.MINUTES)
+                .writeTimeout(3, TimeUnit.MINUTES)
                 .build()
     }
 

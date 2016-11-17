@@ -20,7 +20,7 @@ open class Lesson() : RealmObject() {
             realmDate = value.toEpochDay()
         }
     open var topic: String? = null
-    open var documents: RealmList<Document> = RealmList()
+    open var pages: RealmList<Page> = RealmList()
     @PrimaryKey open var id: String = UUID.randomUUID().toString()
 
     @JsonIgnore var realmDate: Long = 0
@@ -32,8 +32,8 @@ open class Lesson() : RealmObject() {
         this.realmDate = realmDate
     }
 
-    fun calculateDocumentIndexes() {
-        IntRange(0, documents.lastIndex)
-                .forEach { documents[it].index = it }
+    fun calculatePageIndexes() {
+        IntRange(0, pages.lastIndex)
+                .forEach { pages[it].index = it }
     }
 }

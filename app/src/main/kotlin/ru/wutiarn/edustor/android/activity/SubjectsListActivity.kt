@@ -54,10 +54,10 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
         }
     }
 
-    override fun onDocumentQRCodeScanned(result: String) {
+    override fun onPageQRCodeScanned(result: String) {
         val (type, qrData) = EdustorURIParser.parse(result)
 
-        if (type != EdustorURIParser.URIType.DOCUMENT) {
+        if (type != EdustorURIParser.URIType.PAGE) {
             appComponent.eventBus.post(RequestSnackbarEvent("Error: incorrect QR code payload")); return
         }
 

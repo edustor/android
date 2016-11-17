@@ -7,7 +7,7 @@ interface LessonsRepo {
     fun byQR(qr: String): Observable<Lesson>
     fun byDate(subject: String, epochDay: Long): Observable<Lesson>
     fun byId(id: String): Observable<Lesson>
-    fun reorderDocuments(lesson: String, documentId: String, afterDocumentId: String?): Observable<Unit>
+    fun reorderPages(lesson: String, pageId: String, afterPageId: String?): Observable<Unit>
     fun setTopic(lesson: String, topic: String): Observable<Unit>
     fun bySubjectId(subject_id: String): Observable<List<Lesson>>
 }

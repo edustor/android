@@ -2,7 +2,7 @@ package ru.wutiarn.edustor.android.util.extension
 
 object EdustorURIParser {
     enum class URIType(val type: String) {
-        DOCUMENT("d")
+        PAGE("d")
     }
 
     data class EdustorURI(val type: URIType, val id: String)
@@ -11,7 +11,7 @@ object EdustorURIParser {
 
     fun parse(string: String): EdustorURI {
 
-        val matchResult = regex.matchEntire(string) ?: return EdustorURI(URIType.DOCUMENT, string)
+        val matchResult = regex.matchEntire(string) ?: return EdustorURI(URIType.PAGE, string)
 
         val groups = matchResult.groupValues
 

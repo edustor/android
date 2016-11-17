@@ -27,7 +27,7 @@ open class PdfSyncStatus() : RealmObject() {
             field = value
             realmValidUntil = if (value) null else realmDate + CACHE_DAYS
         }
-    open var documentsMD5 = RealmList<DocumentMD5>()
+    open var pageMD5 = RealmList<PageMD5>()
     open var realmValidUntil: Long? = null
         get() = if (markedForSync) null else field
 
@@ -51,24 +51,24 @@ open class PdfSyncStatus() : RealmObject() {
         if (!file.exists()) return SyncStatus.MISSING
 
         val actualMD5List = getMD5List(lesson)
-        if (actualMD5List != documentsMD5.map { it.md5 }) return SyncStatus.OBSOLETE
+        if (actualMD5List != pageMD5.map { it.md5 }) return SyncStatus.OBSOLETE
 
         return SyncStatus.SYNCED
     }
 
     fun copyMD5List(lesson: Lesson) {
         val list = getMD5List(lesson)
-                .map { DocumentMD5(it) }
+                .map { PageMD5(it) }
         Realm.getDefaultInstance().use {
             it.executeTransaction {
-                documentsMD5.clear()
-                documentsMD5.addAll(list)
+                pageMD5.clear()
+                pageMD5.addAll(list)
             }
         }
     }
 
     private fun getMD5List(lesson: Lesson): List<String> {
-        return lesson.documents.filter { it.fileMD5 != null }.map { it.fileMD5!! }
+        return lesson.pages.filter { it.fileMD5 != null }.map { it.fileMD5!! }
     }
 
     enum class SyncStatus(val status: Int) {
