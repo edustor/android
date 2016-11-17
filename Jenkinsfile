@@ -27,5 +27,6 @@ node {
         sh "mv app/build/outputs/apk/* ."
         sh "rm -f *-unaligned.apk"
         archiveArtifacts '*.apk'
+        fingerprint '*.apk'
     }
 }
