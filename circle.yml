@@ -10,8 +10,6 @@ machine:
 dependencies:
   override:
     - ./gradlew resolveConfigurations
-  post:
-    - ./ci-base/ci-base.sh Dockerfile.ci
 test:
   override:
     - ./gradlew test
