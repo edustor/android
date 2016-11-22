@@ -3,6 +3,8 @@ machine:
     TERM: dumb
   pre:
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+    - echo y | android update sdk --no-ui --all --filter "platform-tools,build-tools-24.0.1,android-24"
+    - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository,extra-google-m2repository"
   services:
     - docker
 dependencies:
