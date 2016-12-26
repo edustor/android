@@ -5,7 +5,7 @@
     <string name="sync_content_provider_authority">ru.edustor.debug.datasync.provider</string>
     <string name="pdf_sync_content_provider_authority">ru.edustor.debug.datasync.pdf.provider</string>
 
-    <string name="edustor_core_url">http://192.168.10.4:8080/</string>
+    <string name="edustor_core_url">http://192.168.10.4:8084/</string>
     <string name="edustor_accounts_url">http://192.168.10.4:8081/</string>
 
     <string name="edustor_ui_url">http://192.168.10.4:8080/</string>

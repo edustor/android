@@ -1,41 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
 
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/page_recycler_swipe_item">
 
-    <View
-        android:id="@+id/is_uploaded"
-        android:layout_width="5dp"
+    <LinearLayout
+        android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:background="@color/pageUploaded"/>
+        android:layout_gravity="end">
 
+
+        <Button
+            android:text="Delete"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/item_delete_btn"
+            android:layout_weight="1"
+            android:background="#FF0000"/>
+    </LinearLayout>
+
+
+    <!--TODO: Fix background color-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:orientation="horizontal"
+        android:background="@android:color/background_light">
 
-        <TextView
-            android:id="@+id/uuid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3b23009e176a"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <View
+            android:id="@+id/is_uploaded"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="@color/pageUploaded"/>
 
-        <TextView
-            android:id="@+id/scanned_timestamp"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No scanned date"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:orientation="vertical"
+            android:padding="5dp">
 
-        <TextView
-            android:id="@+id/uploaded_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No uploaded date"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            <TextView
+                android:id="@+id/uuid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3b23009e176a"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView
+                android:id="@+id/scanned_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No scanned date"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:id="@+id/uploaded_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No uploaded date"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</com.daimajia.swipe.SwipeLayout>

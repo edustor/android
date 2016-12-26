@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import com.daimajia.swipe.SwipeLayout
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -126,6 +128,15 @@ class PagesAdapter(val context: Context, val appComponent: AppComponent) : Recyc
                 val color = ContextCompat.getColor(view.context, colorResource)
                 isUploaded.setBackgroundColor(color)
 
+                recyclerItem.showMode = SwipeLayout.ShowMode.LayDown
+                recyclerItem.isClickToClose = true
+
+                deleteButton.setOnClickListener {
+                    recyclerItem.close()
+                    adapter.onRemoveItem(this)
+                    Log.i("EdustorHelperCallback", "removed: $adapterPosition")
+                }
+
             }
             get() = field
 
@@ -133,12 +144,16 @@ class PagesAdapter(val context: Context, val appComponent: AppComponent) : Recyc
         private var timestamp: TextView
         private var uploadedTimestamp: TextView
         private var isUploaded: View
+        private var recyclerItem: SwipeLayout
+        private var deleteButton: Button
 
         init {
             uuid = view.findViewById(R.id.uuid) as TextView
             timestamp = view.findViewById(R.id.scanned_timestamp) as TextView
             uploadedTimestamp = view.findViewById(R.id.uploaded_timestamp) as TextView
             isUploaded = view.findViewById(R.id.is_uploaded)
+            recyclerItem = view.findViewById(R.id.page_recycler_swipe_item) as SwipeLayout
+            deleteButton = view.findViewById(R.id.item_delete_btn) as Button
         }
     }
 
