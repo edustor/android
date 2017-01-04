@@ -22,7 +22,7 @@ fun Lesson.getPdfUrl(baseUrl: String): String {
 }
 
 fun Lesson.getCacheFile(context: Context): File {
-    val file = File(context.getExternalFilesDir(null), "${this.id}.pdf")
+    val file = File(context.externalCacheDir, "pdf/${this.id}.pdf")
     return file
 }
 

@@ -4,12 +4,13 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.support.v4.content.FileProvider
 import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
 import io.realm.Realm
+import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
@@ -20,6 +21,8 @@ import ru.wutiarn.edustor.android.view.LessonDetailsView
 import rx.Subscription
 
 class LessonDetailsPresenter(val appComponent: AppComponent, val context: Context, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
+
+    val TAG = LessonDetailsPresenter::class.java.name
 
     var view: LessonDetailsView? = null
     var activeSubscription: Subscription? = null
@@ -86,9 +89,15 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     }
 
     private fun openSyncedPdf() {
-        val file = lesson?.getCacheFile(appComponent.context)
+        val file = lesson?.getCacheFile(appComponent.context) ?: let {
+            Log.i(TAG, "Failed to get cache file for lesson ${lesson?.id}")
+            return
+        }
+        val fileUri = FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), file)
+
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf")
+        intent.setDataAndType(fileUri, "application/pdf")
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         context.startActivity(intent)
     }
 
