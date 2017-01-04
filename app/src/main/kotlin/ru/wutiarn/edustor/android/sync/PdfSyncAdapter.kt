@@ -119,6 +119,7 @@ class PdfSyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThread
     private fun downloadPdf(lesson: Lesson) {
         val pdfUrl = lesson.getPdfUrl(appComponent.constants.pdf_url)
         val cacheFile = lesson.getCacheFile(context)
+        cacheFile.parentFile.mkdirs()
 
         val request = Request.Builder().url(pdfUrl).build()
         val response = httpClient.newCall(request).execute()
