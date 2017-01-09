@@ -10,7 +10,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import retrofit2.adapter.rxjava.HttpException
 import ru.wutiarn.edustor.android.R
-import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
+import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeSnack
@@ -40,6 +40,9 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
             syncMeta(uploadOnly)
         } catch (e: SyncException) {
             handleSyncException(e, syncResult)
+            handler.post {
+                appComponent.eventBus.post(EdustorMetaSyncFinished(false, e))
+            }
         }
     }
 
@@ -68,7 +71,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                                 .toBlocking()
                                 .subscribe({
                                     handler.post {
-                                        appComponent.eventBus.post(RealmSyncFinishedEvent())
+                                        appComponent.eventBus.post(EdustorMetaSyncFinished(true))
                                     }
                                 }, {
                                     throw SyncException("Fetch failed: $it")
