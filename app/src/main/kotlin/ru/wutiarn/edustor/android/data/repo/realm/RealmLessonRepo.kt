@@ -122,7 +122,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .first()
                 .map { lesson ->
                     realm.executeTransaction {
-                        lesson.topic = if (topic.length != 0) topic else null
+                        lesson.topic = if (topic.isNotEmpty()) topic else null
                         val syncTask = SyncTask("lessons/topic/put", mapOf(
                                 "topic" to lesson.topic,
                                 "lesson" to lesson.id

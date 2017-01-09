@@ -93,28 +93,10 @@
                 android:resource="@xml/syncadapter"/>
         </service>
 
-        <service
-            android:name=".sync.stub.PdfSyncService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/pdfsyncadapter"/>
-        </service>
-
         <provider
             android:name=".sync.stub.SyncProvider"
             android:authorities="@string/sync_content_provider_authority"
             android:label="@string/sync_adapter_name"
-            android:exported="false"
-            android:syncable="true"/>
-
-        <provider
-            android:name=".sync.stub.PdfSyncProvider"
-            android:authorities="@string/pdf_sync_content_provider_authority"
-            android:label="@string/pdf_sync_adapter_name"
             android:exported="false"
             android:syncable="true"/>
 

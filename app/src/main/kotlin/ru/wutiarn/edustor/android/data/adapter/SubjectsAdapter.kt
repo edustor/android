@@ -42,11 +42,7 @@ class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdap
     }
 
     class SubjectViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        lateinit var name: TextView
-
-        init {
-            name = view.findViewById(R.id.name) as TextView
-        }
+        var name: TextView = view.findViewById(R.id.name) as TextView
     }
 
     interface SubjectsAdapterEventsListener {

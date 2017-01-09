@@ -3,6 +3,7 @@ apply plugin: "kotlin-android"
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 apply plugin: "com.palantir.configuration-resolver"
+apply plugin: 'kotlin-kapt'
 
 def debugPass = getEnv("EDUSTOR_ANDROID_DEBUG_KEY_PASSWORD")
 def ciPass = getEnv("EDUSTOR_ANDROID_CI_KEY_PASSWORD")
@@ -19,8 +20,8 @@ android {
         applicationId "ru.wutiarn.edustor.android"
         minSdkVersion 21
         targetSdkVersion 24
-        versionCode 15
-        versionName "0.6.1"
+        versionCode 16
+        versionName "0.6.2"
         multiDexEnabled true
     }
     lintOptions {
@@ -95,10 +96,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
-
-kapt {
-    generateStubs = true
 }
 
 dependencies {

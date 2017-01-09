@@ -18,7 +18,7 @@ import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.view.LoginView
 
 class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActivity) : MvpPresenter<LoginView>, GoogleApiClient.OnConnectionFailedListener {
-    val TAG = LoginPresenter::class.java.simpleName
+    val TAG: String = LoginPresenter::class.java.simpleName
 
     private val RC_SIGN_IN = 0
     val gapi: GoogleApiClient
@@ -37,7 +37,6 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
                 .build()
 
         appComponent.syncManager.syncEnabled = false
-        appComponent.pdfSyncManager.syncEnabled = false
     }
 
     fun onLoggedIn() {
@@ -46,7 +45,6 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
         ))
         appComponent.syncManager.addTask(syncTask)
         appComponent.syncManager.syncEnabled = true
-        appComponent.pdfSyncManager.syncEnabled = true
 
         val intent = Intent(activity, InitSyncActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

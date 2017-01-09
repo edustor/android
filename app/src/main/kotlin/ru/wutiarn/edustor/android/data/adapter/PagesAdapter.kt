@@ -25,7 +25,7 @@ class PagesAdapter(val context: Context, val appComponent: AppComponent) : Recyc
         set(value) {
             field = value
             pages = (value?.pages ?: emptyList<Page>())
-                    .sortedBy { it.index }
+                    .sortedBy(Page::index)
                     .toMutableList()
             notifyDataSetChanged()
         }
@@ -112,7 +112,7 @@ class PagesAdapter(val context: Context, val appComponent: AppComponent) : Recyc
     class PageViewHolder(val view: View, val adapter: PagesAdapter) : RecyclerView.ViewHolder(view) {
         // Nullable only because kotlin 1.0.3 doesn't support custom setters along with lateinit
         var page: Page? = null
-            set(value: Page?) {
+            set(value) {
                 field = value!!
 
                 uuid.text = value.shortQR
@@ -140,21 +140,13 @@ class PagesAdapter(val context: Context, val appComponent: AppComponent) : Recyc
             }
             get() = field
 
-        private var uuid: TextView
-        private var timestamp: TextView
-        private var uploadedTimestamp: TextView
-        private var isUploaded: View
-        private var recyclerItem: SwipeLayout
-        private var deleteButton: Button
+        private var uuid: TextView = view.findViewById(R.id.uuid) as TextView
+        private var timestamp: TextView = view.findViewById(R.id.scanned_timestamp) as TextView
+        private var uploadedTimestamp: TextView = view.findViewById(R.id.uploaded_timestamp) as TextView
+        private var isUploaded: View = view.findViewById(R.id.is_uploaded)
+        private var recyclerItem: SwipeLayout = view.findViewById(R.id.page_recycler_swipe_item) as SwipeLayout
+        private var deleteButton: Button = view.findViewById(R.id.item_delete_btn) as Button
 
-        init {
-            uuid = view.findViewById(R.id.uuid) as TextView
-            timestamp = view.findViewById(R.id.scanned_timestamp) as TextView
-            uploadedTimestamp = view.findViewById(R.id.uploaded_timestamp) as TextView
-            isUploaded = view.findViewById(R.id.is_uploaded)
-            recyclerItem = view.findViewById(R.id.page_recycler_swipe_item) as SwipeLayout
-            deleteButton = view.findViewById(R.id.item_delete_btn) as Button
-        }
     }
 
 }

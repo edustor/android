@@ -17,17 +17,13 @@ import rx.Subscription
 class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonsListView>,
         DatePickerDialog.OnDateSetListener {
 
-    var subjectId: String
+    var subjectId: String = arguments.getString("subject_id")
 
     var view: LessonsListView? = null
     var lessons: List<Lesson> = emptyList()
 
     var activeSubscription: Subscription? = null
 
-
-    init {
-        subjectId = arguments.getString("subject_id")
-    }
 
     override fun detachView(p0: Boolean) {
         view = null
@@ -48,7 +44,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
                 subjectSyncStatus.markedForSync = b
             }
         }
-        appComponent.pdfSyncManager.requestSync(true)
+        appComponent.syncManager.requestSync(true, false)
     }
 
     fun loadData() {
