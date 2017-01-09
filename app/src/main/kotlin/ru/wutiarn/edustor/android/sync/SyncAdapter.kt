@@ -10,13 +10,10 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import retrofit2.adapter.rxjava.HttpException
 import ru.wutiarn.edustor.android.R
-import ru.wutiarn.edustor.android.data.models.util.sync.SyncTaskResult
 import ru.wutiarn.edustor.android.events.RealmSyncFinishedEvent
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
 import ru.wutiarn.edustor.android.util.extension.makeSnack
-import rx.Observable
-import rx.lang.kotlin.onError
 import java.io.IOException
 
 class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
@@ -27,74 +24,81 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
     val TAG = "SyncAdapter"
     val NOTIFICATION_ID = 0
 
+    val notificationBuilder: NotificationCompat.Builder
+        get() = NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_cached_black_24dp)
+                .setContentTitle("Edustor Sync")
+                .setContentText("Preparing sync...")
+                .setProgress(0, 0, true)
+
     override fun onPerformSync(account: Account?, extras: Bundle, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult) {
 
         val uploadOnly = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD)
         val isManual = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL)
 
-        val notification = NotificationCompat.Builder(appComponent.context)
-                .setSmallIcon(R.drawable.ic_cached_black_24dp)
-                .setContentTitle("Edustor Sync")
-                .setContentText("Edustor sync is in progress")
-                .setProgress(0, 0, true).build()
-        notificationService.notify(NOTIFICATION_ID, notification)
+        try {
+            syncMeta(uploadOnly)
+        } catch (e: SyncException) {
+            handleSyncException(e, syncResult)
+        }
+    }
+
+    fun syncMeta(uploadOnly: Boolean) {
 
         val tasks = appComponent.syncManager.popAllTasks()
 
         val tasksCount = tasks.count()
         Log.i(TAG, "Sync $tasksCount changes. Full: ${!uploadOnly}")
-        if (!uploadOnly) {
-            makeSnack("Edustor is syncing ($tasksCount local changes)...", Snackbar.LENGTH_INDEFINITE)
-        }
 
-        var exceptionAlreadyLogged = false
-        var pushResult = emptyList<SyncTaskResult>()
+        notificationService.notify(NOTIFICATION_ID,
+                notificationBuilder
+                        .setContentText("Meta: Pushing $tasksCount changes")
+                        .build()
+        )
 
         appComponent.api.sync.push(tasks)
-                .onError {
-                    Log.w(TAG, "Sync push failed", it)
-                    appComponent.syncManager.pushAllTasks(tasks, true)
-                    exceptionAlreadyLogged = true
-                }
-                .map {
-                    pushResult = it
-                }
-                .flatMap { if (!uploadOnly) appComponent.api.sync.fullSyncNow() else Observable.just(Unit) }
-                .onError { if (!exceptionAlreadyLogged) Log.d(TAG, "Sync pull failed", it) }
-                .subscribe(
-                        {
-                            val taskSucceeded = pushResult.count { it.success }
-                            val msgStr = "Sync finished. Tasks succeeded: $taskSucceeded/${tasks.size}"
-                            Log.i(TAG, msgStr)
-                            makeSnack(msgStr)
-                            appComponent.pdfSyncManager.requestSync(isManual)
+                .toBlocking()
+                .subscribe({ pushResult ->
+                    val tasksSucceeded = pushResult.count { it.success }
+                    val msgStr = "Task push succeeded: $tasksSucceeded/${tasks.size}"
+                    Log.i(TAG, msgStr)
 
-                            handler.post {
-                                appComponent.eventBus.post(RealmSyncFinishedEvent())
-                            }
+                    if (!uploadOnly) {
+                        appComponent.api.sync.fullSyncNow()
+                                .toBlocking()
+                                .subscribe({
+                                    handler.post {
+                                        appComponent.eventBus.post(RealmSyncFinishedEvent())
+                                    }
+                                }, {
+                                    throw SyncException("Fetch failed: $it")
+                                })
+                    }
 
-                            notificationService.cancel(NOTIFICATION_ID)
-                        },
-                        {
-                            if (it is HttpException || it is IOException) {
-                                syncResult.stats.numIoExceptions++ // 401 is already handled in retrofit interceptor
-                            }
-                            val taskSucceeded = pushResult.count { it.success }
-                            Log.w(TAG, "Sync failed")
-                            val msg = "Sync failed: ${it.javaClass.name}: ${it.message}. " +
-                                    "Tasks succeeded: $taskSucceeded/${tasks.size}"
-                            makeSnack(msg, 10000)
+                    notificationService.cancel(NOTIFICATION_ID)
+                }, {
+                    throw SyncException("Push failed: $it")
+                })
+    }
 
-                            val errorBuilder = NotificationCompat.Builder(appComponent.context)
-                                    .setContentTitle("Edustor Sync failed")
-                                    .setContentText(msg)
-                                    .setSmallIcon(R.drawable.ic_error_outline_black_24dp)
-                            val errorNotification = NotificationCompat.BigTextStyle(errorBuilder)
-                                    .bigText(msg)
-                                    .build()
-                            notificationService.notify(NOTIFICATION_ID, errorNotification)
-                        }
-                )
+    private fun handleSyncException(ex: SyncException, syncResult: SyncResult) {
+        val cause = ex.cause
+
+        if (cause is HttpException || cause is IOException) {
+            syncResult.stats.numIoExceptions++ // 401 is already handled in retrofit interceptor
+        }
+
+        val msg = "Sync failed: ${ex.message}"
+        Log.w(TAG, msg)
+
+        val errorBuilder = NotificationCompat.Builder(appComponent.context)
+                .setContentTitle("Edustor Sync failed")
+                .setContentText(msg)
+                .setSmallIcon(R.drawable.ic_error_outline_black_24dp)
+        val errorNotification = NotificationCompat.BigTextStyle(errorBuilder)
+                .bigText(msg)
+                .build()
+        notificationService.notify(NOTIFICATION_ID, errorNotification)
     }
 
     private fun makeSnack(str: String, length: Int = Snackbar.LENGTH_SHORT) {

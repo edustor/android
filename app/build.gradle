@@ -3,6 +3,7 @@ apply plugin: "kotlin-android"
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 apply plugin: "com.palantir.configuration-resolver"
+apply plugin: 'kotlin-kapt'
 
 def debugPass = getEnv("EDUSTOR_ANDROID_DEBUG_KEY_PASSWORD")
 def ciPass = getEnv("EDUSTOR_ANDROID_CI_KEY_PASSWORD")
@@ -97,9 +98,9 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
-}
+//kapt {
+//    generateStubs = true
+//}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
