@@ -27,9 +27,14 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
         val isManual = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL)
 
         val metaSyncImpl = MetaSyncImpl(context, appComponent, notificationService, NOTIFICATION_ID)
+        val pdfSyncImpl = PdfSyncImpl(context, appComponent, notificationService, NOTIFICATION_ID)
 
         try {
             metaSyncImpl.syncMeta(uploadOnly)
+            if (!uploadOnly) {
+                pdfSyncImpl.syncPdf()
+            }
+            notificationService.cancel(NOTIFICATION_ID)
         } catch (e: SyncException) {
             handleSyncException(e, syncResult)
             handler.post {

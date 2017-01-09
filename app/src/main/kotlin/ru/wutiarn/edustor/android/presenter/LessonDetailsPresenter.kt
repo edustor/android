@@ -83,7 +83,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
             openSyncedPdf()
         } else {
             openPdfAfterSyncFinished = true
-            appComponent.pdfSyncManager.requestSync(true)
+            appComponent.syncManager.requestSync(true, false)
             appComponent.eventBus.makeSnack("Pdf sync requested")
         }
     }
@@ -113,7 +113,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
             it.executeTransaction {
                 lesson?.syncStatus?.markedForSync = isEnabled
             }
-            appComponent.pdfSyncManager.requestSync(true)
+            appComponent.syncManager.requestSync(true, false)
         }
     }
 

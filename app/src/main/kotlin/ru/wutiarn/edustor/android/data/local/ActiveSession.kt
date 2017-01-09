@@ -23,7 +23,6 @@ class ActiveSession(val edustorPreferences: EdustorPreferences,
         token = null
         refreshToken = null
         syncManager.syncEnabled = false
-        pdfSyncManager.syncEnabled = false
         edustorPreferences.clear()
         Realm.getDefaultInstance().use { it.executeTransaction(Realm::deleteAll) }
         context.startActivity(LoginActivity::class.java, true)

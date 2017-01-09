@@ -37,7 +37,6 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
                 .build()
 
         appComponent.syncManager.syncEnabled = false
-        appComponent.pdfSyncManager.syncEnabled = false
     }
 
     fun onLoggedIn() {
@@ -46,7 +45,6 @@ class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActi
         ))
         appComponent.syncManager.addTask(syncTask)
         appComponent.syncManager.syncEnabled = true
-        appComponent.pdfSyncManager.syncEnabled = true
 
         val intent = Intent(activity, InitSyncActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

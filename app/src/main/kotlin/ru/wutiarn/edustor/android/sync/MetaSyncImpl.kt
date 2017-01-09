@@ -59,7 +59,6 @@ class MetaSyncImpl(val context: Context,
                                     throw SyncException("Fetch failed: $it")
                                 })
                     }
-                    notificationService.cancel(notificationId)
                 }, {
                     throw SyncException("Push failed: $it")
                 })

@@ -48,7 +48,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
                 subjectSyncStatus.markedForSync = b
             }
         }
-        appComponent.pdfSyncManager.requestSync(true)
+        appComponent.syncManager.requestSync(true, false)
     }
 
     fun loadData() {
