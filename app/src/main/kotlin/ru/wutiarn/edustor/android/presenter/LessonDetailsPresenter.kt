@@ -22,7 +22,7 @@ import rx.Subscription
 
 class LessonDetailsPresenter(val appComponent: AppComponent, val context: Context, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
-    val TAG = LessonDetailsPresenter::class.java.name
+    val TAG: String = LessonDetailsPresenter::class.java.name
 
     var view: LessonDetailsView? = null
     var activeSubscription: Subscription? = null

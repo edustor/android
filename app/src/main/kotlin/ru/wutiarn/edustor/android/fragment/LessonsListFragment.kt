@@ -27,7 +27,7 @@ import ru.wutiarn.edustor.android.presenter.LessonListPresenter
 import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.LessonsListView
 
-class LessonsListFragment() : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),
+class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),
         LessonsListView, LessonsAdapter.LessonsAdapterEventsListener {
     lateinit var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter

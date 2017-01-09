@@ -8,7 +8,7 @@ import io.realm.annotations.RealmClass
  * But I have nothing else to do since Realm CANNOT store lists of non-RealmObject types (and yes, String is definitely
  * is _NOT_ RealmObject. Bullshit.
  *
- * @see https://github.com/realm/realm-java/issues/575
+ * @see <a href="https://github.com/realm/realm-java/issues/575">GitHub Issue</a>
  */
 @RealmClass
 open class PageMD5(

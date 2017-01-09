@@ -6,7 +6,7 @@ import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
 import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import rx.Observable
 
-class RealmSubjectRepo() : SubjectsRepo {
+class RealmSubjectRepo : SubjectsRepo {
 
     override val all: Observable<List<Subject>>
         get() {

@@ -45,13 +45,9 @@ class LessonsAdapter(val appComponent: AppComponent, val listener: LessonsAdapte
     }
 
     class LessonViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        lateinit var topic: TextView
-        lateinit var date: TextView
+        var topic: TextView = view.findViewById(R.id.topic) as TextView
+        var date: TextView = view.findViewById(R.id.date) as TextView
 
-        init {
-            topic = view.findViewById(R.id.topic) as TextView
-            date = view.findViewById(R.id.date) as TextView
-        }
     }
 
     interface LessonsAdapterEventsListener {

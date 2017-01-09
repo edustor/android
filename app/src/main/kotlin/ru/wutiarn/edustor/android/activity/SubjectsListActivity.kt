@@ -23,7 +23,7 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
     lateinit var appComponent: AppComponent
 
     override fun createPresenter(): SubjectListActivityPresenter {
-        return SubjectListActivityPresenter();
+        return SubjectListActivityPresenter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

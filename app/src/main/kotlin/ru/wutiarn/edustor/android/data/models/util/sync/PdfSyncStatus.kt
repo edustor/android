@@ -58,7 +58,7 @@ open class PdfSyncStatus() : RealmObject() {
 
     fun copyMD5List(lesson: Lesson) {
         val list = getMD5List(lesson)
-                .map { PageMD5(it) }
+                .map(::PageMD5)
         Realm.getDefaultInstance().use {
             it.executeTransaction {
                 pageMD5.clear()

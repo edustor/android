@@ -21,7 +21,7 @@ fun Context.makeToast(str: String, duration: Int = Toast.LENGTH_SHORT) {
 
 fun Context.startActivity(activityClass: Class<out AppCompatActivity>, clearStack: Boolean = false) {
     val intent = Intent(this, activityClass)
-    if (clearStack == true) {
+    if (clearStack) {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
     this.startActivity(intent)

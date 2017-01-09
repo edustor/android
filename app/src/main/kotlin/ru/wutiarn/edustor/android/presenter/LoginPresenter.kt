@@ -18,7 +18,7 @@ import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.view.LoginView
 
 class LoginPresenter(val appComponent: AppComponent, val activity: AppCompatActivity) : MvpPresenter<LoginView>, GoogleApiClient.OnConnectionFailedListener {
-    val TAG = LoginPresenter::class.java.simpleName
+    val TAG: String = LoginPresenter::class.java.simpleName
 
     private val RC_SIGN_IN = 0
     val gapi: GoogleApiClient
