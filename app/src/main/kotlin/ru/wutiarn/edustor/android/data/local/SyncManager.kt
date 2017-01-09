@@ -39,7 +39,7 @@ class SyncManager(val context: Context, private val prefs: EdustorPreferences, p
         modifyTasksWithLock {
             it.add(syncTask)
         }
-        requestSync(true, true)
+        requestSync(false, uploadOnly = true)
     }
 
     fun popAllTasks(): List<SyncTask> {
