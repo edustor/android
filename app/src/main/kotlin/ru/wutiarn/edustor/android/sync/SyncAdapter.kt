@@ -15,6 +15,10 @@ import java.io.IOException
 
 class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
 
+    companion object {
+        val SYNC_EXTRAS_PDF_ONLY = "pdfOnly"
+    }
+
     val appComponent = context.initializeNewAppComponent()
     val handler = Handler(context.mainLooper)
     val notificationService = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -23,17 +27,16 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
 
     override fun onPerformSync(account: Account?, extras: Bundle, authority: String?, provider: ContentProviderClient?, syncResult: SyncResult) {
 
-        val uploadOnly = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD)
         val isManual = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL)
+        val uploadOnly = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD)
+        val pdfOnly = extras.getBoolean(SYNC_EXTRAS_PDF_ONLY)
 
         val metaSyncImpl = MetaSyncImpl(context, appComponent, notificationService, NOTIFICATION_ID)
         val pdfSyncImpl = PdfSyncImpl(context, appComponent, notificationService, NOTIFICATION_ID)
 
         try {
-            metaSyncImpl.syncMeta(uploadOnly)
-            if (!uploadOnly) {
-                pdfSyncImpl.syncPdf()
-            }
+            if (!pdfOnly) metaSyncImpl.syncMeta(uploadOnly)
+            if (!uploadOnly) pdfSyncImpl.syncPdf()
             notificationService.cancel(NOTIFICATION_ID)
         } catch (e: SyncException) {
             handleSyncException(e, syncResult)

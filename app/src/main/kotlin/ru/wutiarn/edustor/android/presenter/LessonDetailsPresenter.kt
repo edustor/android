@@ -27,15 +27,11 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     var view: LessonDetailsView? = null
     var activeSubscription: Subscription? = null
 
-    val lessonId: String
+    val lessonId: String = arguments.getString("id")
 
     var lesson: Lesson? = null
 
     var openPdfAfterSyncFinished = false
-
-    init {
-        lessonId = arguments.getString("id")
-    }
 
     override fun detachView(p0: Boolean) {
         appComponent.eventBus.unregister(this)
@@ -83,7 +79,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
             openSyncedPdf()
         } else {
             openPdfAfterSyncFinished = true
-            appComponent.syncManager.requestSync(true, false)
+            appComponent.syncManager.requestSync(manual = true, pdfOnly = true)
             appComponent.eventBus.makeSnack("Pdf sync requested")
         }
     }
