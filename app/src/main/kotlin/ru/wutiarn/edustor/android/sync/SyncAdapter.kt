@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.*
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.Snackbar
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import retrofit2.adapter.rxjava.HttpException
@@ -13,7 +12,6 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.util.extension.fullSyncNow
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
-import ru.wutiarn.edustor.android.util.extension.makeSnack
 import java.io.IOException
 
 class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
@@ -102,11 +100,5 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                 .bigText(msg)
                 .build()
         notificationService.notify(NOTIFICATION_ID, errorNotification)
-    }
-
-    private fun makeSnack(str: String, length: Int = Snackbar.LENGTH_SHORT) {
-        handler.post {
-            appComponent.eventBus.makeSnack(str, length)
-        }
     }
 }
