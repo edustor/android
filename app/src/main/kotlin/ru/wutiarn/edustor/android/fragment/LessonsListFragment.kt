@@ -21,7 +21,7 @@ import ru.wutiarn.edustor.android.activity.LessonDetailsActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.LessonsAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.data.models.Subject
+import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.presenter.LessonListPresenter
 import ru.wutiarn.edustor.android.util.extension.makeSnack
@@ -32,7 +32,7 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
     lateinit var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter
     var switch: Switch? = null
-    var subject: Subject? = null
+    var tag: Tag? = null
 
     var swipeRefreshLayout: SwipeRefreshLayout? = null
 
@@ -92,8 +92,8 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
     override fun setData(lessons: List<Lesson>?) {
         lessonsAdapter.lessons = lessons ?: emptyList()
         lessonsAdapter.notifyDataSetChanged()
-        lessons?.firstOrNull()?.subject?.let {
-            subject = it
+        lessons?.firstOrNull()?.tag?.let {
+            tag = it
             activity?.title = it.name
             initializeSwitch(it)
         }
@@ -102,12 +102,12 @@ class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsLi
 
     fun setSyncSwitch(switch: Switch) {
         this.switch = switch
-        if (subject != null) initializeSwitch(subject!!)
+        if (tag != null) initializeSwitch(tag!!)
     }
 
-    private fun initializeSwitch(subject: Subject) {
+    private fun initializeSwitch(tag: Tag) {
         switch?.isEnabled = true
-        switch?.isChecked = appComponent.pdfSyncManager.getSubjectSyncStatus(subject.id).markedForSync
+        switch?.isChecked = appComponent.pdfSyncManager.getSubjectSyncStatus(tag.id).markedForSync
         switch?.setOnCheckedChangeListener { button, b -> presenter.onSyncSwitchChanged(b) }
     }
 

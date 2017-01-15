@@ -3,7 +3,7 @@ package ru.wutiarn.edustor.android.data.repo.realm
 import io.realm.Realm
 import ru.wutiarn.edustor.android.data.local.SyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
-import ru.wutiarn.edustor.android.data.models.Subject
+import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.util.extension.copyFromRealm
@@ -30,10 +30,10 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                         Observable.just(found.first())
                     } else {
                         Realm.getDefaultInstance().use {
-                            it.where(Subject::class.java)
+                            it.where(Tag::class.java)
                                     .equalTo("id", subject)
                                     .findFirstAsync()
-                                    .asObservable<Subject>()
+                                    .asObservable<Tag>()
                                     .filter { it.isLoaded }
                                     .map {
                                         var lesson = Lesson(it, epochDay)

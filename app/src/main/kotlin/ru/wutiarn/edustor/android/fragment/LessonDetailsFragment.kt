@@ -43,7 +43,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
 
     override fun setData(lesson: Lesson?) {
 
-        subject.text = lesson?.subject?.name
+        subject.text = lesson?.tag?.name
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         topic.setText(lesson?.topic)
 

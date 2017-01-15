@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.models.Subject
+import ru.wutiarn.edustor.android.data.models.Tag
 
 class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdapterEventsListener) : RecyclerView.Adapter<SubjectsAdapter.SubjectViewHolder>() {
-    var subjects: List<Subject> = listOf()
+    var tags: List<Tag> = listOf()
 
     init {
         setHasStableIds(true)
@@ -24,15 +24,15 @@ class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdap
     }
 
     override fun getItemCount(): Int {
-        return subjects.count()
+        return tags.count()
     }
 
     override fun getItemId(position: Int): Long {
-        return subjects[position].hashCode().toLong()
+        return tags[position].hashCode().toLong()
     }
 
     override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
-        val subject = subjects[position]
+        val subject = tags[position]
 
         holder.name.text = subject.name
 
@@ -46,7 +46,7 @@ class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdap
     }
 
     interface SubjectsAdapterEventsListener {
-        fun onSubjectClick(subject: Subject)
+        fun onSubjectClick(tag: Tag)
     }
 
 }

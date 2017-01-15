@@ -6,7 +6,15 @@ import io.realm.annotations.RealmClass
 import java.util.*
 
 @RealmClass
-open class User : RealmObject() {
-    open lateinit var email: String
+open class Account() : RealmObject() {
     @PrimaryKey open var id: String = UUID.randomUUID().toString()
+
+    @Suppress("LeakingThis")
+    constructor(dto: AccountDTO) : this() {
+        id = dto.id
+    }
+
+    data class AccountDTO(
+            val id: String
+    )
 }

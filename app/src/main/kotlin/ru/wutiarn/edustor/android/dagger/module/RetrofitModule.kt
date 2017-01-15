@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -97,6 +98,7 @@ open class RetrofitModule {
         return ObjectMapper()
                 .registerModule(ThreeTenModule())
                 .registerModule(conversionModule)
+                .registerKotlinModule()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     }
 

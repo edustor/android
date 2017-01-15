@@ -16,13 +16,13 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.activity.LessonsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.SubjectsAdapter
-import ru.wutiarn.edustor.android.data.models.Subject
+import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.presenter.SubjectListPresenter
 import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.SubjectsListView
 
-class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, SubjectsListView, SubjectListPresenter>(),
+class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Tag>, SubjectsListView, SubjectListPresenter>(),
         SubjectsListView, SubjectsAdapter.SubjectsAdapterEventsListener {
     lateinit var appComponent: AppComponent
     lateinit var adapter: SubjectsAdapter
@@ -71,8 +71,8 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
         presenter.loadData()
     }
 
-    override fun setData(lessons: List<Subject>?) {
-        adapter.subjects = lessons ?: emptyList()
+    override fun setData(lessons: List<Tag>?) {
+        adapter.tags = lessons ?: emptyList()
         adapter.notifyDataSetChanged()
         showContent()
     }
@@ -83,9 +83,9 @@ class SubjectsListFragment : MvpLceFragment<LinearLayout, List<Subject>, Subject
         base_recycler_view.adapter = adapter
     }
 
-    override fun onSubjectClick(subject: Subject) {
+    override fun onSubjectClick(tag: Tag) {
         val intent = Intent(context, LessonsListActivity::class.java)
-        intent.putExtra("subject_id", subject.id)
+        intent.putExtra("subject_id", tag.id)
         startActivity(intent)
     }
 

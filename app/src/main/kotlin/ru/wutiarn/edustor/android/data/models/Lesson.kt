@@ -12,7 +12,7 @@ import java.util.*
 
 @RealmClass
 open class Lesson() : RealmObject() {
-    open lateinit var subject: Subject
+    open lateinit var tag: Tag
     @Ignore open var date: LocalDate = LocalDate.ofEpochDay(0)
         get() = LocalDate.ofEpochDay(realmDate)
         set(value) {
@@ -27,13 +27,37 @@ open class Lesson() : RealmObject() {
 
     @Ignore var syncStatus: PdfSyncStatus? = null
 
-    constructor(subject: Subject, realmDate: Long) : this() {
-        this.subject = subject
+    @Suppress("LeakingThis")
+    constructor(tag: Tag, realmDate: Long) : this() {
+        this.tag = tag
         this.realmDate = realmDate
+    }
+
+    @Suppress("LeakingThis")
+    constructor(dto: LessonDTO, tag: Tag) : this() {
+        this.id = dto.id
+        this.topic = dto.topic
+        this.date = dto.date
+        this.pages = dto.pages
+                .map(::Page)
+                .toTypedArray()
+                .let { RealmList<Page>(*it) }
+
+        this.tag = tag
     }
 
     fun calculatePageIndexes() {
         IntRange(0, pages.lastIndex)
                 .forEach { pages[it].index = it }
     }
+
+    data class LessonDTO(
+            val id: String,
+            val owner: String,
+            val tag: String,
+            val topic: String?,
+            val date: LocalDate,
+            val removed: Boolean,
+            val pages: List<Page.PageDTO>
+    )
 }

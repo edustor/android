@@ -45,4 +45,26 @@ open class Page() : RealmObject() {
         this.timestamp = timestamp
         this.index = index
     }
+
+    @Suppress("LeakingThis")
+    constructor(dto: PageDTO) : this() {
+        this.id = dto.id
+        this.index = dto.index
+        this.timestamp = dto.timestamp
+        this.isUploaded = dto.uploaded
+        this.uploadedTimestamp = dto.uploadedTimestamp
+        this.qr = dto.qr
+        this.contentType = dto.contentType
+    }
+
+    data class PageDTO(
+            val id: String,
+            val index: Int,
+            val timestamp: Instant,
+            val uploaded: Boolean,
+            val uploadedTimestamp: Instant?,
+            val qr: String?,
+            val contentType: String?,
+            val removed: Boolean
+    )
 }
