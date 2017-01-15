@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.NotificationCompat
 import android.util.Log
+import org.apache.commons.lang3.exception.ExceptionUtils
 import retrofit2.adapter.rxjava.HttpException
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.util.extension.initializeNewAppComponent
+import rx.exceptions.CompositeException
 import java.io.IOException
 
 class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
@@ -38,10 +40,21 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
             if (!pdfOnly) metaSyncImpl.syncMeta(uploadOnly)
             if (!uploadOnly) pdfSyncImpl.syncPdf()
             notificationService.cancel(NOTIFICATION_ID)
-        } catch (e: SyncException) {
-            handleSyncException(e, syncResult)
-            handler.post {
-                appComponent.eventBus.post(EdustorMetaSyncFinished(false, e))
+        } catch (e: Exception) {
+            val exList = ExceptionUtils.getThrowableList(e)
+                    .flatMap {
+                        if (it is CompositeException) {
+                            it.exceptions
+                        } else {
+                            listOf(it)
+                        }
+                    }
+            val syncEx = exList.firstOrNull { it is SyncException } as SyncException?
+            if (syncEx != null) {
+                handleSyncException(syncEx, syncResult)
+                handler.post {
+                    appComponent.eventBus.post(EdustorMetaSyncFinished(false, syncEx))
+                }
             }
         }
     }
