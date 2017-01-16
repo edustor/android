@@ -55,6 +55,7 @@ open class Page() : RealmObject() {
         this.uploadedTimestamp = dto.uploadedTimestamp
         this.qr = dto.qr
         this.contentType = dto.contentType
+        this.fileMD5 = dto.fileMD5
     }
 
     data class PageDTO(
@@ -65,6 +66,7 @@ open class Page() : RealmObject() {
             val uploadedTimestamp: Instant?,
             val qr: String?,
             val contentType: String?,
+            val fileMD5: String?,
             val removed: Boolean
     )
 }
