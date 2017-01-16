@@ -14,7 +14,14 @@ fun SyncApi.fullSyncNow(): Observable<Unit> {
             .map { initData ->
 
                 val account = Account(initData.account)
-                val tags = initData.tags.map(::Tag).sortedBy(Tag::id)
+
+                val tags = initData.tags.map(::Tag)
+                tags.zip(initData.tags).forEach { it ->
+                    val tag = it.first
+                    val tagDTO = it.second
+
+                    tag.parent = tags.firstOrNull { it.parent == tags.firstOrNull {it.id == tagDTO.parent} }
+                }
 
                 val lessons = initData.lessons.map { lessonDTO ->
                     val tag = tags.first { it.id == lessonDTO.tag }  // TODO: Replace with binary search
