@@ -44,7 +44,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                                         val syncTask = SyncTask("lessons/create", mapOf(
                                                 "id" to lesson.id,
                                                 "date" to lesson.date.toEpochDay(),
-                                                "subject" to subject
+                                                "tag" to subject
                                         ))
                                         syncTasksManager.addTask(syncTask)
 

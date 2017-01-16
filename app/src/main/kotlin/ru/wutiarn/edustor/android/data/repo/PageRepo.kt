@@ -10,5 +10,5 @@ interface PageRepo {
                    instant: Instant = Instant.now()
     ): Observable<Page>
 
-    fun delete(pagetId: String): Observable<Unit>
+    fun delete(pageId: String): Observable<Unit>
 }

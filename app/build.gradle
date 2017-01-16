@@ -20,8 +20,8 @@ android {
         applicationId "ru.wutiarn.edustor.android"
         minSdkVersion 21
         targetSdkVersion 24
-        versionCode 18
-        versionName "0.7-pre2"
+        versionCode 19
+        versionName "0.7-pre3"
         multiDexEnabled true
     }
     lintOptions {

@@ -43,10 +43,10 @@ class RealmPageRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManag
     }
 
 
-    override fun delete(pagetId: String): Observable<Unit> {
+    override fun delete(pageId: String): Observable<Unit> {
         val realm = Realm.getDefaultInstance()
         return realm.where(Page::class.java)
-                .equalTo("id", pagetId)
+                .equalTo("id", pageId)
                 .findFirstAsync()
                 .asObservable<Page>()
                 .filter { it.isLoaded }
