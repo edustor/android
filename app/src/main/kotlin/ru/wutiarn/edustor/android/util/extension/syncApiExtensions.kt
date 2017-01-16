@@ -7,6 +7,7 @@ import ru.wutiarn.edustor.android.data.models.Account
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Page
 import ru.wutiarn.edustor.android.data.models.Tag
+import ru.wutiarn.edustor.android.sync.SyncException
 import rx.Observable
 
 fun SyncApi.fullSyncNow(): Observable<Unit> {
@@ -15,16 +16,17 @@ fun SyncApi.fullSyncNow(): Observable<Unit> {
 
                 val account = Account(initData.account)
 
-                val tags = initData.tags.map(::Tag)
-                tags.zip(initData.tags).forEach { it ->
-                    val tag = it.first
-                    val tagDTO = it.second
-
-                    tag.parent = tags.firstOrNull { it.parent == tags.firstOrNull {it.id == tagDTO.parent} }
-                }
+                val tags = initData.tags.map(::Tag).associateBy(Tag::id)
+                initData.tags
+                        .filter { it.parent != null }
+                        .forEach { tagDTO ->
+                            val tag = tags[tagDTO.id]!!
+                            tag.parent = tags[tagDTO.parent]
+                        }
 
                 val lessons = initData.lessons.map { lessonDTO ->
-                    val tag = tags.first { it.id == lessonDTO.tag }  // TODO: Replace with binary search
+                    val tag = tags[lessonDTO.tag] ?: throw SyncException("Lesson ${lessonDTO.id} " +
+                            "has tag ${lessonDTO.tag} which doesn't exist")
                     Lesson(lessonDTO, tag)
                 }
 
@@ -37,7 +39,7 @@ fun SyncApi.fullSyncNow(): Observable<Unit> {
                     lessons.forEach(Lesson::calculatePageIndexes)
 
                     realm.copyToRealmOrUpdate(account)
-                    realm.copyToRealmOrUpdate(tags)
+                    realm.copyToRealmOrUpdate(tags.values)
                     realm.copyToRealmOrUpdate(lessons)
                 }
 
