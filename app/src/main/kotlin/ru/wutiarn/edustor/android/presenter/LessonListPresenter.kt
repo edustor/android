@@ -11,15 +11,15 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
-import ru.wutiarn.edustor.android.view.LessonsListView
+import ru.wutiarn.edustor.android.view.LessonListView
 import rx.Subscription
 
-class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonsListView>,
+class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonListView>,
         DatePickerDialog.OnDateSetListener {
 
     var tagId: String = arguments.getString("tag_id")
 
-    var view: LessonsListView? = null
+    var view: LessonListView? = null
     var lessons: List<Lesson> = emptyList()
 
     var activeSubscription: Subscription? = null
@@ -31,7 +31,7 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
         activeSubscription?.unsubscribe()
     }
 
-    override fun attachView(p0: LessonsListView?) {
+    override fun attachView(p0: LessonListView?) {
         appComponent.eventBus.register(this)
         view = p0
     }

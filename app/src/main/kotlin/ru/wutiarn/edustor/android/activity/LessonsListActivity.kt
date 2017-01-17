@@ -11,12 +11,12 @@ import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.fragment.LessonsListFragment
+import ru.wutiarn.edustor.android.fragment.LessonListFragment
 import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 
 class LessonsListActivity : AppCompatActivity() {
     lateinit var appComponent: AppComponent
-    lateinit var fragment: LessonsListFragment
+    lateinit var fragment: LessonListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val application = applicationContext as EdustorApplication
@@ -29,7 +29,7 @@ class LessonsListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
-        fragment = LessonsListFragment()
+        fragment = LessonListFragment()
         fragment.arguments = intent.extras
         fragment.arguments.putBoolean("allowDatePick", true)
 

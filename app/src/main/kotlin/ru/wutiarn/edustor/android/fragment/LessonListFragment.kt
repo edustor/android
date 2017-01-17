@@ -25,10 +25,10 @@ import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.presenter.LessonListPresenter
 import ru.wutiarn.edustor.android.util.extension.makeSnack
-import ru.wutiarn.edustor.android.view.LessonsListView
+import ru.wutiarn.edustor.android.view.LessonListView
 
-class LessonsListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonsListView, LessonListPresenter>(),
-        LessonsListView, LessonsAdapter.LessonsAdapterEventsListener {
+class LessonListFragment : MvpLceFragment<LinearLayout, List<Lesson>, LessonListView, LessonListPresenter>(),
+        LessonListView, LessonsAdapter.LessonsAdapterEventsListener {
     lateinit var appComponent: AppComponent
     lateinit var lessonsAdapter: LessonsAdapter
     var switch: Switch? = null
