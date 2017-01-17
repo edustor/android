@@ -15,17 +15,17 @@ import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.activity.LessonsListActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.adapter.TagAdapter
+import ru.wutiarn.edustor.android.data.adapter.MainListAdapter
 import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.presenter.TagListPresenter
 import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.TagListView
 
-class TagListFragment : MvpLceFragment<LinearLayout, List<Tag>, TagListView, TagListPresenter>(),
-        TagListView, TagAdapter.TagAdapterEventsListener {
+class MainListFragment : MvpLceFragment<LinearLayout, List<Tag>, TagListView, TagListPresenter>(),
+        TagListView, MainListAdapter.TagAdapterEventsListener {
     lateinit var appComponent: AppComponent
-    lateinit var adapter: TagAdapter
+    lateinit var adapter: MainListAdapter
 
     var swipeRefreshLayout: SwipeRefreshLayout? = null
 
@@ -81,7 +81,7 @@ class TagListFragment : MvpLceFragment<LinearLayout, List<Tag>, TagListView, Tag
     }
 
     fun configureRecyclerView() {
-        adapter = TagAdapter(appComponent, this)
+        adapter = MainListAdapter(appComponent, this)
         base_recycler_view.layoutManager = LinearLayoutManager(context)
         base_recycler_view.adapter = adapter
     }

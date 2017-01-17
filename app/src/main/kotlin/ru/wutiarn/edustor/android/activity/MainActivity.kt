@@ -11,19 +11,19 @@ import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.fragment.TagListFragment
-import ru.wutiarn.edustor.android.presenter.TagListActivityPresenter
+import ru.wutiarn.edustor.android.fragment.MainListFragment
+import ru.wutiarn.edustor.android.presenter.MainListActivityPresenter
 import ru.wutiarn.edustor.android.util.extension.EdustorURIParser
 import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.util.extension.show
-import ru.wutiarn.edustor.android.view.TagListActivityView
+import ru.wutiarn.edustor.android.view.MainListActivityView
 
-class TagListActivity : MvpActivity<TagListActivityView, TagListActivityPresenter>(), TagListActivityView {
+class MainActivity : MvpActivity<MainListActivityView, MainListActivityPresenter>(), MainListActivityView {
     lateinit var appComponent: AppComponent
 
-    override fun createPresenter(): TagListActivityPresenter {
-        return TagListActivityPresenter()
+    override fun createPresenter(): MainListActivityPresenter {
+        return MainListActivityPresenter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class TagListActivity : MvpActivity<TagListActivityView, TagListActivityPresente
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
-        val fragment = TagListFragment()
+        val fragment = MainListFragment()
         fragment.arguments = intent.extras
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, fragment)

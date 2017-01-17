@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label">
         <activity
-            android:name=".activity.TagListActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -38,7 +38,7 @@
         <activity
             android:name=".activity.LessonDetailsActivity"
             android:label="Lesson details"
-            android:parentActivityName=".activity.TagListActivity">
+            android:parentActivityName=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -54,7 +54,7 @@
         <activity
             android:name=".activity.LessonsListActivity"
             android:label="Lessons"
-            android:parentActivityName=".activity.TagListActivity"/>
+            android:parentActivityName=".activity.MainActivity"/>
 
         <service
             android:name=".service.EdustorFirebaseMessagingService"

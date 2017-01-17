@@ -2,7 +2,7 @@ package ru.wutiarn.edustor.android.presenter
 
 import android.content.Context
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
-import ru.wutiarn.edustor.android.activity.TagListActivity
+import ru.wutiarn.edustor.android.activity.MainActivity
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.util.extension.startActivity
 import ru.wutiarn.edustor.android.view.InitScreenView
@@ -20,6 +20,6 @@ class InitSyncPresenter(val appComponent: AppComponent, val context: Context) : 
     }
 
     fun onSyncFinished() {
-        context.startActivity(TagListActivity::class.java, true)
+        context.startActivity(MainActivity::class.java, true)
     }
 }

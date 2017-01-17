@@ -9,7 +9,7 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Tag
 
-class TagAdapter(val appComponent: AppComponent, val listener: TagAdapterEventsListener) : RecyclerView.Adapter<TagAdapter.TagViewHolder>() {
+class MainListAdapter(val appComponent: AppComponent, val listener: TagAdapterEventsListener) : RecyclerView.Adapter<MainListAdapter.TagViewHolder>() {
     var tags: List<Tag> = listOf()
 
     init {
