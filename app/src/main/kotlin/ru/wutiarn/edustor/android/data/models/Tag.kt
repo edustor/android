@@ -6,7 +6,7 @@ import io.realm.annotations.RealmClass
 import java.util.*
 
 @RealmClass
-open class Tag() : RealmObject() {
+open class Tag() : RealmObject(), MainListEntity {
     @PrimaryKey open var id: String = UUID.randomUUID().toString()
     open lateinit var name: String
     open var parent: Tag? = null

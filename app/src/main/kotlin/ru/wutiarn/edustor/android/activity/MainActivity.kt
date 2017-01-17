@@ -2,7 +2,9 @@ package ru.wutiarn.edustor.android.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
+import android.widget.Switch
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpActivity
 import com.squareup.otto.Subscribe
@@ -21,6 +23,7 @@ import ru.wutiarn.edustor.android.view.MainListActivityView
 
 class MainActivity : MvpActivity<MainListActivityView, MainListActivityPresenter>(), MainListActivityView {
     lateinit var appComponent: AppComponent
+    lateinit var fragment: MainListFragment
 
     override fun createPresenter(): MainListActivityPresenter {
         return MainListActivityPresenter()
@@ -37,7 +40,7 @@ class MainActivity : MvpActivity<MainListActivityView, MainListActivityPresenter
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
-        val fragment = MainListFragment()
+        fragment = MainListFragment()
         fragment.arguments = intent.extras
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, fragment)
@@ -47,6 +50,13 @@ class MainActivity : MvpActivity<MainListActivityView, MainListActivityPresenter
         fab_scan_exists.setOnClickListener {
             presenter.requestQrScan(this)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_lessons, menu)
+        val switch = menu.findItem(R.id.menuSyncSwitchItem).actionView.findViewById(R.id.menuSyncSwitch) as Switch
+        fragment.syncSwitch = switch
+        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

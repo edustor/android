@@ -11,7 +11,7 @@ import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import java.util.*
 
 @RealmClass
-open class Lesson() : RealmObject() {
+open class Lesson() : RealmObject(), MainListEntity {
     open lateinit var tag: Tag
     @Ignore open var date: LocalDate = LocalDate.ofEpochDay(0)
         get() = LocalDate.ofEpochDay(realmDate)

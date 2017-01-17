@@ -1,29 +1,24 @@
 package ru.wutiarn.edustor.android.presenter
 
 import android.app.DatePickerDialog
-import android.os.Bundle
 import android.util.Log
 import android.widget.DatePicker
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import io.realm.Realm
 import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
-import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.MainListEntity
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
-import ru.wutiarn.edustor.android.view.LessonListView
+import ru.wutiarn.edustor.android.view.MainListView
 import rx.Subscription
 
-class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonListView>,
+class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?) : MvpPresenter<MainListView>,
         DatePickerDialog.OnDateSetListener {
-
-    var tagId: String = arguments.getString("tag_id")
-
-    var view: LessonListView? = null
-    var lessons: List<Lesson> = emptyList()
+    var view: MainListView? = null
+    var entities: List<MainListEntity>? = null
 
     var activeSubscription: Subscription? = null
-
 
     override fun detachView(p0: Boolean) {
         view = null
@@ -31,13 +26,26 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
         activeSubscription?.unsubscribe()
     }
 
-    override fun attachView(p0: LessonListView?) {
+    override fun attachView(p0: MainListView?) {
         appComponent.eventBus.register(this)
         view = p0
     }
 
+    fun loadData() {
+        activeSubscription?.unsubscribe()
+        activeSubscription = appComponent.repo.tag.byTagParentTagId(parentTagId)
+                // TODO: Combine with lessons
+                .map {
+                    it.map {
+                        @Suppress("USELESS_CAST")
+                        it as MainListEntity // Cast is required since view accepts exactly List<MainListEntity>
+                    }
+                }
+                .linkToLCEView(view, { entities = it })
+    }
+
     fun onSyncSwitchChanged(b: Boolean) {
-        val tagSyncStatus = appComponent.pdfSyncManager.getTagSyncStatus(tagId)
+        val tagSyncStatus = appComponent.pdfSyncManager.getTagSyncStatus(parentTagId!!)
 
         Realm.getDefaultInstance().use {
             it.executeTransaction {
@@ -47,16 +55,9 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
         appComponent.syncManager.requestSync(true, false)
     }
 
-    fun loadData() {
-        activeSubscription?.unsubscribe()
-        activeSubscription = appComponent.repo.lessons.byTagId(tagId)
-                .map { it.filter { it.pages.count() > 0 }.sortedByDescending { it.date } }
-                .linkToLCEView(view, { lessons = it })
-    }
-
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
-        appComponent.repo.lessons.byDate(tagId, date.toEpochDay())
+        appComponent.repo.lessons.byDate(parentTagId!!, date.toEpochDay())
                 .first()
                 .subscribe(
                         { view?.onLessonClick(it) },
@@ -64,6 +65,5 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
                             Log.w("LessonListPresenter", "Error in onDateSet", it)
                             appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
                         }
-                )
-    }
+                )    }
 }
