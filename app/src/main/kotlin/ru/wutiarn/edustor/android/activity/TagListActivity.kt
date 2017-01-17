@@ -38,6 +38,7 @@ class TagListActivity : MvpActivity<TagListActivityView, TagListActivityPresente
         setSupportActionBar(toolbar)
 
         val fragment = TagListFragment()
+        fragment.arguments = intent.extras
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, fragment)
                 .commit()

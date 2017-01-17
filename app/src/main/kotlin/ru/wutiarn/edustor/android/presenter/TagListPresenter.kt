@@ -7,7 +7,7 @@ import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.TagListView
 import rx.Subscription
 
-class TagListPresenter(val appComponent: AppComponent) : MvpPresenter<TagListView> {
+class TagListPresenter(val appComponent: AppComponent, val parentTagId: String?) : MvpPresenter<TagListView> {
 
     var view: TagListView? = null
     var tags: List<Tag>? = null
@@ -27,7 +27,7 @@ class TagListPresenter(val appComponent: AppComponent) : MvpPresenter<TagListVie
 
     fun loadData() {
         activeSubscription?.unsubscribe()
-        activeSubscription = appComponent.repo.tag.all
+        activeSubscription = appComponent.repo.tag.byTagParentTagId(parentTagId)
                 .linkToLCEView(view, { tags = it })
     }
 }

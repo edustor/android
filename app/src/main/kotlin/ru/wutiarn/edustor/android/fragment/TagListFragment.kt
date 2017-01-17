@@ -32,7 +32,10 @@ class TagListFragment : MvpLceFragment<LinearLayout, List<Tag>, TagListView, Tag
     override fun createPresenter(): TagListPresenter {
         val application = context.applicationContext as EdustorApplication
         appComponent = application.appComponent
-        return TagListPresenter(appComponent)
+
+        val parentTagId = arguments?.getString("parent_tag_id")
+
+        return TagListPresenter(appComponent, parentTagId)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

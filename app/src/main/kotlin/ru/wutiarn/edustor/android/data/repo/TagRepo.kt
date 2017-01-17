@@ -5,4 +5,5 @@ import rx.Observable
 
 interface TagRepo {
     val all: Observable<List<Tag>>
+    fun byTagParentTagId(parentTagId: String?): Observable<List<Tag>>
 }
