@@ -4,12 +4,12 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
-import ru.wutiarn.edustor.android.view.SubjectsListView
+import ru.wutiarn.edustor.android.view.TagListView
 import rx.Subscription
 
-class SubjectListPresenter(val appComponent: AppComponent) : MvpPresenter<SubjectsListView> {
+class TagListPresenter(val appComponent: AppComponent) : MvpPresenter<TagListView> {
 
-    var view: SubjectsListView? = null
+    var view: TagListView? = null
     var tags: List<Tag>? = null
 
     var activeSubscription: Subscription? = null
@@ -20,14 +20,14 @@ class SubjectListPresenter(val appComponent: AppComponent) : MvpPresenter<Subjec
         activeSubscription?.unsubscribe()
     }
 
-    override fun attachView(p0: SubjectsListView?) {
+    override fun attachView(p0: TagListView?) {
         appComponent.eventBus.register(this)
         view = p0
     }
 
     fun loadData() {
         activeSubscription?.unsubscribe()
-        activeSubscription = appComponent.repo.subjects.all
+        activeSubscription = appComponent.repo.tag.all
                 .linkToLCEView(view, { tags = it })
     }
 }

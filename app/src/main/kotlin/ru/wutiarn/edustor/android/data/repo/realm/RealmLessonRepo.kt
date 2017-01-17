@@ -18,9 +18,9 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .filter { it.isLoaded }
     }
 
-    override fun byDate(subject: String, epochDay: Long): Observable<Lesson> {
+    override fun byDate(tag: String, epochDay: Long): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
-                .equalTo("tag.id", subject)
+                .equalTo("tag.id", tag)
                 .equalTo("realmDate", epochDay)
                 .findAllAsync()
                 .asObservable()
@@ -31,7 +31,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                     } else {
                         Realm.getDefaultInstance().use {
                             it.where(Tag::class.java)
-                                    .equalTo("id", subject)
+                                    .equalTo("id", tag)
                                     .findFirstAsync()
                                     .asObservable<Tag>()
                                     .filter { it.isLoaded }
@@ -44,7 +44,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                                         val syncTask = SyncTask("lessons/create", mapOf(
                                                 "id" to lesson.id,
                                                 "date" to lesson.date.toEpochDay(),
-                                                "tag" to subject
+                                                "tag" to tag
                                         ))
                                         syncTasksManager.addTask(syncTask)
 
@@ -67,9 +67,9 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .copyFromRealm()
     }
 
-    override fun bySubjectId(subject_id: String): Observable<List<Lesson>> {
+    override fun byTagId(tagId: String): Observable<List<Lesson>> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
-                .equalTo("tag.id", subject_id)
+                .equalTo("tag.id", tagId)
                 .findAllAsync()
                 .asObservable()
                 .filter { it.isLoaded }

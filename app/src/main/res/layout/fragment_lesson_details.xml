@@ -49,11 +49,11 @@
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Subject"
+                        android:text="Tag"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     <TextView
-                        android:id="@+id/subject"
+                        android:id="@+id/tag_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"

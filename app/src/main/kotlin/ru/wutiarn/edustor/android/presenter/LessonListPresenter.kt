@@ -17,7 +17,7 @@ import rx.Subscription
 class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : MvpPresenter<LessonsListView>,
         DatePickerDialog.OnDateSetListener {
 
-    var subjectId: String = arguments.getString("subject_id")
+    var tagId: String = arguments.getString("tag_id")
 
     var view: LessonsListView? = null
     var lessons: List<Lesson> = emptyList()
@@ -37,11 +37,11 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
     }
 
     fun onSyncSwitchChanged(b: Boolean) {
-        val subjectSyncStatus = appComponent.pdfSyncManager.getSubjectSyncStatus(subjectId)
+        val tagSyncStatus = appComponent.pdfSyncManager.getTagSyncStatus(tagId)
 
         Realm.getDefaultInstance().use {
             it.executeTransaction {
-                subjectSyncStatus.markedForSync = b
+                tagSyncStatus.markedForSync = b
             }
         }
         appComponent.syncManager.requestSync(true, false)
@@ -49,14 +49,14 @@ class LessonListPresenter(val appComponent: AppComponent, arguments: Bundle) : M
 
     fun loadData() {
         activeSubscription?.unsubscribe()
-        activeSubscription = appComponent.repo.lessons.bySubjectId(subjectId)
+        activeSubscription = appComponent.repo.lessons.byTagId(tagId)
                 .map { it.filter { it.pages.count() > 0 }.sortedByDescending { it.date } }
                 .linkToLCEView(view, { lessons = it })
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
-        appComponent.repo.lessons.byDate(subjectId, date.toEpochDay())
+        appComponent.repo.lessons.byDate(tagId, date.toEpochDay())
                 .first()
                 .subscribe(
                         { view?.onLessonClick(it) },

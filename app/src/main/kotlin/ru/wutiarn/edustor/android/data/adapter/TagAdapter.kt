@@ -9,18 +9,18 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Tag
 
-class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdapterEventsListener) : RecyclerView.Adapter<SubjectsAdapter.SubjectViewHolder>() {
+class TagAdapter(val appComponent: AppComponent, val listener: TagAdapterEventsListener) : RecyclerView.Adapter<TagAdapter.TagViewHolder>() {
     var tags: List<Tag> = listOf()
 
     init {
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder? {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.subject_recycler_item, parent, false)
+                .inflate(R.layout.tag_recycler_item, parent, false)
 
-        return SubjectViewHolder(view)
+        return TagViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -31,22 +31,22 @@ class SubjectsAdapter(val appComponent: AppComponent, val listener: SubjectsAdap
         return tags[position].hashCode().toLong()
     }
 
-    override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
-        val subject = tags[position]
+    override fun onBindViewHolder(holder: TagViewHolder, position: Int) {
+        val tag = tags[position]
 
-        holder.name.text = subject.name
+        holder.name.text = tag.name
 
         holder.view.setOnClickListener {
-            listener.onSubjectClick(subject)
+            listener.onTagClick(tag)
         }
     }
 
-    class SubjectViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class TagViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById(R.id.name) as TextView
     }
 
-    interface SubjectsAdapterEventsListener {
-        fun onSubjectClick(tag: Tag)
+    interface TagAdapterEventsListener {
+        fun onTagClick(tag: Tag)
     }
 
 }

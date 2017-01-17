@@ -11,19 +11,19 @@ import ru.wutiarn.edustor.android.EdustorApplication
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.fragment.SubjectsListFragment
-import ru.wutiarn.edustor.android.presenter.SubjectListActivityPresenter
+import ru.wutiarn.edustor.android.fragment.TagListFragment
+import ru.wutiarn.edustor.android.presenter.TagListActivityPresenter
 import ru.wutiarn.edustor.android.util.extension.EdustorURIParser
 import ru.wutiarn.edustor.android.util.extension.assertActivityCanStart
 import ru.wutiarn.edustor.android.util.extension.makeToast
 import ru.wutiarn.edustor.android.util.extension.show
-import ru.wutiarn.edustor.android.view.SubjectsListActivityView
+import ru.wutiarn.edustor.android.view.TagListActivityView
 
-class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListActivityPresenter>(), SubjectsListActivityView {
+class TagListActivity : MvpActivity<TagListActivityView, TagListActivityPresenter>(), TagListActivityView {
     lateinit var appComponent: AppComponent
 
-    override fun createPresenter(): SubjectListActivityPresenter {
-        return SubjectListActivityPresenter()
+    override fun createPresenter(): TagListActivityPresenter {
+        return TagListActivityPresenter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class SubjectsListActivity : MvpActivity<SubjectsListActivityView, SubjectListAc
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
-        val fragment = SubjectsListFragment()
+        val fragment = TagListFragment()
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, fragment)
                 .commit()

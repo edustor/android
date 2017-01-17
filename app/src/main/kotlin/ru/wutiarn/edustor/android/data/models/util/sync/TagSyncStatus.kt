@@ -4,11 +4,12 @@ import io.realm.RealmObject
 import io.realm.annotations.RealmClass
 
 @RealmClass
-open class SubjectSyncStatus() : RealmObject() {
-    open lateinit var subjectId: String
+open class TagSyncStatus() : RealmObject() {
+    open lateinit var tagId: String
     open var markedForSync: Boolean = false
 
-    constructor(subjectId: String) : this() {
-        this.subjectId = subjectId
+    @Suppress("LeakingThis")
+    constructor(tagId: String) : this() {
+        this.tagId = tagId
     }
 }

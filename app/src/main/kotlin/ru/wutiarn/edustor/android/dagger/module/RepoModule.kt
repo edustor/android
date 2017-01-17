@@ -6,17 +6,17 @@ import ru.wutiarn.edustor.android.dagger.annotation.AppScope
 import ru.wutiarn.edustor.android.data.local.SyncManager
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.data.repo.PageRepo
-import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
+import ru.wutiarn.edustor.android.data.repo.TagRepo
 import ru.wutiarn.edustor.android.data.repo.realm.RealmLessonRepo
 import ru.wutiarn.edustor.android.data.repo.realm.RealmPageRepo
-import ru.wutiarn.edustor.android.data.repo.realm.RealmSubjectRepo
+import ru.wutiarn.edustor.android.data.repo.realm.RealmTagRepo
 
 @Module
 class RepoModule {
     @Provides
     @AppScope
-    fun subjectsRepo(): SubjectsRepo {
-        return RealmSubjectRepo()
+    fun tagRepo(): TagRepo {
+        return RealmTagRepo()
     }
 
     @Provides

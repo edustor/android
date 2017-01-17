@@ -3,13 +3,13 @@ package ru.wutiarn.edustor.android.presenter
 import android.app.Activity
 import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
-import ru.wutiarn.edustor.android.view.SubjectsListActivityView
+import ru.wutiarn.edustor.android.view.TagListActivityView
 
-class SubjectListActivityPresenter : MvpPresenter<SubjectsListActivityView> {
-    var view: SubjectsListActivityView? = null
+class TagListActivityPresenter : MvpPresenter<TagListActivityView> {
+    var view: TagListActivityView? = null
 
 
-    override fun attachView(view: SubjectsListActivityView) {
+    override fun attachView(view: TagListActivityView) {
         this.view = view
     }
 

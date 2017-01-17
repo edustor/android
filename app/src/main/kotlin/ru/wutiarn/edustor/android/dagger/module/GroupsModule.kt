@@ -9,7 +9,7 @@ import ru.wutiarn.edustor.android.data.api.AccountsApi
 import ru.wutiarn.edustor.android.data.api.SyncApi
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.data.repo.PageRepo
-import ru.wutiarn.edustor.android.data.repo.SubjectsRepo
+import ru.wutiarn.edustor.android.data.repo.TagRepo
 
 @Module
 class GroupsModule {
@@ -24,7 +24,7 @@ class GroupsModule {
     @AppScope
     fun repoGroup(pageRepo: PageRepo,
                   lessonsRepo: LessonsRepo,
-                  subjectsRepo: SubjectsRepo): RepoGroup {
-        return RepoGroup(pageRepo, lessonsRepo, subjectsRepo)
+                  tagRepo: TagRepo): RepoGroup {
+        return RepoGroup(pageRepo, lessonsRepo, tagRepo)
     }
 }

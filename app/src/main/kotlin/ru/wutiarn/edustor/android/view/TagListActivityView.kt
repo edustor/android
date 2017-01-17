@@ -2,6 +2,6 @@ package ru.wutiarn.edustor.android.view
 
 import com.hannesdorfmann.mosby.mvp.MvpView
 
-interface SubjectsListActivityView : MvpView {
+interface TagListActivityView : MvpView {
     fun onPageQRCodeScanned(result: String)
 }

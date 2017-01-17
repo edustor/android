@@ -4,7 +4,7 @@ import android.content.Context
 import io.realm.Realm
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
-import ru.wutiarn.edustor.android.data.models.util.sync.SubjectSyncStatus
+import ru.wutiarn.edustor.android.data.models.util.sync.TagSyncStatus
 import rx.Observable
 
 class PdfSyncManager(val context: Context) {
@@ -12,7 +12,7 @@ class PdfSyncManager(val context: Context) {
     fun getSyncStatus(lesson: Lesson, executeSynchronously: Boolean = false): Observable<PdfSyncStatus> {
         return Realm.getDefaultInstance().use { realm ->
             val query = realm.where(PdfSyncStatus::class.java)
-                    .equalTo("subjectId", lesson.tag.id)
+                    .equalTo("tagId", lesson.tag.id)
                     .equalTo("realmDate", lesson.realmDate)
 
             if (executeSynchronously) {
@@ -30,11 +30,11 @@ class PdfSyncManager(val context: Context) {
         }
     }
 
-    fun getSubjectSyncStatus(subjectId: String): SubjectSyncStatus {
+    fun getTagSyncStatus(tagId: String): TagSyncStatus {
         Realm.getDefaultInstance().use { realm ->
-            return realm.where(SubjectSyncStatus::class.java)
-                    .equalTo("subjectId", subjectId)
-                    .findFirst() ?: createSubjectSyncStatus(subjectId)
+            return realm.where(TagSyncStatus::class.java)
+                    .equalTo("tagId", tagId)
+                    .findFirst() ?: createTagSyncStatus(tagId)
         }
     }
 
@@ -49,8 +49,8 @@ class PdfSyncManager(val context: Context) {
         return pdfSyncStatus
     }
 
-    private fun createSubjectSyncStatus(subjectId: String): SubjectSyncStatus {
-        var pdfSyncStatus = SubjectSyncStatus(subjectId)
+    private fun createTagSyncStatus(tagId: String): TagSyncStatus {
+        var pdfSyncStatus = TagSyncStatus(tagId)
         Realm.getDefaultInstance().use {
             it.executeTransaction {
                 pdfSyncStatus = it.copyToRealm(pdfSyncStatus)

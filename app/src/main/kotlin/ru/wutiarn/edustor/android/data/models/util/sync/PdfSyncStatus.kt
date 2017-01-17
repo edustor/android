@@ -16,7 +16,7 @@ open class PdfSyncStatus() : RealmObject() {
 
     @Ignore private val CACHE_DAYS = 7
 
-    open lateinit var subjectId: String
+    open lateinit var tagId: String
     open var realmDate: Long = 0
         set(value) {
             field = value
@@ -31,14 +31,15 @@ open class PdfSyncStatus() : RealmObject() {
     open var realmValidUntil: Long? = null
         get() = if (markedForSync) null else field
 
-    constructor(subjectId: String, realmDate: Long) : this() {
-        this.subjectId = subjectId
+    @Suppress("LeakingThis")
+    constructor(tagId: String, realmDate: Long) : this() {
+        this.tagId = tagId
         this.realmDate = realmDate
     }
 
     fun shouldBeSynced(pdfSyncManager: PdfSyncManager): Boolean {
         return markedForSync || (realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay())
-                || pdfSyncManager.getSubjectSyncStatus(subjectId).markedForSync
+                || pdfSyncManager.getTagSyncStatus(tagId).markedForSync
     }
 
     fun setShouldBeSynced(value: Boolean) {
