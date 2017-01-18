@@ -11,14 +11,20 @@ import ru.wutiarn.edustor.android.data.models.MainListEntity
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.MainListView
-import rx.Subscription
+import rx.Observable
+import rx.subscriptions.CompositeSubscription
 
 class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?) : MvpPresenter<MainListView>,
         DatePickerDialog.OnDateSetListener {
     var view: MainListView? = null
-    var entities: List<MainListEntity>? = null
 
-    var activeSubscription: Subscription? = null
+    var activeSubscription: CompositeSubscription? = null
+    private val entityCache: MutableMap<EntityType, List<MainListEntity>> = mutableMapOf()
+
+    private enum class EntityType {
+        TAGS,
+        LESSONS
+    }
 
     override fun detachView(p0: Boolean) {
         view = null
@@ -33,15 +39,28 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
 
     fun loadData() {
         activeSubscription?.unsubscribe()
-        activeSubscription = appComponent.repo.tag.byTagParentTagId(parentTagId)
-                // TODO: Combine with lessons
-                .map {
-                    it.map {
-                        @Suppress("USELESS_CAST")
-                        it as MainListEntity // Cast is required since view accepts exactly List<MainListEntity>
-                    }
+        activeSubscription = CompositeSubscription()
+        entityCache.clear()
+
+        EntityType.values().forEach { entityType ->
+            @Suppress("UNCHECKED_CAST")
+            val observable: Observable<List<MainListEntity>> = when (entityType) {
+                EntityType.TAGS -> appComponent.repo.tag.byTagParentTagId(parentTagId) as Observable<List<MainListEntity>>
+                EntityType.LESSONS -> {
+                    parentTagId ?: return@forEach
+                    appComponent.repo.lessons.byTagId(parentTagId) as Observable<List<MainListEntity>>
                 }
-                .linkToLCEView(view, { entities = it })
+                else -> throw IllegalStateException("Unsupported entity type") // (Almost) impossible :)
+            }
+
+            val subscription = observable
+                    .map {
+                        entityCache[entityType] = it
+                        entityCache.values.flatMap { it }
+                    }
+                    .linkToLCEView(view)
+            activeSubscription!!.add(subscription)
+        }
     }
 
     fun onSyncSwitchChanged(b: Boolean) {
@@ -65,5 +84,6 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
                             Log.w("LessonListPresenter", "Error in onDateSet", it)
                             appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
                         }
-                )    }
+                )
+    }
 }
