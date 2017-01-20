@@ -7,7 +7,9 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import io.realm.Realm
 import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
+import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.MainListEntity
+import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
 import ru.wutiarn.edustor.android.util.extension.linkToLCEView
 import ru.wutiarn.edustor.android.view.MainListView
@@ -45,10 +47,13 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
         EntityType.values().forEach { entityType ->
             @Suppress("UNCHECKED_CAST")
             val observable: Observable<List<MainListEntity>> = when (entityType) {
-                EntityType.TAGS -> appComponent.repo.tag.byTagParentTagId(parentTagId) as Observable<List<MainListEntity>>
+                EntityType.TAGS -> appComponent.repo.tag.byTagParentTagId(parentTagId).map { it.sortedBy(Tag::name) } as Observable<List<MainListEntity>>
                 EntityType.LESSONS -> {
                     parentTagId ?: return@forEach
-                    appComponent.repo.lessons.byTagId(parentTagId) as Observable<List<MainListEntity>>
+                    appComponent.repo.lessons.byTagId(parentTagId)
+                            .map {
+                                it.filter { it.pages.size > 0 }.sortedByDescending(Lesson::date)
+                            } as Observable<List<MainListEntity>>
                 }
                 else -> throw IllegalStateException("Unsupported entity type") // (Almost) impossible :)
             }
@@ -56,7 +61,10 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
             val subscription = observable
                     .map {
                         entityCache[entityType] = it
-                        entityCache.values.flatMap { it }
+
+                        EntityType.values()
+                                .filter { it in entityCache }
+                                .flatMap { entityCache[it] ?: emptyList() }
                     }
                     .linkToLCEView(view)
             activeSubscription!!.add(subscription)
