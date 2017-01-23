@@ -33,7 +33,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         setContentView(R.layout.activity_base)
         setSupportActionBar(toolbar)
 
-        fab_scan_exists.visibility = View.GONE
+        fab_scan_existed.visibility = View.GONE
 
         lessonDetailsFragment = LessonDetailsFragment()
 

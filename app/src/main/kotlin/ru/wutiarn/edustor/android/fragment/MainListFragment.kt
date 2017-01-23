@@ -58,8 +58,6 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
             appComponent.syncManager.requestSync(true, false)
         }
 
-        configureCalendarFab() // TODO: Execute only when parentId != null
-
         return view
     }
 
@@ -77,6 +75,7 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        configureFabs()
         configureRecyclerView()
         loadData(false)
     }
@@ -103,21 +102,33 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
     }
 
     private fun configureSyncSwitch() {
-        presenter.parentTagId?.let {
+        if (presenter.parentTagId != null) {
             syncSwitch?.isEnabled = true
             syncSwitch?.isChecked = appComponent.pdfSyncManager.getTagSyncStatus(presenter.parentTagId!!).markedForSync
             syncSwitch?.setOnCheckedChangeListener { button, b -> presenter.onSyncSwitchChanged(b) }
         }
+        else {
+            syncSwitch?.visibility = View.GONE
+        }
     }
 
-    fun configureCalendarFab() {
+    fun configureFabs() {
         val calendarFab = activity.fab_calendar
-        calendarFab.visibility = View.VISIBLE
+        val scanExistedButton = activity.fab_scan_existed
 
-        calendarFab.setOnClickListener {
-            val now = LocalDateTime.now()
-            val dialog = DatePickerDialog(context, presenter, now.year, now.monthValue - 1, now.dayOfMonth)
-            dialog.show()
+        if (presenter.parentTagId != null) {
+            calendarFab.visibility = View.VISIBLE
+            scanExistedButton.visibility = View.GONE
+
+            calendarFab.setOnClickListener {
+                val now = LocalDateTime.now()
+                val dialog = DatePickerDialog(context, presenter, now.year, now.monthValue - 1, now.dayOfMonth)
+                dialog.show()
+            }
+        }
+        else {
+            scanExistedButton.visibility = View.VISIBLE
+            calendarFab.visibility = View.GONE
         }
     }
 

@@ -46,8 +46,8 @@ class MainActivity : MvpActivity<MainListActivityView, MainListActivityPresenter
                 .add(R.id.main_container, fragment)
                 .commit()
 
-        fab_scan_exists.visibility = View.VISIBLE
-        fab_scan_exists.setOnClickListener {
+        fab_scan_existed.visibility = View.VISIBLE
+        fab_scan_existed.setOnClickListener {
             presenter.requestQrScan(this)
         }
     }

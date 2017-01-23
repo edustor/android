@@ -46,7 +46,7 @@
         android:orientation="vertical">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_scan_exists"
+            android:id="@+id/fab_scan_existed"
             style="@style/floatingActionButtonStyle"
             android:src="@drawable/ic_search_white_24dp" />
 
