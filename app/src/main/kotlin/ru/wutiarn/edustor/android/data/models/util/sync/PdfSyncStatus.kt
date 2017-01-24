@@ -7,43 +7,32 @@ import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import io.realm.annotations.RealmClass
 import org.threeten.bp.LocalDate
-import ru.wutiarn.edustor.android.data.local.PdfSyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.util.extension.getCacheFile
 
 @RealmClass
 open class PdfSyncStatus() : RealmObject() {
 
+//    TODO: Use lesson id
+
     @Ignore private val CACHE_DAYS = 7
 
-    open lateinit var tagId: String
-    open var realmDate: Long = 0
-        set(value) {
-            field = value
-            realmValidUntil = value + CACHE_DAYS
-        }
-    open var markedForSync = false  // By user on LessonDetails
-        set(value) {
-            field = value
-            realmValidUntil = if (value) null else realmDate + CACHE_DAYS
-        }
-    open var pageMD5 = RealmList<PageMD5>()
-    open var realmValidUntil: Long? = null
+    open lateinit var lessonId: String
+    open var markedForSync = false
+
+    open var syncedUntil: Long? = null
         get() = if (markedForSync) null else field
 
-    @Suppress("LeakingThis")
-    constructor(tagId: String, realmDate: Long) : this() {
-        this.tagId = tagId
-        this.realmDate = realmDate
-    }
+    open var pageMD5 = RealmList<PageMD5>()
 
-    fun shouldBeSynced(pdfSyncManager: PdfSyncManager): Boolean {
-        return markedForSync || (realmValidUntil != null && realmValidUntil!! >= LocalDate.now().toEpochDay())
-                || pdfSyncManager.getTagSyncStatus(tagId).markedForSync
+
+    @Suppress("LeakingThis")
+    constructor(lessonId: String) : this() {
+        this.lessonId = lessonId
     }
 
     fun setShouldBeSynced(value: Boolean) {
-        realmValidUntil = if (value) LocalDate.now().toEpochDay() + CACHE_DAYS else null
+        syncedUntil = if (value) LocalDate.now().toEpochDay() + CACHE_DAYS else null
     }
 
     fun getStatus(lesson: Lesson, context: Context): SyncStatus {
@@ -72,9 +61,9 @@ open class PdfSyncStatus() : RealmObject() {
         return lesson.pages.filter { it.fileMD5 != null }.map { it.fileMD5!! }
     }
 
-    enum class SyncStatus(val status: Int) {
-        SYNCED(0),
-        MISSING(1),
-        OBSOLETE(2)
+    enum class SyncStatus {
+        SYNCED,
+        MISSING,
+        OBSOLETE
     }
 }

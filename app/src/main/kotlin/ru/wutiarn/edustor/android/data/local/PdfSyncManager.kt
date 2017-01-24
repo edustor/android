@@ -12,8 +12,7 @@ class PdfSyncManager(val context: Context) {
     fun getSyncStatus(lesson: Lesson, executeSynchronously: Boolean = false): Observable<PdfSyncStatus> {
         return Realm.getDefaultInstance().use { realm ->
             val query = realm.where(PdfSyncStatus::class.java)
-                    .equalTo("tagId", lesson.tag.id)
-                    .equalTo("realmDate", lesson.realmDate)
+                    .equalTo("lessonId", lesson.id)
 
             if (executeSynchronously) {
                 val syncStatus = query.findFirst() ?: createSyncStatus(lesson)
@@ -39,7 +38,7 @@ class PdfSyncManager(val context: Context) {
     }
 
     private fun createSyncStatus(lesson: Lesson): PdfSyncStatus {
-        var pdfSyncStatus = PdfSyncStatus(lesson.tag.id, lesson.realmDate)
+        var pdfSyncStatus = PdfSyncStatus(lesson.id)
         Realm.getDefaultInstance().use {
             it.executeTransaction {
                 pdfSyncStatus = it.copyToRealm(pdfSyncStatus)

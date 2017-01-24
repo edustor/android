@@ -13,6 +13,7 @@ import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Page
+import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.util.ProgressResponseBody
@@ -56,14 +57,20 @@ class PdfSyncImpl(val context: Context,
                 .first()
                 .sortedByDescending { it.realmDate }
 
-        val syncable = lessons
-                .filter { it.syncStatus!!.shouldBeSynced(appComponent.pdfSyncManager) }
+        val markedLessons = lessons
+                .filter { it.syncStatus!!.markedForSync }
                 .filter { it.pages.filter(Page::isUploaded).count() > 0 }
 
-        val otherLessons = lessons.minus(syncable)
+        val markedTags = Realm.getDefaultInstance().where(Tag::class.java)
+                .findAll()
+                .toObservable()
+
+//        TODO: Marked tags sync
+
+        val otherLessons = lessons.minus(markedLessons)
 
         removePdfs(otherLessons)
-        val toSync = syncable.filter { it.syncStatus!!.getStatus(it, context) != PdfSyncStatus.SyncStatus.SYNCED }
+        val toSync = markedLessons.filter { it.syncStatus!!.getStatus(it, context) != PdfSyncStatus.SyncStatus.SYNCED }
         val toSyncCount = toSync.size
 
         val filesPercentSum = toSyncCount * 100
