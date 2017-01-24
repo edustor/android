@@ -56,8 +56,8 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
                 PdfSyncStatus.SyncStatus.MISSING -> "Not synced"
                 else -> "State in unknown"
             }
-            expDate.text = if (it.syncedUntil != null)
-                LocalDate.ofEpochDay(it.syncedUntil!!).toString() else "None"
+            expDate.text = if (it.syncedUntilEpochDay != null)
+                LocalDate.ofEpochDay(it.syncedUntilEpochDay!!).toString() else "None"
         }
 
         pagesAdapter.lesson = lesson

@@ -9,6 +9,7 @@ import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
@@ -58,7 +59,7 @@ class PdfSyncImpl(val context: Context,
                 .sortedByDescending { it.realmDate }
 
         val markedLessons = lessons
-                .filter { it.syncStatus!!.markedForSync }
+                .filter { it.syncStatus!!.shouldBeSynced }
                 .filter { it.pages.filter(Page::isUploaded).count() > 0 }
 
         val markedTags = Realm.getDefaultInstance().where(Tag::class.java)

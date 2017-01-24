@@ -10,6 +10,7 @@ import android.util.Log
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import com.squareup.otto.Subscribe
 import io.realm.Realm
+import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
@@ -72,7 +73,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     fun onGetPdfClicked() {
         Realm.getDefaultInstance().use {
             it.executeTransaction {
-                lesson?.syncStatus!!.setShouldBeSynced(true)  // Update realmValidUntil even if page is already synced
+                lesson?.syncStatus!!.setSyncedUntil(LocalDate.now().plusDays(7))  // Update realmValidUntil even if page is already synced
             }
         }
         if (lesson!!.syncStatus!!.getStatus(lesson!!, appComponent.context) == PdfSyncStatus.SyncStatus.SYNCED) {

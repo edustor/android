@@ -13,14 +13,14 @@ import ru.wutiarn.edustor.android.util.extension.getCacheFile
 @RealmClass
 open class PdfSyncStatus() : RealmObject() {
 
-//    TODO: Use lesson id
-
-    @Ignore private val CACHE_DAYS = 7
-
     open lateinit var lessonId: String
     open var markedForSync = false
+        set(value) {
+            field = value
+            syncedUntilEpochDay = null
+        }
 
-    open var syncedUntil: Long? = null
+    open var syncedUntilEpochDay: Long? = null
         get() = if (markedForSync) null else field
 
     open var pageMD5 = RealmList<PageMD5>()
@@ -31,8 +31,22 @@ open class PdfSyncStatus() : RealmObject() {
         this.lessonId = lessonId
     }
 
-    fun setShouldBeSynced(value: Boolean) {
-        syncedUntil = if (value) LocalDate.now().toEpochDay() + CACHE_DAYS else null
+    val shouldBeSynced: Boolean
+        get() {
+            if (markedForSync) {
+                return true
+            }
+
+            syncedUntilEpochDay?.let {
+                return syncedUntilEpochDay!! >= LocalDate.now().toEpochDay()
+            }
+
+            return false
+        }
+
+    fun setSyncedUntil(date: LocalDate?) {
+        if (markedForSync) return
+        syncedUntilEpochDay = date?.toEpochDay()
     }
 
     fun getStatus(lesson: Lesson, context: Context): SyncStatus {
