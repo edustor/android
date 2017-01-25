@@ -9,7 +9,6 @@ import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.R
 import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.models.Lesson
@@ -18,12 +17,10 @@ import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.util.ProgressResponseBody
-import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import ru.wutiarn.edustor.android.util.extension.getCacheFile
+import ru.wutiarn.edustor.android.util.extension.getParents
 import ru.wutiarn.edustor.android.util.extension.getPdfUrl
-import ru.wutiarn.edustor.android.util.extension.setUpSyncStateAsync
 import rx.Observable
-import rx.lang.kotlin.toObservable
 
 class PdfSyncImpl(val context: Context,
                   val appComponent: AppComponent,
@@ -60,20 +57,31 @@ class PdfSyncImpl(val context: Context,
                 .toList()
                 .sortedByDescending { it.realmDate }
 
-        val markedLessons = lessons
-                .filter { it.syncStatus!!.shouldBeSynced }
-                .filter { it.pages.filter(Page::isUploaded).count() > 0 }
-
-        val markedTags = Realm.getDefaultInstance().where(Tag::class.java)
+        val tags = Realm.getDefaultInstance().where(Tag::class.java)
                 .findAll()
-                .toObservable()
+                .map { tag ->
+                    val tagSyncStatus = appComponent.pdfSyncManager.getTagSyncStatus(tag.id)
+                    tag.syncStatus = tagSyncStatus
+                    return@map tag
+                }
+                .associateBy(Tag::id)
+
+        val tagsIdToSync = tags.values
+                .filter { it.syncStatus!!.markedForSync }
+                .flatMap { arrayOf(it, *it.getParents()).asIterable()}
+                .map(Tag::id)
+                .toHashSet()
+
+        val lessonsToSync = lessons
+                .filter { it.syncStatus!!.shouldBeSynced || tagsIdToSync.contains(it.tag.id) }
+                .filter { it.pages.filter(Page::isUploaded).count() > 0 }
 
 //        TODO: Marked tags sync
 
-        val otherLessons = lessons.minus(markedLessons)
+        val otherLessons = lessons.minus(lessonsToSync)
 
         removePdfs(otherLessons)
-        val toSync = markedLessons.filter { it.syncStatus!!.getStatus(it, context) != PdfSyncStatus.SyncStatus.SYNCED }
+        val toSync = lessonsToSync.filter { it.syncStatus!!.getStatus(it, context) != PdfSyncStatus.SyncStatus.SYNCED }
         val toSyncCount = toSync.size
 
         val filesPercentSum = toSyncCount * 100

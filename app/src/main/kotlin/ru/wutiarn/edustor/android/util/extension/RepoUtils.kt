@@ -5,6 +5,7 @@ import io.realm.Realm
 import io.realm.RealmObject
 import ru.wutiarn.edustor.android.data.local.PdfSyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
+import ru.wutiarn.edustor.android.data.models.Tag
 import rx.Observable
 import java.io.File
 
@@ -23,6 +24,14 @@ fun Lesson.getPdfUrl(baseUrl: String): String {
 fun Lesson.getCacheFile(context: Context): File {
     val file = File(context.externalCacheDir, "pdf/${this.id}.pdf")
     return file
+}
+
+fun Tag.getParents(): Array<Tag> {
+    if (this.parent != null) {
+        return arrayOf(this.parent!!, *this.parent!!.getParents())
+    } else {
+        return emptyArray()
+    }
 }
 
 fun <T : RealmObject> Observable<T>.copyFromRealm(): Observable<T> {
