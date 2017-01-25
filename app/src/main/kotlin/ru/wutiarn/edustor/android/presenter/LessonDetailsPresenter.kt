@@ -66,7 +66,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
         activeSubscription?.unsubscribe()
 
         activeSubscription = appComponent.repo.lessons.byId(lessonId)
-                .setUpSyncState(appComponent.pdfSyncManager)
+                .setUpSyncStateAsync(appComponent.pdfSyncManager)
                 .linkToLCEView(view, { lesson = it })
     }
 

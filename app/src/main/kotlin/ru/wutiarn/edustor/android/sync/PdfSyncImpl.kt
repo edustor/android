@@ -18,9 +18,10 @@ import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.util.ProgressResponseBody
+import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import ru.wutiarn.edustor.android.util.extension.getCacheFile
 import ru.wutiarn.edustor.android.util.extension.getPdfUrl
-import ru.wutiarn.edustor.android.util.extension.setUpSyncState
+import ru.wutiarn.edustor.android.util.extension.setUpSyncStateAsync
 import rx.Observable
 import rx.lang.kotlin.toObservable
 
@@ -51,11 +52,12 @@ class PdfSyncImpl(val context: Context,
 
         val lessons = Realm.getDefaultInstance().where(Lesson::class.java)
                 .findAll()
-                .toObservable()
-                .setUpSyncState(appComponent.pdfSyncManager, true)
+                .map { lesson ->
+                    val syncStatus = appComponent.pdfSyncManager.getSyncStatus(lesson.id)
+                    lesson.syncStatus = syncStatus
+                    return@map lesson
+                }
                 .toList()
-                .toBlocking()
-                .first()
                 .sortedByDescending { it.realmDate }
 
         val markedLessons = lessons

@@ -2,30 +2,31 @@ package ru.wutiarn.edustor.android.data.local
 
 import android.content.Context
 import io.realm.Realm
-import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.data.models.util.sync.TagSyncStatus
 import rx.Observable
 
 class PdfSyncManager(val context: Context) {
 
-    fun getSyncStatus(lesson: Lesson, executeSynchronously: Boolean = false): Observable<PdfSyncStatus> {
-        return Realm.getDefaultInstance().use { realm ->
-            val query = realm.where(PdfSyncStatus::class.java)
-                    .equalTo("lessonId", lesson.id)
+    fun getSyncStatus(lessonId: String): PdfSyncStatus {
+        Realm.getDefaultInstance().use { realm ->
+            return realm.where(PdfSyncStatus::class.java)
+                    .equalTo("lessonId", lessonId)
+                    .findFirst() ?: createSyncStatus(lessonId)
+        }
+    }
 
-            if (executeSynchronously) {
-                val syncStatus = query.findFirst() ?: createSyncStatus(lesson)
-                return Observable.just(syncStatus)
-            } else {
-                return query.findFirstAsync()
-                        .asObservable<PdfSyncStatus>()
-                        .filter { it.isLoaded }
-                        .flatMap {
-                            if (it != null && it.isValid) return@flatMap Observable.just(it)
-                            return@flatMap Observable.just(createSyncStatus(lesson))
-                        }
-            }
+    fun getSyncStatusAsync(lessonId: String): Observable<PdfSyncStatus> {
+        Realm.getDefaultInstance().use { realm ->
+            return realm.where(PdfSyncStatus::class.java)
+                    .equalTo("lessonId", lessonId)
+                    .findFirstAsync()
+                    .asObservable<PdfSyncStatus>()
+                    .filter { it.isLoaded }
+                    .map {
+                        if (it != null && it.isValid) return@map it
+                        return@map createSyncStatus(lessonId)
+                    }
         }
     }
 
@@ -37,8 +38,8 @@ class PdfSyncManager(val context: Context) {
         }
     }
 
-    private fun createSyncStatus(lesson: Lesson): PdfSyncStatus {
-        var pdfSyncStatus = PdfSyncStatus(lesson.id)
+    private fun createSyncStatus(lessonId: String): PdfSyncStatus {
+        var pdfSyncStatus = PdfSyncStatus(lessonId)
         Realm.getDefaultInstance().use {
             it.executeTransaction {
                 pdfSyncStatus = it.copyToRealm(pdfSyncStatus)
