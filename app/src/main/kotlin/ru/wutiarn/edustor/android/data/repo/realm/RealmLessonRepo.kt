@@ -63,7 +63,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .findAllAsync()
                 .asObservable()
                 .filter { it.isLoaded }
-                .map { it.first() }
+                .map { it.first() } // TODO: Move .first from here
                 .copyFromRealm()
     }
 

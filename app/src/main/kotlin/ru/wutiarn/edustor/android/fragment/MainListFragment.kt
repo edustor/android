@@ -95,6 +95,10 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
         showContent()
     }
 
+    override fun setTitle(title: String) {
+        activity.title = title
+    }
+
     fun configureRecyclerView() {
         entityAdapter = MainListEntityAdapter(appComponent, this)
         base_recycler_view.layoutManager = LinearLayoutManager(context)

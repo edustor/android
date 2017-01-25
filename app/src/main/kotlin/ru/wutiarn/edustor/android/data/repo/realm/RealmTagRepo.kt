@@ -17,12 +17,21 @@ class RealmTagRepo : TagRepo {
                     .map { it.toList().map { it.copyFromRealm<Tag>() } }
         }
 
-    override fun byTagParentTagId(parentTagId: String?): Observable<List<Tag>> {
+    override fun byParentTagId(parentTagId: String?): Observable<List<Tag>> {
         return Realm.getDefaultInstance().where(Tag::class.java)
                 .equalTo("parent.id", parentTagId)
                 .findAllAsync()
                 .asObservable()
                 .filter { it.isLoaded }
                 .map { it.toList().map { it.copyFromRealm<Tag>() } }
+    }
+
+    override fun byId(id: String): Observable<Tag> {
+        return Realm.getDefaultInstance().where(Tag::class.java)
+                .equalTo("id", id)
+                .findFirstAsync()
+                .asObservable<Tag>()
+                .filter { it.isLoaded }
+                .copyFromRealm()
     }
 }

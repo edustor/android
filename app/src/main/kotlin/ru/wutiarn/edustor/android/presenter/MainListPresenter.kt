@@ -45,9 +45,15 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
         entityCache.clear()
 
         EntityType.values().forEach { entityType ->
+            parentTagId?.let {
+                appComponent.repo.tag.byId(parentTagId).first().subscribe {
+                    view?.setTitle(it.name)
+                }
+            }
+
             @Suppress("UNCHECKED_CAST")
             val observable: Observable<List<MainListEntity>> = when (entityType) {
-                EntityType.TAGS -> appComponent.repo.tag.byTagParentTagId(parentTagId).map { it.sortedBy(Tag::name) } as Observable<List<MainListEntity>>
+                EntityType.TAGS -> appComponent.repo.tag.byParentTagId(parentTagId).map { it.sortedBy(Tag::name) } as Observable<List<MainListEntity>>
                 EntityType.LESSONS -> {
                     parentTagId ?: return@forEach
                     appComponent.repo.lessons.byTagId(parentTagId)
@@ -70,6 +76,7 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
             activeSubscription!!.add(subscription)
         }
     }
+
 
     fun onSyncSwitchChanged(b: Boolean) {
         val tagSyncStatus = appComponent.pdfSyncManager.getTagSyncStatus(parentTagId!!)

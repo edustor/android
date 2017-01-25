@@ -6,4 +6,5 @@ import ru.wutiarn.edustor.android.data.models.MainListEntity
 
 interface MainListView : MvpLceView<List<MainListEntity>> {
     fun onLessonClick(lesson: Lesson)
+    fun setTitle(title: String)
 }
