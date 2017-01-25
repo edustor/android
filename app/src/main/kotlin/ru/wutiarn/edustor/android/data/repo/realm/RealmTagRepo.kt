@@ -1,7 +1,6 @@
 package ru.wutiarn.edustor.android.data.repo.realm
 
 import io.realm.Realm
-import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.data.repo.TagRepo
 import ru.wutiarn.edustor.android.util.extension.copyFromRealm

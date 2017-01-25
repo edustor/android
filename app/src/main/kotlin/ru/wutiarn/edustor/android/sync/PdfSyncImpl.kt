@@ -76,8 +76,6 @@ class PdfSyncImpl(val context: Context,
                 .filter { it.syncStatus!!.shouldBeSynced || tagsIdToSync.contains(it.tag.id) }
                 .filter { it.pages.filter(Page::isUploaded).count() > 0 }
 
-//        TODO: Marked tags sync
-
         val otherLessons = lessons.minus(lessonsToSync)
 
         removePdfs(otherLessons)

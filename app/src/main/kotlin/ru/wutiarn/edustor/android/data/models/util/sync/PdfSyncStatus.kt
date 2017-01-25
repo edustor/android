@@ -4,7 +4,6 @@ import android.content.Context
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
-import io.realm.annotations.Ignore
 import io.realm.annotations.RealmClass
 import org.threeten.bp.LocalDate
 import ru.wutiarn.edustor.android.data.models.Lesson
