@@ -149,9 +149,8 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
     }
 
     @Subscribe fun OnSyncFinished(event: EdustorMetaSyncFinished) {
-        if (event.success) {
-            swipeRefreshLayout?.isRefreshing = false
-        } else {
+        swipeRefreshLayout?.isRefreshing = false
+        if (!event.success) {
             appComponent.eventBus.makeSnack("Sync finished with error: ${event.exception?.message}")
         }
     }
