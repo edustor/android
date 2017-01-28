@@ -60,10 +60,9 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
     override fun byId(id: String): Observable<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("id", id)
-                .findAllAsync()
-                .asObservable()
+                .findFirstAsync()
+                .asObservable<Lesson>()
                 .filter { it.isLoaded }
-                .map { it.first() } // TODO: Move .first from here
                 .copyFromRealm()
     }
 
@@ -74,7 +73,6 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 .asObservable()
                 .filter { it.isLoaded }
                 .map { it.toList().map { it.copyFromRealm<Lesson>() } }
-//                .flatMap { it.toObservable().flatMap { Observable.just(it).setUpSyncStateAsync(pdfSyncManager).toList() } }
     }
 
     override fun reorderPages(lesson: String, pageId: String, afterPageId: String?): Observable<Unit> {
