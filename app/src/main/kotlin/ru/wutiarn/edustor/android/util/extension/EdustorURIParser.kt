@@ -7,15 +7,11 @@ object EdustorURIParser {
 
     data class EdustorURI(val type: URIType, val id: String)
 
-    private val regex = "edustor://(.+?)/(.+)".toRegex()
+    private val UUID_REGEX = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}".toRegex()
 
     fun parse(string: String): EdustorURI {
-
-        val matchResult = regex.matchEntire(string) ?: return EdustorURI(URIType.PAGE, string)
-
-        val groups = matchResult.groupValues
-
-        val type = URIType.values().firstOrNull { it.type == groups[1] } ?: throw IllegalAccessException("Unsupported type ${groups[1]}")
-        return EdustorURI(type, groups[2])
+        // Regex is simplified to be compatible with qr format v3 and older
+        val qrUuid = UUID_REGEX.find(string)?.value ?: throw IllegalAccessException("Unknown qr code")
+        return EdustorURI(URIType.PAGE, qrUuid)
     }
 }
