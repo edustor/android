@@ -13,7 +13,7 @@ import ru.wutiarn.edustor.android.util.extension.copyToRealm
 import rx.Observable
 
 class RealmPageRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManager) : PageRepo {
-    override fun activateQR(qr: String, lessonId: String, instant: Instant): Observable<Page> {
+    override fun link(qr: String, lessonId: String, instant: Instant): Observable<Page> {
         val realm = Realm.getDefaultInstance()
         return lessonRepo.byId(lessonId)
                 .map { it.copyToRealm<Lesson>() }
@@ -30,7 +30,7 @@ class RealmPageRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManag
                         realm.copyToRealm(page)
                         lesson.pages.add(page)
 
-                        val syncTask = SyncTask("pages/qr/activate", mapOf(
+                        val syncTask = SyncTask("pages/link", mapOf(
                                 "id" to page.id,
                                 "qr" to page.qr,
                                 "instant" to page.realmTimestamp,

@@ -9,5 +9,5 @@
     <string name="edustor_accounts_url">http://192.168.10.4:8081/</string>
 
     <string name="edustor_ui_url">http://192.168.10.4:8080/</string>
-    <string name="edustor_pdf_url">http://192.168.10.4:8080/pdf/</string>
+    <string name="edustor_pdf_url">http://192.168.10.4:8084/pdf/</string>
 </resources>
