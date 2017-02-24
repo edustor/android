@@ -136,7 +136,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
             appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson uuid is not found")); return
         }
 
-        appComponent.repo.pages.activateQR(id, lesson?.id!!).subscribe({
+        appComponent.repo.pages.link(id, lesson?.id!!).subscribe({
             appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortQR}! ID: ${it.id}"))
         }, {
             Log.w("LessonDetailsPresenter", "Error while creating page", it)

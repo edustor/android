@@ -5,9 +5,9 @@ import ru.wutiarn.edustor.android.data.models.Page
 import rx.Observable
 
 interface PageRepo {
-    fun activateQR(qr: String,
-                   lessonId: String,
-                   instant: Instant = Instant.now()
+    fun link(qr: String,
+             lessonId: String,
+             instant: Instant = Instant.now()
     ): Observable<Page>
 
     fun delete(pageId: String): Observable<Unit>
