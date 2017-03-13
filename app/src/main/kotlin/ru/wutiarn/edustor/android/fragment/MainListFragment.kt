@@ -72,20 +72,24 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
         appComponent.eventBus.unregister(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadData(false)
+    }
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         configureFabs()
         configureRecyclerView()
-        loadData(false)
     }
 
     override fun getErrorMessage(p0: Throwable?, p1: Boolean): String? {
         return p0?.message
     }
 
-    override fun loadData(p0: Boolean) {
-        showLoading(p0)
+    override fun loadData(pullToRefresh: Boolean) {
+        showLoading(pullToRefresh)
         presenter.loadData()
     }
 
@@ -150,6 +154,7 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
 
     @Subscribe fun OnSyncFinished(event: EdustorMetaSyncFinished) {
         swipeRefreshLayout?.isRefreshing = false
+        loadData(false)
         if (!event.success) {
             appComponent.eventBus.makeSnack("Sync finished with error: ${event.exception?.message}")
         }
