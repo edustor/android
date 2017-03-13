@@ -86,10 +86,7 @@ class PagesAdapter(val context: Context, val appComponent: AppComponent) : Recyc
     fun onMovementFinished() {
         lastUnfinishedMovement?.let {
             appComponent.repo.lessons.reorderPages(lesson?.id!!, it.first, it.second)
-                    .subscribe(
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved")) },
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Move error: ${it.message}")) }
-                    )
+            appComponent.eventBus.post(RequestSnackbarEvent("Successfully moved"))
         }
     }
 
@@ -103,10 +100,7 @@ class PagesAdapter(val context: Context, val appComponent: AppComponent) : Recyc
 
         val shortUUID = page.shortQR
         appComponent.repo.pages.delete(page.id)
-                .subscribe(
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID")) },
-                        { appComponent.eventBus.post(RequestSnackbarEvent("Error removing $shortUUID: ${it.message}")) }
-                )
+        appComponent.eventBus.post(RequestSnackbarEvent("Successfully removed: $shortUUID"))
     }
 
     class PageViewHolder(val view: View, val adapter: PagesAdapter) : RecyclerView.ViewHolder(view) {

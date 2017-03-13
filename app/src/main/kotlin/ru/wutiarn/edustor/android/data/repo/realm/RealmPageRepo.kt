@@ -13,13 +13,10 @@ import ru.wutiarn.edustor.android.util.extension.copyToRealm
 import rx.Observable
 
 class RealmPageRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManager) : PageRepo {
-    override fun link(qr: String, lessonId: String, instant: Instant): Observable<Page> {
+    override fun link(qr: String, lessonId: String, instant: Instant): Page {
         val realm = Realm.getDefaultInstance()
         return lessonRepo.byId(lessonId)
-                .map { it.copyToRealm<Lesson>() }
-                .first()
-                .map { lesson ->
-
+                .let { lesson ->
                     if (realm.where(Lesson::class.java).equalTo("pages.qr", qr).count() != 0L) {
                         throw IllegalArgumentException("QR already registered")
                     }
@@ -38,20 +35,17 @@ class RealmPageRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManag
                         ))
                         syncTasksManager.addTask(syncTask)
                     }
-                    return@map lesson.pages.first { it.qr == qr }.copyFromRealm<Page>()
+                    return@let lesson.pages.first { it.qr == qr }.copyFromRealm<Page>()
                 }
     }
 
 
-    override fun delete(pageId: String): Observable<Unit> {
+    override fun delete(pageId: String) {
         val realm = Realm.getDefaultInstance()
         return realm.where(Page::class.java)
                 .equalTo("id", pageId)
-                .findFirstAsync()
-                .asObservable<Page>()
-                .filter { it.isLoaded }
-                .first()
-                .map { doc ->
+                .findFirst()
+                .let { doc ->
                     val syncTask = SyncTask("pages/delete", mapOf(
                             "page" to doc.id
                     ))

@@ -8,30 +8,24 @@ import rx.Observable
 
 class RealmTagRepo : TagRepo {
 
-    override val all: Observable<List<Tag>>
+    override val all: List<Tag>
         get() {
             return Realm.getDefaultInstance().where(Tag::class.java)
-                    .findAllAsync()
-                    .asObservable()
-                    .filter { it.isLoaded }
-                    .map { it.toList().map { it.copyFromRealm<Tag>() } }
+                    .findAll()
+                    .map { it.copyFromRealm<Tag>() }
         }
 
-    override fun byParentTagId(parentTagId: String?): Observable<List<Tag>> {
+    override fun byParentTagId(parentTagId: String?): List<Tag> {
         return Realm.getDefaultInstance().where(Tag::class.java)
                 .equalTo("parent.id", parentTagId)
-                .findAllAsync()
-                .asObservable()
-                .filter { it.isLoaded }
-                .map { it.toList().map { it.copyFromRealm<Tag>() } }
+                .findAll()
+                .map { it.copyFromRealm<Tag>() }
     }
 
-    override fun byId(id: String): Observable<Tag> {
+    override fun byId(id: String): Tag {
         return Realm.getDefaultInstance().where(Tag::class.java)
                 .equalTo("id", id)
-                .findFirstAsync()
-                .asObservable<Tag>()
-                .filter { it.isLoaded }
+                .findFirst()
                 .copyFromRealm()
     }
 }

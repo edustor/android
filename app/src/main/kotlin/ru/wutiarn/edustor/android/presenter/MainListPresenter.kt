@@ -46,20 +46,18 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
 
         EntityType.values().forEach { entityType ->
             parentTagId?.let {
-                appComponent.repo.tag.byId(parentTagId).first().subscribe {
-                    view?.setTitle(it.name)
-                }
+                val tag = appComponent.repo.tag.byId(parentTagId)
+                view?.setTitle(tag.name)
             }
 
             @Suppress("UNCHECKED_CAST")
             val observable: Observable<List<MainListEntity>> = when (entityType) {
-                EntityType.TAGS -> appComponent.repo.tag.byParentTagId(parentTagId).map { it.sortedBy(Tag::name) } as Observable<List<MainListEntity>>
+                EntityType.TAGS -> appComponent.repo.tag.byParentTagId(parentTagId).sortedBy(Tag::name) as Observable<List<MainListEntity>>
                 EntityType.LESSONS -> {
                     parentTagId ?: return@forEach
                     appComponent.repo.lessons.byTagId(parentTagId)
-                            .map {
-                                it.filter { it.pages.size > 0 }.sortedByDescending(Lesson::date)
-                            } as Observable<List<MainListEntity>>
+                            .filter { it.pages.size > 0 }
+                            .sortedByDescending(Lesson::date) as Observable<List<MainListEntity>>
                 }
                 else -> throw IllegalStateException("Unsupported entity type") // (Almost) impossible :)
             }
@@ -91,14 +89,7 @@ class MainListPresenter(val appComponent: AppComponent, val parentTagId: String?
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
         val date = LocalDate.of(year, month + 1, day)
-        appComponent.repo.lessons.byDate(parentTagId!!, date.toEpochDay())
-                .first()
-                .subscribe(
-                        { view?.onLessonClick(it) },
-                        {
-                            Log.w("LessonListPresenter", "Error in onDateSet", it)
-                            appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
-                        }
-                )
+        val lesson = appComponent.repo.lessons.byDate(parentTagId!!, date.toEpochDay())
+        view?.onLessonClick(lesson)
     }
 }

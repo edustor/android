@@ -8,7 +8,7 @@ interface PageRepo {
     fun link(qr: String,
              lessonId: String,
              instant: Instant = Instant.now()
-    ): Observable<Page>
+    ): Page
 
-    fun delete(pageId: String): Observable<Unit>
+    fun delete(pageId: String)
 }

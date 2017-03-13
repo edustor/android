@@ -10,80 +10,61 @@ import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import rx.Observable
 
 class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
-    override fun byQR(qr: String): Observable<Lesson> {
+    override fun byQR(qr: String): Lesson? {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("pages.qr", qr)
-                .findFirstAsync()
-                .asObservable<Lesson>()
-                .filter { it.isLoaded }
+                .findFirst()
     }
 
-    override fun byDate(tag: String, epochDay: Long): Observable<Lesson> {
-        return Realm.getDefaultInstance().where(Lesson::class.java)
+    override fun byDate(tag: String, epochDay: Long): Lesson {
+        val lesson = Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("tag.id", tag)
                 .equalTo("realmDate", epochDay)
-                .findAllAsync()
-                .asObservable()
-                .filter { it.isLoaded }
-                .flatMap { found ->
-                    if (found.isNotEmpty()) {
-                        Observable.just(found.first())
-                    } else {
-                        Realm.getDefaultInstance().use {
-                            it.where(Tag::class.java)
-                                    .equalTo("id", tag)
-                                    .findFirstAsync()
-                                    .asObservable<Tag>()
-                                    .filter { it.isLoaded }
-                                    .map {
-                                        var lesson = Lesson(it, epochDay)
-                                        Realm.getDefaultInstance().executeTransaction {
-                                            lesson = it.copyToRealm(lesson)
-                                        }
+                .findFirst() ?: let {
+            Realm.getDefaultInstance().use {
+                it.where(Tag::class.java)
+                        .equalTo("id", tag)
+                        .findFirst()
+                        .let { tag ->
+                            var lesson = Lesson(tag, epochDay)
+                            Realm.getDefaultInstance().executeTransaction {
+                                lesson = it.copyToRealm(lesson)
+                            }
 
-                                        val syncTask = SyncTask("lessons/create", mapOf(
-                                                "id" to lesson.id,
-                                                "date" to lesson.date.toEpochDay(),
-                                                "tag" to tag
-                                        ))
-                                        syncTasksManager.addTask(syncTask)
+                            val syncTask = SyncTask("lessons/create", mapOf(
+                                    "id" to lesson.id,
+                                    "date" to lesson.date.toEpochDay(),
+                                    "tag" to tag
+                            ))
+                            syncTasksManager.addTask(syncTask)
 
-                                        lesson
-                                    }
+                            lesson
                         }
-                    }
-
-                }
-                .copyFromRealm()
+            }
+        }
+        return lesson.copyFromRealm()
     }
 
-    override fun byId(id: String): Observable<Lesson> {
+    override fun byId(id: String): Lesson {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("id", id)
-                .findFirstAsync()
-                .asObservable<Lesson>()
-                .filter { it.isLoaded }
+                .findFirst()
                 .copyFromRealm()
     }
 
-    override fun byTagId(tagId: String): Observable<List<Lesson>> {
+    override fun byTagId(tagId: String): List<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("tag.id", tagId)
-                .findAllAsync()
-                .asObservable()
-                .filter { it.isLoaded }
-                .map { it.toList().map { it.copyFromRealm<Lesson>() } }
+                .findAll()
+                .map { it.copyFromRealm<Lesson>() }
     }
 
-    override fun reorderPages(lesson: String, pageId: String, afterPageId: String?): Observable<Unit> {
+    override fun reorderPages(lesson: String, pageId: String, afterPageId: String?) {
         val realm = Realm.getDefaultInstance()
         return realm.where(Lesson::class.java)
                 .equalTo("id", lesson)
-                .findFirstAsync()
-                .asObservable<Lesson>()
-                .filter { it.isLoaded }
-                .first()
-                .map { lesson ->
+                .findFirst()
+                .let { lesson ->
                     realm.executeTransaction {
                         val page = lesson.pages.first { it.id == pageId }
                         lesson.pages.remove(page)
@@ -110,15 +91,12 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                 }
     }
 
-    override fun setTopic(lesson: String, topic: String): Observable<Unit> {
+    override fun setTopic(lesson: String, topic: String) {
         val realm = Realm.getDefaultInstance()
         return realm.where(Lesson::class.java)
                 .equalTo("id", lesson)
-                .findFirstAsync()
-                .asObservable<Lesson>()
-                .filter { it.isLoaded }
-                .first()
-                .map { lesson ->
+                .findFirst()
+                .let { lesson ->
                     realm.executeTransaction {
                         lesson.topic = if (topic.isNotEmpty()) topic else null
                         val syncTask = SyncTask("lessons/topic/put", mapOf(
