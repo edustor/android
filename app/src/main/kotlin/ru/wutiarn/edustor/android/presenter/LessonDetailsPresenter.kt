@@ -26,7 +26,6 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     val TAG: String = LessonDetailsPresenter::class.java.name
 
     var view: LessonDetailsView? = null
-    var activeSubscription: Subscription? = null
 
     val lessonId: String = arguments.getString("id")
 
@@ -36,7 +35,6 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
 
     override fun detachView(p0: Boolean) {
         appComponent.eventBus.unregister(this)
-        activeSubscription?.unsubscribe()
         view = null
     }
 
@@ -63,11 +61,8 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     }
 
     fun loadData() {
-        activeSubscription?.unsubscribe()
-
-        activeSubscription = appComponent.repo.lessons.byId(lessonId)
-                .setUpSyncStateAsync(appComponent.pdfSyncManager)
-                .linkToLCEView(view, { lesson = it })
+        lesson = appComponent.repo.lessons.byId(lessonId)
+        view?.setData(lesson)
     }
 
     fun onGetPdfClicked() {
@@ -117,15 +112,11 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     fun setTopic(topic: String) {
         lesson?.let {
             appComponent.repo.lessons.setTopic(lesson?.id!!, topic)
-                    .subscribe(
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed")) },
-                            { appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}")) }
-                    )
+            appComponent.eventBus.post(RequestSnackbarEvent("Successfully renamed"))
         }
     }
 
     fun onQrCodeScanned(result: String) {
-
         val (type, id) = EdustorURIParser.parse(result)
 
         if (type != EdustorURIParser.URIType.PAGE) {
@@ -136,11 +127,12 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
             appComponent.eventBus.post(RequestSnackbarEvent("Error: lesson uuid is not found")); return
         }
 
-        appComponent.repo.pages.link(id, lesson?.id!!).subscribe({
-            appComponent.eventBus.post(RequestSnackbarEvent("Done ${it.shortQR}! ID: ${it.id}"))
-        }, {
-            Log.w("LessonDetailsPresenter", "Error while creating page", it)
-            appComponent.eventBus.post(RequestSnackbarEvent("Error: ${it.message}"))
-        })
+        try {
+            val page = appComponent.repo.pages.link(id, lesson?.id!!)
+            appComponent.eventBus.post(RequestSnackbarEvent("Done ${page.shortQR}! ID: ${page.id}"))
+            view?.loadData(true)
+        } catch (e: IllegalArgumentException) {
+            appComponent.eventBus.post(RequestSnackbarEvent("Failed to link page: ${e.message}"))
+        }
     }
 }

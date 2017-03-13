@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.hannesdorfmann.mosby.mvp.lce.MvpLceFragment
+import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_lesson_details.*
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -17,8 +18,10 @@ import ru.wutiarn.edustor.android.dagger.component.AppComponent
 import ru.wutiarn.edustor.android.data.adapter.PagesAdapter
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
+import ru.wutiarn.edustor.android.events.EdustorMetaSyncFinished
 import ru.wutiarn.edustor.android.presenter.LessonDetailsPresenter
 import ru.wutiarn.edustor.android.util.EdustorPageTouchHelperCallback
+import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.LessonDetailsView
 
 
@@ -42,7 +45,6 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     }
 
     override fun setData(lesson: Lesson?) {
-
         tag_text_view.text = lesson?.tag?.name
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         topic.setText(lesson?.topic)
@@ -73,8 +75,8 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         syncStatus.text = status
     }
 
-    override fun loadData(p0: Boolean) {
-        showLoading(false)
+    override fun loadData(pullToRefresh: Boolean) {
+        showLoading(true)
         presenter.loadData()
     }
 
@@ -97,5 +99,22 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         val itemTouchHelper = ItemTouchHelper(cb)
 
         itemTouchHelper.attachToRecyclerView(page_recycler_view)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        appComponent.eventBus.register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appComponent.eventBus.unregister(this)
+    }
+
+    @Subscribe fun OnSyncFinished(event: EdustorMetaSyncFinished) {
+        loadData(true)
+        if (!event.success) {
+            appComponent.eventBus.makeSnack("Sync finished with error: ${event.exception?.message}")
+        }
     }
 }

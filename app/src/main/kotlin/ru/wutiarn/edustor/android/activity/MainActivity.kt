@@ -72,23 +72,16 @@ class MainActivity : MvpActivity<MainListActivityView, MainListActivityPresenter
             appComponent.eventBus.post(RequestSnackbarEvent("Error: incorrect QR code payload")); return
         }
 
-        appComponent.repo.lessons.byQR(qrData).first().subscribe(
-                {
-                    if (!it.isValid) {
-                        appComponent.context.makeToast("Unknown QR code: $qrData")
-                        return@subscribe
-                    }
+        val lesson = appComponent.repo.lessons.byQR(qrData)
 
-                    val intent = Intent(this, LessonDetailsActivity::class.java)
-                    intent.putExtra("id", it.id)
-                    startActivity(intent)
-                },
-                {
-                    appComponent.context.makeToast("Failed to open lesson by qr: $it")
-                }
-        )
+        if (lesson == null) {
+            appComponent.context.makeToast("Unknown QR code: $qrData")
+            return
+        }
 
-
+        val intent = Intent(this, LessonDetailsActivity::class.java)
+        intent.putExtra("id", lesson.id)
+        startActivity(intent)
     }
 
     @Subscribe fun onSnackbarShowRequest(event: RequestSnackbarEvent) {
