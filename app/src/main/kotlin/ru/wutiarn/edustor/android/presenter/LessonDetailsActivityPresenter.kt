@@ -5,7 +5,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.hannesdorfmann.mosby.mvp.MvpPresenter
 import ru.wutiarn.edustor.android.view.LessonDetailsActivityView
 
-class LessonDetailsActivityPresenter() : MvpPresenter<LessonDetailsActivityView> {
+class LessonDetailsActivityPresenter : MvpPresenter<LessonDetailsActivityView> {
     private var view: LessonDetailsActivityView? = null
 
     override fun attachView(p0: LessonDetailsActivityView?) {

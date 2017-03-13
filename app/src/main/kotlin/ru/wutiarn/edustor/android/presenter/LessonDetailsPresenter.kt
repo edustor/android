@@ -130,6 +130,7 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
         try {
             val page = appComponent.repo.pages.link(id, lesson?.id!!)
             appComponent.eventBus.post(RequestSnackbarEvent("Done ${page.shortQR}! ID: ${page.id}"))
+            view?.loadData(true)
         } catch (e: IllegalArgumentException) {
             appComponent.eventBus.post(RequestSnackbarEvent("Failed to link page: ${e.message}"))
         }

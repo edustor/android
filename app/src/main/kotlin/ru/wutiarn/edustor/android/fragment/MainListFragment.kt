@@ -89,7 +89,7 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
     }
 
     override fun loadData(pullToRefresh: Boolean) {
-        showLoading(pullToRefresh)
+        showLoading(true)
         presenter.loadData()
     }
 
@@ -154,7 +154,7 @@ class MainListFragment : MvpLceFragment<LinearLayout, List<MainListEntity>, Main
 
     @Subscribe fun OnSyncFinished(event: EdustorMetaSyncFinished) {
         swipeRefreshLayout?.isRefreshing = false
-        loadData(false)
+        loadData(true)
         if (!event.success) {
             appComponent.eventBus.makeSnack("Sync finished with error: ${event.exception?.message}")
         }

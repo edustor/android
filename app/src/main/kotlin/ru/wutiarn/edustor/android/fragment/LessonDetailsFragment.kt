@@ -45,7 +45,6 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     }
 
     override fun setData(lesson: Lesson?) {
-
         tag_text_view.text = lesson?.tag?.name
         date.text = lesson?.date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
         topic.setText(lesson?.topic)
@@ -76,8 +75,8 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
         syncStatus.text = status
     }
 
-    override fun loadData(p0: Boolean) {
-        showLoading(false)
+    override fun loadData(pullToRefresh: Boolean) {
+        showLoading(true)
         presenter.loadData()
     }
 
@@ -113,7 +112,7 @@ class LessonDetailsFragment : MvpLceFragment<LinearLayout, Lesson, LessonDetails
     }
 
     @Subscribe fun OnSyncFinished(event: EdustorMetaSyncFinished) {
-        loadData(false)
+        loadData(true)
         if (!event.success) {
             appComponent.eventBus.makeSnack("Sync finished with error: ${event.exception?.message}")
         }

@@ -16,6 +16,7 @@ class RealmPageRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManag
     override fun link(qr: String, lessonId: String, instant: Instant): Page {
         val realm = Realm.getDefaultInstance()
         return lessonRepo.byId(lessonId)
+                .copyToRealm<Lesson>()
                 .let { lesson ->
                     if (realm.where(Lesson::class.java).equalTo("pages.qr", qr).count() != 0L) {
                         throw IllegalArgumentException("QR already registered")
