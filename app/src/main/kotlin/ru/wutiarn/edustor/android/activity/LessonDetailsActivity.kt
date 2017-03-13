@@ -47,6 +47,8 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_container, lessonDetailsFragment)
                 .commit()
+
+        appComponent.eventBus.register(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -66,13 +68,7 @@ class LessonDetailsActivity : MvpActivity<LessonDetailsActivityView, LessonDetai
         event.show(container)
     }
 
-    override fun onStart() {
-        super.onStart()
-        appComponent.eventBus.register(this)
-
-    }
-
-    override fun onStop() {
+    override fun onDestroy() {
         super.onStop()
         appComponent.eventBus.unregister(this)
     }
