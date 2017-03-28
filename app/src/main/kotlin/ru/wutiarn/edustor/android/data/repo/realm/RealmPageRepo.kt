@@ -10,7 +10,6 @@ import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.data.repo.PageRepo
 import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import ru.wutiarn.edustor.android.util.extension.copyToRealm
-import rx.Observable
 
 class RealmPageRepo(val lessonRepo: LessonsRepo, val syncTasksManager: SyncManager) : PageRepo {
     override fun link(qr: String, lessonId: String, instant: Instant): Page {

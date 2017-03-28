@@ -6,7 +6,6 @@ import io.realm.RealmObject
 import ru.wutiarn.edustor.android.data.local.PdfSyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Tag
-import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import rx.Observable
 import java.io.File
 

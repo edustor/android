@@ -9,7 +9,6 @@ import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.util.extension.copyFromRealm
 import ru.wutiarn.edustor.android.util.extension.withSyncStatus
-import rx.Observable
 
 class RealmLessonRepo(val syncTasksManager: SyncManager,
                       val pdfSyncManager: PdfSyncManager) : LessonsRepo {
@@ -17,6 +16,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager,
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("pages.qr", qr)
                 .findFirst()
+                ?.copyFromRealm<Lesson>()
                 ?.withSyncStatus(pdfSyncManager)
     }
 
@@ -46,6 +46,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager,
                         }
             }
         }
+                .copyFromRealm<Lesson>()
                 .withSyncStatus(pdfSyncManager)
         return lesson
     }
@@ -54,6 +55,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager,
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("id", id)
                 .findFirst()
+                .copyFromRealm<Lesson>()
                 .withSyncStatus(pdfSyncManager)
     }
 
@@ -61,7 +63,7 @@ class RealmLessonRepo(val syncTasksManager: SyncManager,
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("tag.id", tagId)
                 .findAll()
-                .map { it.withSyncStatus(pdfSyncManager) }
+                .map { it.copyFromRealm<Lesson>().withSyncStatus(pdfSyncManager) }
     }
 
     override fun reorderPages(lesson: String, pageId: String, afterPageId: String?) {

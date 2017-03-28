@@ -4,7 +4,6 @@ import android.content.Context
 import io.realm.Realm
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.data.models.util.sync.TagSyncStatus
-import rx.Observable
 
 class PdfSyncManager(val context: Context) {
 

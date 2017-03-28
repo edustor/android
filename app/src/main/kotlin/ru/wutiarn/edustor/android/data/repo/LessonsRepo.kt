@@ -1,7 +1,6 @@
 package ru.wutiarn.edustor.android.data.repo
 
 import ru.wutiarn.edustor.android.data.models.Lesson
-import rx.Observable
 
 interface LessonsRepo {
     fun byQR(qr: String): Lesson?
