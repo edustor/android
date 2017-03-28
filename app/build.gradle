@@ -28,8 +28,8 @@ android {
         applicationId "ru.wutiarn.edustor.android"
         minSdkVersion 21
         targetSdkVersion 24
-        versionCode 27
-        versionName "0.8-m3"
+        versionCode 28
+        versionName "0.8-m4"
         multiDexEnabled true
     }
     lintOptions {
