@@ -17,11 +17,15 @@ import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.events.PdfSyncProgressEvent
 import ru.wutiarn.edustor.android.events.RequestSnackbarEvent
-import ru.wutiarn.edustor.android.util.extension.*
+import ru.wutiarn.edustor.android.util.extension.EdustorURIParser
+import ru.wutiarn.edustor.android.util.extension.getCacheFile
+import ru.wutiarn.edustor.android.util.extension.getPdfUrl
+import ru.wutiarn.edustor.android.util.extension.makeSnack
 import ru.wutiarn.edustor.android.view.LessonDetailsView
-import rx.Subscription
 
-class LessonDetailsPresenter(val appComponent: AppComponent, val context: Context, arguments: Bundle) : MvpPresenter<LessonDetailsView> {
+class LessonDetailsPresenter(val appComponent: AppComponent,
+                             val context: Context,
+                             arguments: Bundle) : MvpPresenter<LessonDetailsView> {
 
     val TAG: String = LessonDetailsPresenter::class.java.name
 
@@ -68,10 +72,11 @@ class LessonDetailsPresenter(val appComponent: AppComponent, val context: Contex
     fun onGetPdfClicked() {
         Realm.getDefaultInstance().use {
             it.executeTransaction {
-                lesson?.syncStatus!!.setSyncedUntil(LocalDate.now().plusDays(7))  // Update realmValidUntil even if page is already synced
+                lesson!!.syncStatus.setSyncedUntil(LocalDate.now().plusDays(7))  // Update realmValidUntil even if page is already synced
             }
         }
-        if (lesson!!.syncStatus!!.getStatus(lesson!!, appComponent.context) == PdfSyncStatus.SyncStatus.SYNCED) {
+
+        if (lesson!!.syncStatus.getStatus(lesson!!, appComponent.context) == PdfSyncStatus.SyncStatus.SYNCED) {
             openSyncedPdf()
         } else {
             openPdfAfterSyncFinished = true

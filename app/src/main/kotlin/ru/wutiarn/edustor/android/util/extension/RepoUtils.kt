@@ -9,12 +9,9 @@ import ru.wutiarn.edustor.android.data.models.Tag
 import rx.Observable
 import java.io.File
 
-fun Observable<Lesson>.setUpSyncStateAsync(pdfSyncManager: PdfSyncManager): Observable<Lesson> {
+fun Lesson.withSyncStatus(pdfSyncManager: PdfSyncManager): Lesson {
+    this.syncStatus = pdfSyncManager.getSyncStatus(this.id)
     return this
-            .flatMap { lesson ->
-                val syncStatusObservable = pdfSyncManager.getSyncStatusAsync(lesson.id)
-                return@flatMap syncStatusObservable.map { lesson.syncStatus = it; lesson }
-            }
 }
 
 fun Lesson.getPdfUrl(baseUrl: String): String {

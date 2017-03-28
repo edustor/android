@@ -4,7 +4,6 @@ import android.content.Context
 import io.realm.Realm
 import ru.wutiarn.edustor.android.data.models.util.sync.PdfSyncStatus
 import ru.wutiarn.edustor.android.data.models.util.sync.TagSyncStatus
-import rx.Observable
 
 class PdfSyncManager(val context: Context) {
 
@@ -13,20 +12,6 @@ class PdfSyncManager(val context: Context) {
             return realm.where(PdfSyncStatus::class.java)
                     .equalTo("lessonId", lessonId)
                     .findFirst() ?: createSyncStatus(lessonId)
-        }
-    }
-
-    fun getSyncStatusAsync(lessonId: String): Observable<PdfSyncStatus> {
-        Realm.getDefaultInstance().use { realm ->
-            return realm.where(PdfSyncStatus::class.java)
-                    .equalTo("lessonId", lessonId)
-                    .findFirstAsync()
-                    .asObservable<PdfSyncStatus>()
-                    .filter { it.isLoaded }
-                    .map {
-                        if (it != null && it.isValid) return@map it
-                        return@map createSyncStatus(lessonId)
-                    }
         }
     }
 

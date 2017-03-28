@@ -1,19 +1,23 @@
 package ru.wutiarn.edustor.android.data.repo.realm
 
 import io.realm.Realm
+import ru.wutiarn.edustor.android.data.local.PdfSyncManager
 import ru.wutiarn.edustor.android.data.local.SyncManager
 import ru.wutiarn.edustor.android.data.models.Lesson
 import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.data.models.util.sync.SyncTask
 import ru.wutiarn.edustor.android.data.repo.LessonsRepo
 import ru.wutiarn.edustor.android.util.extension.copyFromRealm
-import rx.Observable
+import ru.wutiarn.edustor.android.util.extension.withSyncStatus
 
-class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
+class RealmLessonRepo(val syncTasksManager: SyncManager,
+                      val pdfSyncManager: PdfSyncManager) : LessonsRepo {
     override fun byQR(qr: String): Lesson? {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("pages.qr", qr)
                 .findFirst()
+                ?.copyFromRealm<Lesson>()
+                ?.withSyncStatus(pdfSyncManager)
     }
 
     override fun byDate(tag: String, epochDay: Long): Lesson {
@@ -42,21 +46,24 @@ class RealmLessonRepo(val syncTasksManager: SyncManager) : LessonsRepo {
                         }
             }
         }
-        return lesson.copyFromRealm()
+                .copyFromRealm<Lesson>()
+                .withSyncStatus(pdfSyncManager)
+        return lesson
     }
 
     override fun byId(id: String): Lesson {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("id", id)
                 .findFirst()
-                .copyFromRealm()
+                .copyFromRealm<Lesson>()
+                .withSyncStatus(pdfSyncManager)
     }
 
     override fun byTagId(tagId: String): List<Lesson> {
         return Realm.getDefaultInstance().where(Lesson::class.java)
                 .equalTo("tag.id", tagId)
                 .findAll()
-                .map { it.copyFromRealm<Lesson>() }
+                .map { it.copyFromRealm<Lesson>().withSyncStatus(pdfSyncManager) }
     }
 
     override fun reorderPages(lesson: String, pageId: String, afterPageId: String?) {

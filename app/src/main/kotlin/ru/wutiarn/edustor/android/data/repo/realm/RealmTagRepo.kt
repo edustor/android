@@ -4,7 +4,6 @@ import io.realm.Realm
 import ru.wutiarn.edustor.android.data.models.Tag
 import ru.wutiarn.edustor.android.data.repo.TagRepo
 import ru.wutiarn.edustor.android.util.extension.copyFromRealm
-import rx.Observable
 
 class RealmTagRepo : TagRepo {
 
