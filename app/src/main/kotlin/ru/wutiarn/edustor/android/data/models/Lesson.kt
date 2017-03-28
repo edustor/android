@@ -25,7 +25,7 @@ open class Lesson() : RealmObject(), MainListEntity {
 
     @JsonIgnore var realmDate: Long = 0
 
-    @Ignore var syncStatus: PdfSyncStatus? = null
+    @Ignore lateinit var syncStatus: PdfSyncStatus
 
     @Suppress("LeakingThis")
     constructor(tag: Tag, realmDate: Long) : this() {

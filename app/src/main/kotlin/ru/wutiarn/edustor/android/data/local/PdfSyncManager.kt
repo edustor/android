@@ -16,20 +16,6 @@ class PdfSyncManager(val context: Context) {
         }
     }
 
-    fun getSyncStatusAsync(lessonId: String): Observable<PdfSyncStatus> {
-        Realm.getDefaultInstance().use { realm ->
-            return realm.where(PdfSyncStatus::class.java)
-                    .equalTo("lessonId", lessonId)
-                    .findFirstAsync()
-                    .asObservable<PdfSyncStatus>()
-                    .filter { it.isLoaded }
-                    .map {
-                        if (it != null && it.isValid) return@map it
-                        return@map createSyncStatus(lessonId)
-                    }
-        }
-    }
-
     fun getTagSyncStatus(tagId: String): TagSyncStatus {
         Realm.getDefaultInstance().use { realm ->
             return realm.where(TagSyncStatus::class.java)
