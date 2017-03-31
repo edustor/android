@@ -3,17 +3,19 @@ variables:
 
 cache:
   paths:
-  - .gradle-home
+  - .gradle-home/
 
 build_CI:
   image: quay.io/wutiarn/android-base
   stage: build
   script:
+    - ls -lah
     - ./gradlew assembleCI
     - mv app/build/outputs/apk/* .
     - rm -f *-unaligned.apk
     - pwd
     - ls -lah
+    - ls -lah .gradle-home
   artifacts:
     name: "edustor-android-CI-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
