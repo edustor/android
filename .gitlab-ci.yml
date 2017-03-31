@@ -1,3 +1,10 @@
+variables:
+  GRADLE_USER_HOME: .gradle-home
+
+cache:
+  paths:
+  - .gradle-home
+
 build_CI:
   image: quay.io/wutiarn/android-base
   stage: build
@@ -19,6 +26,7 @@ build_release:
     - rm -f *-unaligned.apk
   artifacts:
     name: "edustor-android-RELEASE-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
+    expire_in: 1 week
     paths:
       - "*.apk"
   only:

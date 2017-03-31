@@ -107,3 +107,4 @@ proguard/
 .navigation/
 
 !gradle/wrapper/gradle-wrapper.jar
+.gradle-home
