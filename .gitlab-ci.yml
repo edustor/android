@@ -1,13 +1,12 @@
 variables:
   GRADLE_USER_HOME: .gradle-home
 
-cache:
-  paths:
-  - .gradle-home/
-
 build_CI:
   image: quay.io/wutiarn/android-base
   stage: build
+  cache:
+    paths:
+      - .gradle-home/
   script:
     - ls -lah
     - ./gradlew assembleCI
