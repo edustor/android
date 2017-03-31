@@ -12,6 +12,8 @@ build_CI:
     - ./gradlew assembleCI
     - mv app/build/outputs/apk/* .
     - rm -f *-unaligned.apk
+    - pwd
+    - ls -lah
   artifacts:
     name: "edustor-android-CI-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
