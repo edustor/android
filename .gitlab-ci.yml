@@ -2,6 +2,7 @@ variables:
   GRADLE_USER_HOME: .gradle-home
 
 cache: # Looks like caching doesn't work on gitlab.com
+  key: edustor-android-gradle
   paths:
   - .gradle-home/
 
