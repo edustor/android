@@ -17,25 +17,26 @@ build_CI:
     - pwd
     - ls -lah
     - ls -lah .gradle-home
+    - sleep 300
   artifacts:
     name: "edustor-android-CI-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
     paths:
       - "*.apk"
-
-build_release:
-  image: quay.io/wutiarn/android-base
-  stage: build
-  script:
-    - ./gradlew assembleRelease
-    - mv app/build/outputs/apk/* .
-    - rm -f *-unaligned.apk
-  artifacts:
-    name: "edustor-android-RELEASE-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
-    expire_in: 1 week
-    paths:
-      - "*.apk"
-  only:
-    - master
+#
+#build_release:
+#  image: quay.io/wutiarn/android-base
+#  stage: build
+#  script:
+#    - ./gradlew assembleRelease
+#    - mv app/build/outputs/apk/* .
+#    - rm -f *-unaligned.apk
+#  artifacts:
+#    name: "edustor-android-RELEASE-${CI_BUILD_REF_NAME}-${CI_BUILD_REF}"
+#    expire_in: 1 week
+#    paths:
+#      - "*.apk"
+#  only:
+#    - master
 
 # REQUIRED ENVIRONMENTS
 # EDUSTOR_ANDROID_CI_KEY_PASSWORD
