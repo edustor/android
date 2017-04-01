@@ -1,13 +1,13 @@
 variables:
   GRADLE_USER_HOME: .gradle-home
 
-cache: # Looks like caching doesn't work on gitlab.com
-  paths:
-  - .gradle-home/
-
 build_CI:
   image: quay.io/wutiarn/android-base
   stage: build
+  cache: # Looks like caching doesn't work on gitlab.com
+    key: "$CI_PROJECT_NAME_$CI_PROJECT_ID"
+    paths:
+    - .gradle-home/
   script:
     - ls -lah
     - ./gradlew assembleCI
