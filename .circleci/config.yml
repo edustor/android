@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: edustor-android-gradle-{{ checksum "build.gradle" }}
+          key: edustor-android-gradle-{{ checksum "app/build.gradle" }}
       - run:
           name: Test
           command: ./gradlew test
@@ -17,9 +17,8 @@ jobs:
           name: Assemble
           command: |
             ./gradlew assembleCI
-            rm app/build/outputs/apk/*-unaligned.apk
       - save_cache:
-          key: edustor-android-gradle-{{ checksum "build.gradle" }}
+          key: edustor-android-gradle-{{ checksum "app/build.gradle" }}
           paths:
             - ~/.gradle
       - store_artifacts:
