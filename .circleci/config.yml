@@ -11,12 +11,9 @@ jobs:
       - restore_cache:
           key: edustor-android-gradle-{{ checksum "app/build.gradle" }}
       - run:
-          name: Test
-          command: ./gradlew test
-      - run:
-          name: Assemble
+          name: Build
           command: |
-            ./gradlew assembleCI
+            ./gradlew test assembleCI
       - save_cache:
           key: edustor-android-gradle-{{ checksum "app/build.gradle" }}
           paths:
