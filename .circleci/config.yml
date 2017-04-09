@@ -1,0 +1,27 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/edustor-android
+    docker:
+      - image: quay.io/wutiarn/android-base
+    environment:
+      TERM: dumb
+    steps:
+      - checkout
+      - restore_cache:
+          key: edustor-android-gradle-{{ checksum "build.gradle" }}
+      - run:
+          name: Test
+          command: ./gradlew test
+      - run:
+          name: Assemble
+          command: |
+            ./gradlew assembleCI
+            rm app/build/outputs/apk/*-unaligned.apk
+      - save_cache:
+          key: edustor-android-gradle-{{ checksum "build.gradle" }}
+          paths:
+            - ~/.gradle
+      - store_artifacts:
+          path: ~/edustor-android/app/build/outputs/apk
+          destination: edustor-android
